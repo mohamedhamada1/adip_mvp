@@ -17,11 +17,17 @@
   "seams": [],
   "stages": {
     "1.1": {
-      "lifecycle": "stage_qa",
+      "lifecycle": "done",
       "conformance": {
         "status": "PASS",
         "matrix": {},
         "orphanWork": []
+      },
+      "proof": "legacy_unproven",
+      "legacy_exception": {
+        "reason": "Stage 1.1 executed as a manual technical/data spike (Esri 3D probes, SceneView harness, AD-SDI REST verification) outside the autopilot AC-matrix proof pipeline; owner-accepted PASS-WITH-CONDITIONS 2026-09-04. Proof is the evidence/ package, not an independent-verifier conformance matrix.",
+        "authorized_by": "Project owner (requesting owner) \u2014 see decisions/DECISION-stage-1.1-accepted-pass-with-conditions.md (2026-09-04)",
+        "at": "2026-09-04T12:21:43Z"
       }
     },
     "1.2": {
