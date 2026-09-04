@@ -45,31 +45,25 @@ Ask-AI stages build on. No Assessment, Simulate, or Ask-AI logic in this stage.
 ---
 
 ## Acceptance Criteria
-- [ ] AC-1: A standalone **Vite + React + TypeScript** app builds and runs; ArcGIS Maps SDK for JS
-  `SceneView` renders as the primary surface (WORK-CON-7, WORK-INT-1).
-- [ ] AC-2: The **Esri 3D Buildings** SceneLayer (tokenless service verified in Stage 1.1) loads and renders
-  for both AOIs; no API key is required for the core 3D scene.
-- [ ] AC-3: An **AOI switcher** toggles Khalifa City ↔ Al Reem Island **without a full app reload**
-  (camera + layers swap, app stays mounted) (WORK-AC-3, WORK-NFR-3).
-- [ ] AC-4: The Explore state shows a **KPI strip** bound ONLY to the authored synthetic `IS_DEMO` portfolio
-  — **no hard-coded screenshot numbers** (no literal 139 / 219 / "AED 85B" etc. in code) (WORK-AC-19).
-- [ ] AC-5: Curated project markers render on the scene from the frozen synthetic portfolio dataset; a
-  marker is selectable and emphasizes (highlight/fly-to) (WORK-REQ-1/5, WORK-UX-2).
-- [ ] AC-6: Project **filters** (e.g., Mobility / Education / Health / Public Realm / Community / Utilities)
-  filter the visible markers (WORK-REQ-4).
-- [ ] AC-7: The AOI boundary for the active AOI is rendered from an **OFFICIAL/PUBLIC** source (AD-SDI
-  Districts, verified in Stage 1.1) — used for development; provenance recorded (see Core Invariants).
-- [ ] AC-8: Every dataset/field carries a **provenance tag** (`OFFICIAL/PUBLIC` · `DERIVED` · `SYNTHETIC/
-  DEMO`) in the data model, so a later swap to real internal data needs no UI redesign.
-- [ ] AC-9: A **data attribution** element is visible on the Explore screen (© OpenStreetMap contributors /
-  Overture / AD-SDI / SCAD as applicable) from the first screen (condition C3).
-- [ ] AC-10: The visual language is **premium dark cinematic** (dark navy, restrained blue highlights,
-  muted context buildings, large readable KPIs) per the reference screenshots and WORK-UX-1/2/4.
-- [ ] AC-11: A **deterministic fallback**: if the tokenless Esri 3D service is unreachable, the scene
-  degrades to the own-built extruded-footprint floor OR a clearly-labeled reduced state **without a page
-  reload** (WORK-NFR-5; kill-switch pattern from Stage 1.1). Al Reem opening can be disabled and the app
-  stays coherent (WORK-EX-4).
-- [ ] AC-12: No live LLM and no Assessment/Simulate/Ask-AI logic is introduced in this stage.
+
+> Anchored traceability: each `AC-n` covers ≥1 ROADMAP requirement (`RR-n` in ROADMAP.md § Stage 1.2).
+> The full guardrail set (no mockup numbers, provenance tags, attribution, degrade, no-live-LLM) is carried
+> in the AC text + Core Invariants + Success Proof.
+
+#### AC-1 — Standalone Vite/React/TS app renders a dark cinematic ArcGIS SceneView with the tokenless Esri 3D Buildings layer (muted context) and project markers emphasized; no API key needed (WORK-CON-7, WORK-UX-1/2, WORK-INT-1).
+covers: RR-1
+
+#### AC-2 — The Explore state presents a compact KPI strip, dataset-appropriate filters, and selectable animated project markers with fly-to/emphasis (WORK-REQ-2/3/4/5).
+covers: RR-2
+
+#### AC-3 — AOI switching between Khalifa City and Al Reem Island occurs without a full app reload and preserves the Explore workflow (camera + layers swap on the mounted view) (WORK-AC-3, WORK-NFR-3, WORK-REQ-6).
+covers: RR-3
+
+#### AC-4 — The Al Reem opening degrades gracefully to a disabled/hidden switcher state leaving a coherent Khalifa-only experience; the scene also degrades without a page reload if the tokenless 3D service is unreachable, and no live LLM is introduced (WORK-EX-4, WORK-DEC-5, WORK-NFR-5).
+covers: RR-4
+
+#### AC-5 — Every displayed KPI/marker value derives from the frozen synthetic IS_DEMO snapshot; every dataset/field is provenance-tagged (OFFICIAL/PUBLIC, DERIVED, or SYNTHETIC/DEMO) with no hard-coded screenshot numbers (no literal 139/219/AED 85B), and required source attribution is visible from the first Explore render (WORK-AC-19, WORK-DEC-7; condition C3).
+covers: RR-5
 
 ---
 
@@ -351,3 +345,26 @@ None. No backend.
 
 **Decision:** Draft — pending owner authorization already given for Stage 1.2 (routine start).
 **Reason:** —
+
+---
+
+## Success Proof
+
+> Done-criteria (DC-n) — each demonstrates ≥1 AC and is verified by `.ai/stages/1.2/verify.sh <AC>`
+> (post-build; pre-build it honestly reports NOT-YET-BUILT).
+
+- DC-1: `npm run build` succeeds and `src/` contains a SceneView instantiating the tokenless Esri 3D Buildings SceneLayer with muted context and emphasized markers.
+  demonstrates: AC-1
+  verify: bash .ai/stages/1.2/verify.sh AC-1
+- DC-2: `src/` renders a KPI strip, sector filters, and selectable markers with fly-to/emphasis.
+  demonstrates: AC-2
+  verify: bash .ai/stages/1.2/verify.sh AC-2
+- DC-3: An AOI switcher swaps Khalifa/Al Reem on the mounted view without remounting the app root.
+  demonstrates: AC-3
+  verify: bash .ai/stages/1.2/verify.sh AC-3
+- DC-4: Disabling the Al Reem opening leaves a coherent Khalifa-only experience and the scene degrades without reload.
+  demonstrates: AC-4
+  verify: bash .ai/stages/1.2/verify.sh AC-4
+- DC-5: All demo records carry provenance + IS_DEMO, no mockup-number literals appear in `src/`, and an attribution element is present.
+  demonstrates: AC-5
+  verify: bash .ai/stages/1.2/verify.sh AC-5

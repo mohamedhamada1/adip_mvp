@@ -1,0 +1,170 @@
+# Traceability matrix — emitted by ai-certify-stage-readiness.sh
+# Reviewers judge THIS matrix; they do not reconstruct it each run (AC-1).
+schema: "stage-traceability-matrix/v1"
+stage: "1.2"
+epic: "adpic-livex-2026-capital-intelligence-mvp"
+content_determinism: "derived from artifact content only; no timestamp, no environment"
+certifier: "ai-certify-stage-readiness.sh"
+boundary: "domain-only"
+artifacts:
+  roadmap:
+    path: "ROADMAP.md"
+    section: "### Stage 1.2"
+    sha256: "7984abbcf0e37ff0a21c8af31da5d5afe0e76f5191bf94f9248ea2db40c6631e"
+  spec:
+    path: ".ai/stages/1.2/spec.md"
+    section: null
+    sha256: "6dcc6db9fe4e308a3cf1137c6fbfaf71a363d2bd5af38fb359045db9d804bc45"
+  plan:
+    path: ".ai/stages/1.2/plan.md"
+    section: null
+    sha256: "2b9dd313c3b2982dcf5aa7eda2217bad1c2b17005e0ef1dbfd1d51197f8e0961"
+  test:
+    path: ".ai/stages/1.2/plan.md"
+    section: "## Test plan"
+    sha256: "48740dd25bc07de9ae0bd0a35e7638797e0de08dd17fecce332aa3840161a25c"
+  done:
+    path: ".ai/stages/1.2/spec.md"
+    section: "## Success Proof"
+    sha256: "5eba21a5b9326e734df9ef43450fb02f49de3287755ef4e93e67f1b50e300033"
+requirements:
+  - id: "RR-1"
+    text: "The standalone Vite/React/TS app renders a dark cinematic `SceneView` with contextual buildings muted and projects emphasized — source: WORK-CON-7, WORK-UX-1/2."
+    covered_by: ["AC-1"]
+  - id: "RR-2"
+    text: "A compact KPI strip, dataset-appropriate filters, and selectable animated project markers with fly-to are present — source: WORK-REQ-3/4/5, WORK-REQ-2."
+    covered_by: ["AC-2"]
+  - id: "RR-3"
+    text: "AOI switching between Khalifa City and (conditionally) Al Reem Island occurs without a full reload and preserves the core workflow — source: WORK-REQ-6, WORK-AC-3, WORK-NFR-3."
+    covered_by: ["AC-3"]
+  - id: "RR-4"
+    text: "The Al Reem opening degrades gracefully to a disabled/hidden switcher state when its 3D spike did not pass — source: WORK-EX-4, WORK-DEC-5."
+    covered_by: ["AC-4"]
+  - id: "RR-5"
+    text: "Every displayed KPI value equals the frozen validated snapshot — source: WORK-AC-19, WORK-DEC-7."
+    covered_by: ["AC-5"]
+acceptance_criteria:
+  - id: "AC-1"
+    text: "Standalone Vite/React/TS app renders a dark cinematic ArcGIS SceneView with the tokenless Esri 3D Buildings layer (muted context) and project markers emphasized; no API key needed (WORK-CON-7, WORK-UX-1/2, WORK-INT-1)."
+    covers: ["RR-1"]
+    plan_tasks: ["T-1"]
+    tests: ["TEST-1"]
+    done_criteria: ["DC-1"]
+  - id: "AC-2"
+    text: "The Explore state presents a compact KPI strip, dataset-appropriate filters, and selectable animated project markers with fly-to/emphasis (WORK-REQ-2/3/4/5)."
+    covers: ["RR-2"]
+    plan_tasks: ["T-2"]
+    tests: ["TEST-2"]
+    done_criteria: ["DC-2"]
+  - id: "AC-3"
+    text: "AOI switching between Khalifa City and Al Reem Island occurs without a full app reload and preserves the Explore workflow (camera + layers swap on the mounted view) (WORK-AC-3, WORK-NFR-3, WORK-REQ-6)."
+    covers: ["RR-3"]
+    plan_tasks: ["T-3"]
+    tests: ["TEST-3"]
+    done_criteria: ["DC-3"]
+  - id: "AC-4"
+    text: "The Al Reem opening degrades gracefully to a disabled/hidden switcher state leaving a coherent Khalifa-only experience; the scene also degrades without a page reload if the tokenless 3D service is unreachable, and no live LLM is introduced (WORK-EX-4, WORK-DEC-5, WORK-NFR-5)."
+    covers: ["RR-4"]
+    plan_tasks: ["T-4"]
+    tests: ["TEST-4"]
+    done_criteria: ["DC-4"]
+  - id: "AC-5"
+    text: "Every displayed KPI/marker value derives from the frozen synthetic IS_DEMO snapshot; every dataset/field is provenance-tagged (OFFICIAL/PUBLIC, DERIVED, or SYNTHETIC/DEMO) with no hard-coded screenshot numbers (no literal 139/219/AED 85B), and required source attribution is visible from the first Explore render (WORK-AC-19, WORK-DEC-7; condition C3)."
+    covers: ["RR-5"]
+    plan_tasks: ["T-5"]
+    tests: ["TEST-5"]
+    done_criteria: ["DC-5"]
+plan_tasks:
+  - id: "T-1"
+    text: "Scaffold Vite/React/TS + `@arcgis/core`; `src/scene/SceneRoot.tsx` instantiates `SceneView` with the tokenless Esri 3D Buildings SceneLayer (muted context) + emphasized project markers; dark cinematic tokens."
+    satisfies: ["AC-1"]
+    tags: []
+  - id: "T-2"
+    text: "Build `KpiStrip`, `Filters`, and marker select→fly-to/emphasis interactions."
+    satisfies: ["AC-2"]
+    tags: []
+  - id: "T-3"
+    text: "Build `AoiSwitcher` that swaps camera/layers on the mounted `SceneView` (no app remount, no reload)."
+    satisfies: ["AC-3"]
+    tags: []
+  - id: "T-4"
+    text: "Add an Al Reem enable flag + graceful disable/hide path and a 3D-service degrade path (no reload); ensure no live-LLM code."
+    satisfies: ["AC-4"]
+    tags: []
+  - id: "T-5"
+    text: "Author the frozen synthetic `IS_DEMO` portfolio + `provenance.ts` model; compute KPIs from it; add `Attribution` component; add a no-mockup-number guard."
+    satisfies: ["AC-5"]
+    tags: []
+tests:
+  - id: "TEST-1"
+    text: "Component/render test asserts `SceneRoot` mounts a `SceneView` and adds the Esri 3D Buildings `SceneLayer`."
+    proves: ["AC-1"]
+    fails_when: "SceneRoot renders without a SceneLayer (3D layer omitted)."
+  - id: "TEST-2"
+    text: "Interaction test asserts a sector filter toggles visible markers and selecting a marker triggers a fly-to/emphasis call."
+    proves: ["AC-2"]
+    fails_when: "filter change leaves the marker set unchanged, or select does not call goTo."
+  - id: "TEST-3"
+    text: "AOI-switch test asserts the app root component instance is preserved across a Khalifa↔Al Reem switch (no remount / no full reload)."
+    proves: ["AC-3"]
+    fails_when: "switching AOI remounts the root or reloads the document."
+  - id: "TEST-4"
+    text: "Degrade test asserts disabling Al Reem yields a coherent Khalifa-only state and a simulated 3D-layer load failure swaps to the degrade path without reload."
+    proves: ["AC-4"]
+    fails_when: "disabling Al Reem crashes/blanks the app, or a layer failure forces a reload."
+  - id: "TEST-5"
+    text: "Data guard asserts every demo record carries a provenance tag + `IS_DEMO`, that `grep` finds no mockup-number literals in `src/`, and that an `Attribution` element renders."
+    proves: ["AC-5"]
+    fails_when: "any record lacks provenance/IS_DEMO, a mockup literal (139/219/AED 85B) appears in `src/`, or no attribution renders."
+done_criteria:
+  - id: "DC-1"
+    text: "`npm run build` succeeds and `src/` contains a SceneView instantiating the tokenless Esri 3D Buildings SceneLayer with muted context and emphasized markers."
+    demonstrates: ["AC-1"]
+    verify: "bash .ai/stages/1.2/verify.sh AC-1"
+    observable: true
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9"
+  - id: "DC-2"
+    text: "`src/` renders a KPI strip, sector filters, and selectable markers with fly-to/emphasis."
+    demonstrates: ["AC-2"]
+    verify: "bash .ai/stages/1.2/verify.sh AC-2"
+    observable: true
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9"
+  - id: "DC-3"
+    text: "An AOI switcher swaps Khalifa/Al Reem on the mounted view without remounting the app root."
+    demonstrates: ["AC-3"]
+    verify: "bash .ai/stages/1.2/verify.sh AC-3"
+    observable: true
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9"
+  - id: "DC-4"
+    text: "Disabling the Al Reem opening leaves a coherent Khalifa-only experience and the scene degrades without reload."
+    demonstrates: ["AC-4"]
+    verify: "bash .ai/stages/1.2/verify.sh AC-4"
+    observable: true
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9"
+  - id: "DC-5"
+    text: "All demo records carry provenance + IS_DEMO, no mockup-number literals appear in `src/`, and an attribution element is present."
+    demonstrates: ["AC-5"]
+    verify: "bash .ai/stages/1.2/verify.sh AC-5"
+    observable: true
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9"
+edges:
+  - {from: "RR-1", to: "AC-1", type: roadmap_to_ac}
+  - {from: "RR-2", to: "AC-2", type: roadmap_to_ac}
+  - {from: "RR-3", to: "AC-3", type: roadmap_to_ac}
+  - {from: "RR-4", to: "AC-4", type: roadmap_to_ac}
+  - {from: "RR-5", to: "AC-5", type: roadmap_to_ac}
+  - {from: "AC-1", to: "T-1", type: ac_to_plan_task}
+  - {from: "AC-1", to: "TEST-1", type: ac_to_test}
+  - {from: "AC-1", to: "DC-1", type: ac_to_done_criterion}
+  - {from: "AC-2", to: "T-2", type: ac_to_plan_task}
+  - {from: "AC-2", to: "TEST-2", type: ac_to_test}
+  - {from: "AC-2", to: "DC-2", type: ac_to_done_criterion}
+  - {from: "AC-3", to: "T-3", type: ac_to_plan_task}
+  - {from: "AC-3", to: "TEST-3", type: ac_to_test}
+  - {from: "AC-3", to: "DC-3", type: ac_to_done_criterion}
+  - {from: "AC-4", to: "T-4", type: ac_to_plan_task}
+  - {from: "AC-4", to: "TEST-4", type: ac_to_test}
+  - {from: "AC-4", to: "DC-4", type: ac_to_done_criterion}
+  - {from: "AC-5", to: "T-5", type: ac_to_plan_task}
+  - {from: "AC-5", to: "TEST-5", type: ac_to_test}
+  - {from: "AC-5", to: "DC-5", type: ac_to_done_criterion}

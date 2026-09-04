@@ -112,3 +112,40 @@ Greenfield — abandoning removes `src/` scaffold; no data/schema to revert.
   tokenless Esri 3D + own-built degrade, deterministic/no-live-LLM, dark cinematic tokens, WORK.md > screenshots.
 - Explore ONLY. Do not add Assessment/Simulate/Ask-AI.
 - Screenshots are UX direction, not data. Al Reem opening must be cleanly disable-able.
+
+---
+
+## Plan Tasks
+
+> Anchored plan tasks (T-n) — each satisfies ≥1 AC.
+
+- T-1: Scaffold Vite/React/TS + `@arcgis/core`; `src/scene/SceneRoot.tsx` instantiates `SceneView` with the tokenless Esri 3D Buildings SceneLayer (muted context) + emphasized project markers; dark cinematic tokens.
+  satisfies: AC-1
+- T-2: Build `KpiStrip`, `Filters`, and marker select→fly-to/emphasis interactions.
+  satisfies: AC-2
+- T-3: Build `AoiSwitcher` that swaps camera/layers on the mounted `SceneView` (no app remount, no reload).
+  satisfies: AC-3
+- T-4: Add an Al Reem enable flag + graceful disable/hide path and a 3D-service degrade path (no reload); ensure no live-LLM code.
+  satisfies: AC-4
+- T-5: Author the frozen synthetic `IS_DEMO` portfolio + `provenance.ts` model; compute KPIs from it; add `Attribution` component; add a no-mockup-number guard.
+  satisfies: AC-5
+
+## Test plan
+
+> Anchored tests (TEST-n) — each proves ≥1 AC and declares a negative control (fails_when:).
+
+- TEST-1: Component/render test asserts `SceneRoot` mounts a `SceneView` and adds the Esri 3D Buildings `SceneLayer`.
+  proves: AC-1
+  fails_when: SceneRoot renders without a SceneLayer (3D layer omitted).
+- TEST-2: Interaction test asserts a sector filter toggles visible markers and selecting a marker triggers a fly-to/emphasis call.
+  proves: AC-2
+  fails_when: filter change leaves the marker set unchanged, or select does not call goTo.
+- TEST-3: AOI-switch test asserts the app root component instance is preserved across a Khalifa↔Al Reem switch (no remount / no full reload).
+  proves: AC-3
+  fails_when: switching AOI remounts the root or reloads the document.
+- TEST-4: Degrade test asserts disabling Al Reem yields a coherent Khalifa-only state and a simulated 3D-layer load failure swaps to the degrade path without reload.
+  proves: AC-4
+  fails_when: disabling Al Reem crashes/blanks the app, or a layer failure forces a reload.
+- TEST-5: Data guard asserts every demo record carries a provenance tag + `IS_DEMO`, that `grep` finds no mockup-number literals in `src/`, and that an `Attribution` element renders.
+  proves: AC-5
+  fails_when: any record lacks provenance/IS_DEMO, a mockup literal (139/219/AED 85B) appears in `src/`, or no attribution renders.
