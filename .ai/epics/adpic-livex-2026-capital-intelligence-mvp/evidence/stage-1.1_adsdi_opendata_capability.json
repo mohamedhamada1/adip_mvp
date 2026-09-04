@@ -1,0 +1,75 @@
+{
+  "service": "https://arcgis.sdi.abudhabi.ae/agspublish/rest/services/OpenData/ADSDI_OpenData/MapServer",
+  "probed": "2026-09-04 anonymous",
+  "capabilities": "Query,Map,Data",
+  "maxRecordCount": 2000,
+  "copyrightText": "",
+  "relevant_layers": [
+    {
+      "id": 208,
+      "name": "Charter Schools"
+    },
+    {
+      "id": 209,
+      "name": "Nurseries"
+    },
+    {
+      "id": 211,
+      "name": "Public Schools"
+    },
+    {
+      "id": 212,
+      "name": "Private Schools"
+    },
+    {
+      "id": 350,
+      "name": "Facilities"
+    },
+    {
+      "id": 328,
+      "name": "Clinics"
+    },
+    {
+      "id": 12,
+      "name": "Land Use"
+    },
+    {
+      "id": 102,
+      "name": "RoadEdge"
+    },
+    {
+      "id": 101,
+      "name": "RoadCenterline"
+    },
+    {
+      "id": 111,
+      "name": "RoadSurface"
+    },
+    {
+      "id": 353,
+      "name": "Building"
+    },
+    {
+      "id": 0,
+      "name": "Administrative Boundaries"
+    },
+    {
+      "id": 2,
+      "name": "Community"
+    },
+    {
+      "id": 4,
+      "name": "Districts"
+    },
+    {
+      "id": 6,
+      "name": "Municipality"
+    }
+  ],
+  "verified_coverage": {
+    "khalifa_public_schools_in_envelope": 5,
+    "reem_community_polygon": "AL REEM EAST ISLAND present"
+  },
+  "export_formats": "JSON/geoJSON/PBF",
+  "licensing": "PENDING \u2014 terms not embedded (copyrightText empty)"
+}

@@ -1,67 +1,97 @@
-# Stage 1.1 — WORK-OQ-5 Dataset Inventory (evaluation framework)
+# Stage 1.1 — WORK-OQ-5 Dataset Inventory (demo-dataset basis)
 
-**Status:** ⏳ AWAITING DATA — no dataset has been provided yet. This is the evaluation
-framework; each dataset is assessed on inspection of the ACTUAL artifact, not because it
-is required. **Availability/approval is NOT assumed for any dataset not provided** (owner
-instruction, 2026-09-04).
+**Basis (owner-approved 2026-09-04):** a controlled exhibition/demo dataset is permitted rather than
+waiting for every internal ADPIC dataset. Preferred hierarchy: (1) official Abu Dhabi/UAE public/open
+data where permitted → (2) other appropriately-licensed public geospatial data → (3) deterministically
+derived from approved/public sources → (4) clearly-labeled SYNTHETIC/DEMO for what is unavailable/unapproved.
 
-**Rule:** inspect what actually exists. Being "required" ≠ "available." Being "present" ≠
-"production/exhibition-approved" (approval remains WORK-OQ-1/OQ-2, OPEN).
+**Provenance classification is MANDATORY per dataset/field:** `OFFICIAL/PUBLIC` · `DERIVED` · `SYNTHETIC/DEMO`.
+The swap of temporary demo data for approved internal ADPIC data must NOT require architecture/UI redesign.
 
-## Per-dataset record (fields required by owner)
-
-For EACH of the 7 datasets, record on inspection:
-1. **Source** (system/owner/file/service)
-2. **Availability** (provided & inspected / referenced-not-provided / not available)
-3. **Spatial/attribute structure** (geometry type, CRS, key attributes/fields)
-4. **Completeness** (coverage of AOI, record counts, gaps)
-5. **Suitability for the LIVEX story** (fit for Explore/Assess/Simulate)
-6. **Public/exhibition approval status** (if known; else "unknown — pending OQ-1/2")
-7. **Sanitization required** (which fields; name/budget/timeline sanitization per WORK-DEC-1)
-8. **Missing fields/layers** (vs. WORK-DATA-4..31 model)
-9. **Synthetic/demo replacement required?** (yes/no + why; must carry IS_DEMO, WORK-DATA-22/32)
-10. **Freezable into the deterministic event snapshot?** (yes/no + conditions)
+**Verification rule (owner):** public accessibility ≠ unrestricted offline redistribution. Licensing,
+provenance, freshness, and freeze/export feasibility are being verified, not assumed.
 
 ---
 
-### D1 — Khalifa City portfolio  — ⏳ AWAITING DATA
-1. Source: — · 2. Availability: NOT YET PROVIDED · 3. Structure: — · 4. Completeness: — ·
-5. Suitability: — · 6. Approval: unknown (OQ-1/2 OPEN) · 7. Sanitization: — · 8. Missing: — ·
-9. Synthetic replacement: — · 10. Freezable: —
+## Verified source: AD-SDI OpenData (this session, anonymous REST probes)
+- Service: `https://arcgis.sdi.abudhabi.ae/agspublish/rest/services/OpenData/ADSDI_OpenData/MapServer`
+  — **HTTP 200 anonymous**, 216 layers, `capabilities: Query,Map,Data`, `maxRecordCount 2000`,
+  query formats **JSON / geoJSON / PBF** (⇒ technically exportable/freezable). `copyrightText` empty.
+- **Layers confirmed present & relevant:** Public Schools (211, **212 features**), Private Schools (212),
+  Charter Schools (208), Nurseries (209), Clinics/health Facilities (350/328); RoadCenterline (101) +
+  full road network (edge/surface/intersection); Administrative Boundaries (0), Community (2, polygons
+  w/ `COMMUNITYNAMEENG/ARA`, `DISTRICTNAMEENG`), Districts (4), Municipality (6); Building (353);
+  Land Use (12).
+- **AOI coverage verified:** Khalifa City envelope → **5 public schools**; Community layer returns named
+  polygons incl. **"AL REEM EAST ISLAND"**. (Al Reem public-school count in a first envelope came back
+  empty — to re-check with the exact community polygon during data prep; Al Reem is the Explore opening,
+  not the simulate spine, so this is non-critical.)
+- Bilingual fields present (`SCH_NAME_EN/AR`, `COMMUNITYNAMEENG/ARA`) ⇒ supports Arabic-ready architecture.
+- ⚠️ **LICENSING/redistribution: PENDING verification** (empty `copyrightText`; AD-SDI open-data terms
+  being confirmed by research). Do NOT assume offline redistribution is permitted until confirmed.
 
-### D2 — Al Reem Island portfolio  — ⏳ AWAITING DATA
-1.–10. (same fields) — NOT YET PROVIDED.
+## Verified: Esri 3D Buildings (prior spike)
+- Public, tokenless, CORS-open for CONNECTED use. Al Reem strong cinematic massing. Offline clip/re-host
+  = `DEP-ESRI-OFFLINE-LICENSE` UNRESOLVED. Own-built extruded footprints (from AD-SDI Building 353 /
+  Overture) are the offline floor needing no Esri permission.
 
-### D3 — AOI boundaries  — ⏳ AWAITING DATA
-1.–10. — NOT YET PROVIDED.
-
-### D4 — Population / demand  — ⏳ AWAITING DATA
-1.–10. — NOT YET PROVIDED. (Critical for the school simulation, WORK-DATA-26.)
-
-### D5 — Existing facilities  — ⏳ AWAITING DATA
-1.–10. — NOT YET PROVIDED. (Critical for the school simulation, WORK-DATA-27.)
-
-### D6 — Roads / network / service-area inputs  — ⏳ AWAITING DATA
-1.–10. — NOT YET PROVIDED. (Critical for service areas, WORK-DATA-28, DEP-7.)
-
-### D7 — Strategic-theme mapping  — ⏳ AWAITING DATA
-1.–10. — NOT YET PROVIDED. (Feeds Strategic Alignment scoring, WORK-BR-6.)
+## Pending (research subagent in progress)
+- SCAD population/census spatial granularity + reuse license.
+- OSM (ODbL) / Overture (ODbL/CDLA) offline-redistribution + attribution obligations.
+- AD-SDI open-data license terms (redistribution/offline).
 
 ---
 
-## School-simulation substitute determination (owner-required)
-If analytical inputs (D4/D5/D6 esp.) are unavailable, determine **explicitly** whether Stage 1.1
-can produce **deterministic/precomputed substitutes** for the school simulation:
-- Substitutes are permitted ONLY if they are internally labeled demo/synthetic (IS_DEMO,
-  WORK-DATA-22/32, WORK-BR-12/14, WORK-SEC-6) and are **never** represented as real ADPIC data.
-- The hypothetical school itself is already demo by design (WORK-DEC-2, WORK-BR-14).
-- Record: which inputs were substituted, the substitution method, and the misrepresentation guard.
-- If a credible, non-misrepresenting substitute is NOT possible for a given input → that becomes a
-  FAIL/CONDITION item for the final recommendation, not a silent gap.
+## Per-dataset record (D1–D7)
 
-## Snapshot-freeze feasibility (rolls up from D1–D7)
-To be concluded after inspection: can a frozen, sanitized, count-validated event snapshot be produced
-from what actually exists (+ labeled substitutes)? Yes / Yes-with-conditions / No.
+### D1 — Khalifa City portfolio — **SYNTHETIC/DEMO** (owner-directed)
+Owner: do NOT reconstruct an alleged official portfolio from unofficial sources. Build a curated
+synthetic/sanitized exhibition portfolio, geographically/functionally credible, explicitly demo, sized
+for a strong responsive MVP (NOT 219). `IS_DEMO=true`. Freezable: yes. Swap-ready to real internal data.
 
-> When datasets arrive: fill D1–D7, complete the substitute determination + snapshot feasibility, then
-> issue the final Stage 1.1 recommendation (PASS / PASS WITH CONDITIONS / FAIL) in the findings report.
+### D2 — Al Reem Island portfolio — **SYNTHETIC/DEMO** (owner-directed)
+Same as D1; NOT 139. Curated synthetic showcase portfolio for the cinematic Explore opening. Freezable: yes.
+
+### D3 — AOI boundaries — **OFFICIAL/PUBLIC** (AD-SDI), licensing PENDING
+Source: AD-SDI Community(2)/Districts(4)/Administrative Boundaries(0). Structure: polygons, WGS84,
+bilingual names. Completeness: AOIs present (Reem confirmed; exact Khalifa City community to be selected).
+Suitability: high. Sanitization: none (public boundaries). Missing: none material. Synthetic: no.
+Freezable: yes (geoJSON export) **subject to license confirmation**.
+
+### D4 — Population / demand — **DERIVED / SYNTHETIC-DEMO** (SCAD official where granular; else labeled synthetic)
+Prefer SCAD official statistics where spatially granular enough (PENDING granularity/licensing check). If
+the spatial demand grain the simulator needs is unavailable → a **derived/synthetic demonstration demand
+model** is approved, **explicitly NOT official ADPIC population analysis** (owner), `IS_DEMO`. Freezable: yes.
+
+### D5 — Existing facilities (esp. schools) — **OFFICIAL/PUBLIC** (AD-SDI), licensing PENDING
+Source: AD-SDI Public/Private/Charter Schools + Nurseries + Clinics. 212 public schools; 5 in Khalifa
+envelope. Rich attributes (curriculum, gender, grades, cycle, plot). Suitability: high — real schools
+anchor the deterministic school-simulation context. Sanitization: minimal (public facility data).
+Synthetic: no. Freezable: yes (geoJSON) **subject to license confirmation**.
+
+### D6 — Roads / network / service-area inputs — **OFFICIAL/PUBLIC (roads)** → **DERIVED (service areas)**
+Source: AD-SDI RoadCenterline(101) + network layers. Approach: precompute service-area/accessibility
+deterministically from the official network and **bake results into the frozen snapshot** (owner-approved;
+live routing off critical path). Service-area polygons are `DERIVED`. Freezable: yes.
+
+### D7 — Strategic-theme mapping / assessment inputs — **SYNTHETIC/DEMO** (exhibition-only)
+Owner: synthetic exhibition-only project attributes + deterministic rules acceptable where approved
+internal methodology/data is unavailable, under the decision-support disclaimer (WORK-BR-15). `IS_DEMO`.
+Deterministic + reproducible (WORK-BR-3). Freezable: yes.
+
+---
+
+## School-simulation substitute determination
+- Real anchors available OFFICIAL/PUBLIC: existing schools (D5), road network (D6), AOI/community
+  boundaries (D3), building footprints (Building 353). Khalifa City has real schools + network + boundaries
+  ⇒ the **Evaluate + Simulate spine is buildable on official/public + derived data**.
+- The **proposed** school is hypothetical/demo by design (WORK-DEC-2, BR-14). Service areas + underserved/
+  accessibility deltas are `DERIVED` (deterministic, precomputed) from official inputs.
+- **Population/demand** is the one likely-synthetic input (D4) — permitted as a labeled derived/synthetic
+  demand model, never represented as official ADPIC analysis. ⇒ credible non-misrepresenting substitutes
+  ARE possible; no fabricated "official" data required.
+
+## Snapshot-freeze feasibility (preliminary)
+Technically YES — AD-SDI supports geoJSON export; synthetic/derived layers are ours to freeze. **Gating
+condition: confirm AD-SDI (and OSM/Overture/SCAD) licenses permit export + offline redistribution for a
+public exhibition.** Final PASS/CONDITIONS depends on that confirmation (research in progress).
