@@ -570,7 +570,8 @@ initiative is not part of this work.
     Depends-On: WORK-DEC-6 Source: Decision Form Q6 / Start Decision
     Resolution: Resolved-By: Resolved-At:
 
--   WORK-OQ-5: Status: OPEN Owner: PRODUCT_OWNER Blocking: EPIC_CREATE
+-   WORK-OQ-5: Status: RESOLVED (spike-gating; per-dataset production/exhibition
+    approval still PENDING) Owner: PRODUCT_OWNER Blocking: EPIC_CREATE
     Blocking-Stage: Question: What is the approved availability/status
     for each required event dataset: Khalifa portfolio, Reem portfolio,
     AOI boundaries, population/demand, existing facilities,
@@ -583,14 +584,31 @@ initiative is not part of this work.
     -   Available, approval pending
     -   Not available
     -   Use demo/synthetic replacement Depends-On: Source: Decision Form
-        Q7 Resolution: Resolved-By: Resolved-At:
+        Q7 Resolution: For every listed dataset (Khalifa City portfolio,
+        Al Reem Island portfolio, AOI boundaries, population/demand,
+        existing facilities, roads/network/service-area inputs,
+        strategic-theme mapping) the status is **availability/approval TO
+        BE VALIDATED by the Stage 1.1 spike**. Existence alone does NOT
+        make any dataset production-approved or exhibition-approved. Stage
+        1.1 must inventory each dataset and record its actual status,
+        source, suitability, gaps, and whether a frozen/sanitized event
+        replacement is required. This resolution unblocks seeding/starting
+        Stage 1.1 ONLY; it grants no publication/exhibition data approval
+        (see WORK-OQ-1/WORK-OQ-2, still OPEN). Resolved-By: Project owner
+        (requesting owner) Resolved-At: 2026-09-04
 
--   WORK-OQ-6: Status: OPEN Owner: PRODUCT_OWNER Blocking: EPIC_CREATE
+-   WORK-OQ-6: Status: RESOLVED (temporary project-side owner; not a
+    publication/security approval) Owner: PRODUCT_OWNER Blocking: EPIC_CREATE
     Blocking-Stage: Question: Who is the named GIS/data owner
     responsible for the frozen event snapshot and dataset validation?
     Why-Needed: Q7 and the start gate require accountable data
     ownership. Options: Depends-On: WORK-OQ-5 Source: Decision Form Q7
-    Resolution: Resolved-By: Resolved-At:
+    Resolution: The Project owner (requesting owner) acts as the
+    **temporary project-side GIS/data owner** for coordinating the frozen
+    event snapshot and Stage 1.1 dataset validation. This is NOT a
+    security or publication approval; the public-attribute allowlist and
+    named data approver (WORK-OQ-1, WORK-OQ-2) remain SEPARATE and OPEN.
+    Resolved-By: Project owner (requesting owner) Resolved-At: 2026-09-04
 
 -   WORK-OQ-7: Status: OPEN Owner: SECURITY_OWNER Blocking: EPIC_CREATE
     Blocking-Stage: Question: What information categories may be sent to
@@ -614,14 +632,19 @@ initiative is not part of this work.
     Depends-On: WORK-OQ-7 Source: Decision Form Q8 Resolution:
     Resolved-By: Resolved-At:
 
--   WORK-OQ-9: Status: OPEN Owner: TECH_OWNER Blocking: BEFORE_STAGE
+-   WORK-OQ-9: Status: RESOLVED (project-side spike owner) Owner: TECH_OWNER
+    Blocking: BEFORE_STAGE
     Blocking-Stage: EXHIBITION_BUILD_COMMIT Question: Who owns the
     technical spike for runtime data access, connectivity, external Esri
     approvals, authentication/CORS and offline/fallback validation?
     Why-Needed: Q9 may remain open during initial epic creation but
     requires a named owner and must close before exhibition-build
     commitment. Options: Depends-On: Source: Decision Form Q9 / Start
-    Decision Resolution: Resolved-By: Resolved-At:
+    Decision Resolution: The Project owner (requesting owner) acts as the
+    **project-side technical-spike owner** for Stage 1.1. External Esri
+    approvals/credentials/credits themselves remain subject to WORK-OQ-8
+    (security/AI approver, OPEN) where they touch the AI/data boundary.
+    Resolved-By: Project owner (requesting owner) Resolved-At: 2026-09-04
 
 -   WORK-OQ-10: Status: OPEN Owner: OPERATIONS_OWNER Blocking:
     BEFORE_STAGE Blocking-Stage: EXHIBITION_BUILD_COMMIT Question: Who
