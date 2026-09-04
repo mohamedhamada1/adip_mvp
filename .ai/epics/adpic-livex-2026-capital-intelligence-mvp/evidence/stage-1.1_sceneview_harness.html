@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Stage 1.1 Spike — Esri 3D Buildings SceneView Harness</title>
+  <link rel="stylesheet" href="https://js.arcgis.com/4.31/esri/themes/dark/main.css" />
+  <style>
+    html, body, #viewDiv { padding: 0; margin: 0; height: 100%; width: 100%; background:#0b1220; }
+    #hud { position: absolute; top: 8px; left: 8px; z-index: 99; background: rgba(10,18,32,.85);
+      color: #cfe0ff; font: 12px/1.4 monospace; padding: 8px 10px; border: 1px solid #24406b; border-radius: 6px; max-width: 46ch;}
+    .ok{color:#7CFC9B}.bad{color:#ff8a8a}.warn{color:#ffd479}
+  </style>
+</head>
+<body>
+  <div id="viewDiv"></div>
+  <div id="hud">booting…</div>
+  <script src="https://js.arcgis.com/4.31/"></script>
+  <script>
+    const AOIS = {
+      reem:    { name:"Al Reem Island",  lon:54.4045, lat:24.4990, heading:210, tilt:68, z:900 },
+      khalifa: { name:"Khalifa City",    lon:54.5780, lat:24.4190, heading:200, tilt:66, z:1200 }
+    };
+    const SCENE_URL = "https://basemaps3d.arcgis.com/arcgis/rest/services/Esri3D_Buildings_v1/SceneServer";
+    window.__spike = { status:"init", layerLoaded:false, fps:null, aoi:null, errors:[] };
+    const hud = document.getElementById("hud");
+    function log(html){ hud.innerHTML = html; }
+
+    require([
+      "esri/Map","esri/views/SceneView","esri/layers/SceneLayer"
+    ], function(Map, SceneView, SceneLayer){
+      // No basemap (dark basemap needs an API key) — render buildings on default ground.
+      const map = new Map({ basemap: null, ground: "world-elevation" });
+      const buildings = new SceneLayer({ url: SCENE_URL, popupEnabled:false });
+      map.add(buildings);
+      const view = new SceneView({
+        container: "viewDiv", map: map, qualityProfile: "high",
+        environment: { background:{ type:"color", color:[8,14,26,1] }, starsEnabled:false, atmosphereEnabled:true },
+        ui: { components: [] }
+      });
+      window.__view = view; window.__buildings = buildings;
+
+      buildings.load().then(function(){
+        window.__spike.layerLoaded = true;
+        log('<span class="ok">SceneLayer loaded (no token)</span><br>go(): use window.__go("reem"|"khalifa")');
+      }).catch(function(e){
+        window.__spike.errors.push(String(e && e.message || e));
+        window.__spike.layerLoaded = false;
+        log('<span class="bad">SceneLayer load FAILED</span><br>'+ (e && e.message || e));
+      });
+
+      window.__go = function(key){
+        const a = AOIS[key]; if(!a) return Promise.reject("bad aoi");
+        window.__spike.aoi = a.name;
+        return view.goTo({ position:{ longitude:a.lon, latitude:a.lat, z:a.z }, heading:a.heading, tilt:a.tilt }, { animate:true, duration:2000 })
+          .then(()=> view.whenLayerView(buildings))
+          .then(lv=> new Promise(res=>{
+            // wait until the layer view stops updating (tiles settled)
+            let tries=0; const h=setInterval(()=>{ tries++; if(!lv.updating || tries>40){ clearInterval(h); res(lv); } },250);
+          }));
+      };
+
+      // FPS benchmark over ~3s using rAF
+      window.__bench = function(){ return new Promise(res=>{
+        let frames=0, t0=performance.now();
+        function tick(){ frames++; if(performance.now()-t0 < 3000){ requestAnimationFrame(tick);} else {
+          const fps = Math.round(frames/((performance.now()-t0)/1000)); window.__spike.fps=fps; res(fps); } }
+        requestAnimationFrame(tick);
+      });};
+
+      view.when(function(){
+        log('<span class="ok">SceneView ready</span> — WebGL up<br>navigating Al Reem…');
+        window.__go("reem");
+      }, function(err){
+        window.__spike.errors.push("view: "+(err&&err.message||err));
+        log('<span class="bad">SceneView FAILED</span><br>'+(err&&err.message||err));
+      });
+    });
+  </script>
+</body>
+</html>
