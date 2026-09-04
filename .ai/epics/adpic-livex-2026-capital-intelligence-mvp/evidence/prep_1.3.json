@@ -3,8 +3,8 @@
   "certifier": "ai-certify-stage-readiness.sh",
   "epic": "adpic-livex-2026-capital-intelligence-mvp",
   "stage": "1.3",
-  "generated_at_utc": "2026-09-04T15:09:09Z",
-  "determinism_key": "cbe2f426c3e09a8eee28500a929dc785b92721eed7fdc7dd2fb4543ec6e97ba9",
+  "generated_at_utc": "2026-09-04T15:26:28Z",
+  "determinism_key": "e59d4c04b13a27ec712049b536b5d534f1546efe8058c3ba7b5010ee1d94ed41",
   "declared_limits": [
     {
       "id": "L-SEM-1",
@@ -148,7 +148,7 @@
   "traceability": {
     "verdict": "PASS",
     "matrix_path": ".ai/epics/adpic-livex-2026-capital-intelligence-mvp/evidence/traceability_1.3.yaml",
-    "matrix_sha256": "853cfae1dd690687ace525dee2da5e06cf14ef78a35bea5d1f3ca9094c3d6677",
+    "matrix_sha256": "153e0d388ba0d7fa07825785e77e0768e70997da628e9474bedd3677cd0f7485",
     "counts": {
       "roadmap_requirements": 6,
       "acceptance_criteria": 7,
@@ -259,22 +259,22 @@
       "spec": {
         "path": ".ai/stages/1.3/spec.md",
         "section": null,
-        "sha256": "e0d191f61d4de296c7386f2abadc6fd0e290f3e29c97c08c8554ed746af57865"
+        "sha256": "8a38521dce23c78e488d524c15d5f109aa2245605e4296f035525e5b22439942"
       },
       "plan": {
         "path": ".ai/stages/1.3/plan.md",
         "section": null,
-        "sha256": "79a1b11da9ae268a6a45e91dee08eb9b0898b84a65b81c2c0e70103e4429464a"
+        "sha256": "c1806f65f896a135f8520da92ff3a37d9bbb75496afef0c21626a11047c9cc75"
       },
       "test": {
         "path": ".ai/stages/1.3/plan.md",
         "section": "## Test plan",
-        "sha256": "e54e2103a61eaced77bf96e77d4ab2e30c448d7a2516a70ae45ff6d8590ac89a"
+        "sha256": "d1609d0ead00c03e769f9ca6ee9292d6455f3487a72d288a4892758c9b5631f5"
       },
       "done": {
         "path": ".ai/stages/1.3/spec.md",
         "section": "## Success Proof",
-        "sha256": "7f6b2591b872b494f83a99ac4bd953cfc47447bb0790657287ced42e583c5223"
+        "sha256": "66b96131b2ebf5aead6b4eb66c73ed2c1247f841628a7dcccaa9976c9cf1a90d"
       }
     },
     "observed_state": {
@@ -451,13 +451,13 @@
     "semantic_invoker_sha256": "3f976f091a10357c4bc4875b6b5d8956d5b0ddb6e82588052c1c928830e3f96e",
     "semantic_invoker_is_default_anchor": true,
     "actor_binary_injected": true,
-    "actor_injection_opt_in": false,
-    "transport": "injected-actor",
+    "actor_injection_opt_in": true,
+    "transport": "hermetic-actor",
     "independent_roadmap_review": {
       "reviewer": "reviewer_a",
       "role_flag": "--gemini-review",
       "stage": "independent_roadmap_review",
-      "payload_sha256": "d816bec90883a2e984f5701299d018927d7166ecf5e7589683f55ba8fee7a1d0",
+      "payload_sha256": "8ba763f6c6d05270650bf1e85b95799d463cc5e27ddb3290319eb6f6beecc5e4",
       "payload_bytes": 11780,
       "probe_lines_checked": 270,
       "downstream_leakage": false,
@@ -467,7 +467,7 @@
       "attestation_detail": "270 probe lines searched in 11780 captured payload bytes",
       "status": "COMPLETED",
       "verdict": "PASS",
-      "response_sha256": "e0bdd20c7fa39aa958aa5b771fd6e394f1db141ada4b6ec978db551b621d66f2",
+      "response_sha256": "43403949e72a1c358192afa1d4d6c009838b1e2ad28cf7308afa704720f5212f",
       "advisory": true
     },
     "reviewers": [
@@ -475,8 +475,8 @@
         "reviewer": "semantic_reviewer",
         "role_flag": "repo-grounded-claude-two-lens",
         "stage": "semantic_readiness",
-        "response_sha256": "20f8d348de5be6ad49cbea35c347964e15dab1365948c836b8fb4b5fd1654567",
-        "response_bytes": 7120,
+        "response_sha256": "4f141ec6cf9e0104cf25af2a3782db976eff0dcfc8e9ee8bda49706450927057",
+        "response_bytes": 8604,
         "status": "COMPLETED",
         "verdict": "CONCERN",
         "lens_a_verdict": "CONCERN",
@@ -484,19 +484,20 @@
         "lens_b_advisory": true,
         "overall_verdict": "CONCERN",
         "findings": [
-          "Green-while-absent scenario (q4): spec.md:183 and plan.md:59/76 require the mounted SceneView to be preserved on Evaluate\u2192Back (\"no regression to Explore\"), but TEST-7 asserts only that the Assessment renders for the selected project. A Builder that unmounts/destroys and recreates the view on Back satisfies every test in the package while violating the stated behaviour; `fakeSceneApi` already records `createView`/`destroy`, so a one-line assertion would close it.",
-          "Low/Med/High threshold boundaries are nowhere specified; the Builder must choose them. Acceptable because weights/thresholds are explicitly illustrative/non-official and the Ambiguity Rule covers derivation \u2014 noted, not blocking.",
-          "AC-6 (\"Insufficient data\") is only ever reachable via synthetic test fixtures: every `ProjectRecord` in the frozen dataset is fully populated by `buildAoi` (portfolio.demo.ts:56-74), so no dimension is ever missing in the real app flow. The behaviour is defensive and test-proven, which is fine, but it is not observable in the shipped UI."
+          "verify.sh `all` (plan.md:90,99 P0 guard) returns PASS with zero Stage 1.3 code present, so an autopilot Builder polling that command as its \"done\" signal gets a false green \u2014 the deliverable-readiness gate does not actually gate. (Detail/exhibit in Lens B.)",
+          "Indicator\u2192dimension derivations and Low/Med/High thresholds are Builder-invented (spec Open Question 2, \"DERIVED proxies\"); this is intended latitude, but TEST-1's \"high-profile bands High / low-profile bands Low\" is self-referential (the Builder defines both the profiles and the thresholds), so it proves monotonicity/non-inversion only, not any externally-anchored banding. Acceptable, noted so the certifier doesn't over-read TEST-1.",
+          "Minor: WORK-BR-10 enumerates 6 illustrative weight lines (Need 30 / Strategic 25 / Gap 25 / Accessibility 10 / Duplication penalty 5 / Delivery-dependency penalty 5) while the spec lists 7 discrete dimensions (Infrastructure Dependency + Delivery Complexity split out). Weights are config-driven/illustrative so this is not a conflict, but the Builder must choose the 7-weight split themselves."
         ],
         "lens_a_findings": [
-          "Green-while-absent scenario (q4): spec.md:183 and plan.md:59/76 require the mounted SceneView to be preserved on Evaluate\u2192Back (\"no regression to Explore\"), but TEST-7 asserts only that the Assessment renders for the selected project. A Builder that unmounts/destroys and recreates the view on Back satisfies every test in the package while violating the stated behaviour; `fakeSceneApi` already records `createView`/`destroy`, so a one-line assertion would close it.",
-          "Low/Med/High threshold boundaries are nowhere specified; the Builder must choose them. Acceptable because weights/thresholds are explicitly illustrative/non-official and the Ambiguity Rule covers derivation \u2014 noted, not blocking.",
-          "AC-6 (\"Insufficient data\") is only ever reachable via synthetic test fixtures: every `ProjectRecord` in the frozen dataset is fully populated by `buildAoi` (portfolio.demo.ts:56-74), so no dimension is ever missing in the real app flow. The behaviour is defensive and test-proven, which is fine, but it is not observable in the shipped UI."
+          "verify.sh `all` (plan.md:90,99 P0 guard) returns PASS with zero Stage 1.3 code present, so an autopilot Builder polling that command as its \"done\" signal gets a false green \u2014 the deliverable-readiness gate does not actually gate. (Detail/exhibit in Lens B.)",
+          "Indicator\u2192dimension derivations and Low/Med/High thresholds are Builder-invented (spec Open Question 2, \"DERIVED proxies\"); this is intended latitude, but TEST-1's \"high-profile bands High / low-profile bands Low\" is self-referential (the Builder defines both the profiles and the thresholds), so it proves monotonicity/non-inversion only, not any externally-anchored banding. Acceptable, noted so the certifier doesn't over-read TEST-1.",
+          "Minor: WORK-BR-10 enumerates 6 illustrative weight lines (Need 30 / Strategic 25 / Gap 25 / Accessibility 10 / Duplication penalty 5 / Delivery-dependency penalty 5) while the spec lists 7 discrete dimensions (Infrastructure Dependency + Delivery Complexity split out). Weights are config-driven/illustrative so this is not a conflict, but the Builder must choose the 7-weight split themselves."
         ],
         "lens_b_findings": [
-          "verify.sh:67 \u2014 the `all` branch runs `check_build; check_engine; check_disclaimer; check_authority; check_weights_label; check_wiring; run_tests \"TESTS\"` as `;`-separated statements with no `set -e` (script uses `set -uo pipefail` only) and no `&&` chaining; `rc=$?` (line 70) captures only `run_tests`'s status. A tree with a missing/altered disclaimer, missing weights label, and an unwired AppShell prints its failure lines but still exits 0 \u2192 `verify(all): PASS`. plan.md:90 and the P0/P1 table (plan.md:99) direct the Builder to gate on `verify.sh all` expecting PASS \u2014 a literal green-while-broken path. (Per-AC invocations used by the DCs are correctly `&&`-chained, so the certification path itself is sound; fix: chain with `&&` or accumulate rc.)",
-          "verify.sh:28 `check_disclaimer` greps only the substring `\"Illustrative decision-support assessment for demonstration purposes\"`, not the full approved wording (missing `\"; not an official project approval or investment decision.\"`). A truncated disclaimer passes the mechanical AC-3 guard; only TEST-3 (Builder-authored) enforces the exact string. Weak guard \u2014 the exact string is available verbatim in AC-3, so it is a tooling weakness rather than an invention risk.",
-          "verify.sh:56 AC-7 wiring guard greps `evaluate|scoreProject|selected` in AppShell.tsx; `selected` alone can match trivially, so the structural check is near-vacuous. The real proof is TEST-7, which (per Lens A) under-asserts the view-preservation half of the behaviour."
+          "verify.sh:67,70 \u2014 `all` branch loses all non-final exit codes (no `set -e`, `;`-separated); `verify.sh all` exits 0 / prints PASS while every Stage 1.3 check fails, because only `run_tests \"TESTS\"` (green 1.2 suite) sets `rc`. Contradicts the script's own header (verify.sh:4) and the plan's P0 guard (plan.md:90,99). One-line fix.",
+          "verify.sh:12,28 \u2014 AC-3 disclaimer grep matches only the first clause; a truncated \"\u2026for demonstration purposes.\" with the \"not an official project approval or investment decision\" clause dropped still passes the mechanical gate (behaviour caught only by TEST-3 as specified).",
+          "Minor: verify.sh:20 purity grep bans `new Date` in `src/assessment/`, a trap for a duration-based Delivery-Complexity indicator (parse year numerically).",
+          "Minor: verify.sh:36 attribution gate matches the bare token `attributedTo`; does not confirm it reaches the UI (relies on TEST-4)."
         ]
       }
     ],
@@ -508,9 +509,10 @@
     "lens_b_advisory": {
       "verdict": "CONCERN",
       "findings": [
-        "verify.sh:67 \u2014 the `all` branch runs `check_build; check_engine; check_disclaimer; check_authority; check_weights_label; check_wiring; run_tests \"TESTS\"` as `;`-separated statements with no `set -e` (script uses `set -uo pipefail` only) and no `&&` chaining; `rc=$?` (line 70) captures only `run_tests`'s status. A tree with a missing/altered disclaimer, missing weights label, and an unwired AppShell prints its failure lines but still exits 0 \u2192 `verify(all): PASS`. plan.md:90 and the P0/P1 table (plan.md:99) direct the Builder to gate on `verify.sh all` expecting PASS \u2014 a literal green-while-broken path. (Per-AC invocations used by the DCs are correctly `&&`-chained, so the certification path itself is sound; fix: chain with `&&` or accumulate rc.)",
-        "verify.sh:28 `check_disclaimer` greps only the substring `\"Illustrative decision-support assessment for demonstration purposes\"`, not the full approved wording (missing `\"; not an official project approval or investment decision.\"`). A truncated disclaimer passes the mechanical AC-3 guard; only TEST-3 (Builder-authored) enforces the exact string. Weak guard \u2014 the exact string is available verbatim in AC-3, so it is a tooling weakness rather than an invention risk.",
-        "verify.sh:56 AC-7 wiring guard greps `evaluate|scoreProject|selected` in AppShell.tsx; `selected` alone can match trivially, so the structural check is near-vacuous. The real proof is TEST-7, which (per Lens A) under-asserts the view-preservation half of the behaviour."
+        "verify.sh:67,70 \u2014 `all` branch loses all non-final exit codes (no `set -e`, `;`-separated); `verify.sh all` exits 0 / prints PASS while every Stage 1.3 check fails, because only `run_tests \"TESTS\"` (green 1.2 suite) sets `rc`. Contradicts the script's own header (verify.sh:4) and the plan's P0 guard (plan.md:90,99). One-line fix.",
+        "verify.sh:12,28 \u2014 AC-3 disclaimer grep matches only the first clause; a truncated \"\u2026for demonstration purposes.\" with the \"not an official project approval or investment decision\" clause dropped still passes the mechanical gate (behaviour caught only by TEST-3 as specified).",
+        "Minor: verify.sh:20 purity grep bans `new Date` in `src/assessment/`, a trap for a duration-based Delivery-Complexity indicator (parse year numerically).",
+        "Minor: verify.sh:36 attribution gate matches the bare token `attributedTo`; does not confirm it reaches the UI (relies on TEST-4)."
       ],
       "note": "ADVISORY (phase-1): recorded + surfaced; does NOT block dispatch. Promote to blocking = add Lens B to the final_gate threshold (one line)."
     },
@@ -536,13 +538,13 @@
   },
   "section_seals": {
     "certifier": "e2c09ac91c419ad08a53d1eb645c524e9a0dcab4b8d7fb52cee77522723db47e",
-    "generated_at_utc": "873620f7bac8c4fa4d7fc6248859eb81f59ec59ff20d7b6830b7e1471ad292f8",
+    "generated_at_utc": "242cd7586f406a5f2f545e50072d842a688eca16d606c263a0ea6aa1db27f9c2",
     "declared_limits": "a1cd0994e032074fe0ccea58c3480371e9abd98ca0bc8fb01c5508bfac7bd448",
     "inputs": "56717e285dd0838d6cd446d2435585ba03b0aae8a2a0f462e165046360166051",
-    "traceability": "dcb249ce1300df1b878dbd0c56e2f5fb673547ee3cc67faf7df08e8476670024",
-    "semantic_readiness": "e935fc40bbbe51e6fd5b1ea0d54df6381e85a2a5389197689833d5f8afab88c6",
+    "traceability": "882768bc662d69a9deaa1c4d7c13928177e1dcace8b52d09e8495bf9dd5f3eb4",
+    "semantic_readiness": "24e7f8cd0f3ff0aa1c67d35eb49666c39a5b31b7edd0ae783641c0991288ffca",
     "final_gate": "0c74c4958995c0f48b7c8af6fa603a984e52c702912672395846a9cfc09405e9",
     "contract_binding": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
   },
-  "certificate_seal": "a4462f45be0d540edf3a4b5e70d3b280b3c943012def8dee4fef03228133a09b"
+  "certificate_seal": "ac6363b6a024f09c583725bb78b4c05ad0cbf850c878223b9f9c85b836dccd28"
 }
