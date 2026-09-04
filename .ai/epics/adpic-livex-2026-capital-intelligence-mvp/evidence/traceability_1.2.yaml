@@ -14,15 +14,15 @@ artifacts:
   spec:
     path: ".ai/stages/1.2/spec.md"
     section: null
-    sha256: "58c8a5c530ea8274fe8903b8c3900637ceb7cf95c0d1ad8af88f65d784972f82"
+    sha256: "4c22a6af8c7c8d0a869d5bc1305ffcff51d51715f917d0b49f3220c643b31a20"
   plan:
     path: ".ai/stages/1.2/plan.md"
     section: null
-    sha256: "4ca6e52c06220e20bb55d5cddc39d7784115421035d47fc9e4697c51b3e02386"
+    sha256: "0fbd98cb1811ce16b02267fbf3ccdfdb25cc51ecdb2e2e47cc7f410860105236"
   test:
     path: ".ai/stages/1.2/plan.md"
     section: "## Test plan"
-    sha256: "42f9053de4da7f8798d26297733c3545dc7676568e8b24765710c75e47508e50"
+    sha256: "cb1aa178da10e25f0dcdd3df9377f583e26cb0acf25f58a2114af353f31f794e"
   done:
     path: ".ai/stages/1.2/spec.md"
     section: "## Success Proof"
@@ -69,7 +69,7 @@ acceptance_criteria:
     tests: ["TEST-4"]
     done_criteria: ["DC-4"]
   - id: "AC-5"
-    text: "Every displayed KPI/marker value derives from the frozen synthetic IS_DEMO snapshot; every dataset/field is provenance-tagged (OFFICIAL/PUBLIC, DERIVED, or SYNTHETIC/DEMO) with no hard-coded screenshot numbers (no literal 139/219/AED 85B), and required source attribution is visible from the first Explore render (WORK-AC-19, WORK-DEC-7; condition C3)."
+    text: "Every displayed KPI/marker value derives from the frozen synthetic IS_DEMO snapshot; every dataset/field is provenance-tagged (OFFICIAL/PUBLIC, DERIVED, or SYNTHETIC/DEMO) with no hard-coded screenshot numbers (no numeric KPI literal typed in JSX), and required source attribution is visible from the first Explore render (WORK-AC-19, WORK-DEC-7; condition C3)."
     covers: ["RR-5"]
     plan_tasks: ["T-5"]
     tests: ["TEST-5"]
@@ -97,9 +97,9 @@ plan_tasks:
     tags: []
 tests:
   - id: "TEST-1"
-    text: "Component/render test asserts `SceneRoot` mounts a `SceneView` and adds the Esri 3D Buildings `SceneLayer`."
+    text: "Component/render test asserts `SceneRoot` mounts a `SceneView` and adds the Esri 3D Buildings `SceneLayer`; a guard (`verify.sh` AC-1) asserts no raw hex color literal appears in any `*.tsx` component (hex only in `src/theme/*.css` tokens)."
     proves: ["AC-1"]
-    fails_when: "SceneRoot renders without a SceneLayer (3D layer omitted)."
+    fails_when: "SceneRoot renders without a SceneLayer (3D layer omitted), or a raw hex color is used in a component instead of a token."
   - id: "TEST-2"
     text: "Interaction test asserts a sector filter toggles visible markers and selecting a marker triggers a fly-to/emphasis call."
     proves: ["AC-2"]
@@ -109,9 +109,9 @@ tests:
     proves: ["AC-3"]
     fails_when: "switching AOI constructs a new SceneView, remounts the root, or triggers a full document reload (`location.reload`/`location.href=`) instead of updating the existing view."
   - id: "TEST-4"
-    text: "Degrade test asserts disabling Al Reem yields a coherent Khalifa-only state and a simulated 3D-layer load failure swaps to the degrade path without reload."
+    text: "Degrade test asserts disabling Al Reem yields a coherent Khalifa-only state and a simulated 3D-layer load failure swaps to the degrade path without reload; a guard (`verify.sh` AC-4) asserts no live-LLM / Assessment / Simulate / Ask-AI module reference exists anywhere in `src/`."
     proves: ["AC-4"]
-    fails_when: "disabling Al Reem crashes/blanks the app, or a layer failure forces a reload."
+    fails_when: "disabling Al Reem crashes/blanks the app, a layer failure forces a reload, or a forbidden module (LLM/Assessment/Simulate/Ask-AI) is referenced in src/."
   - id: "TEST-5"
     text: "Data guard asserts **every dataset module across ALL sources in `src/data/**` — both `.ts` and frozen `.json`** (synthetic portfolio AND AD-SDI-derived boundaries) carries a provenance tag (synthetic records also `IS_DEMO`), that KPI/count values are computed (no distinctive mockup budget literal `AED <n>B` appears in `src/`), and that an `Attribution` element renders."
     proves: ["AC-5"]
@@ -122,31 +122,31 @@ done_criteria:
     demonstrates: ["AC-1"]
     verify: "bash .ai/stages/1.2/verify.sh AC-1"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@236528c3e459"
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@71aa4f66250e"
   - id: "DC-2"
     text: "`src/` renders a KPI strip, sector filters, and selectable markers with fly-to/emphasis."
     demonstrates: ["AC-2"]
     verify: "bash .ai/stages/1.2/verify.sh AC-2"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@236528c3e459"
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@71aa4f66250e"
   - id: "DC-3"
     text: "An AOI switcher swaps Khalifa/Al Reem by updating the camera/layers of the SAME persisted `SceneView` instance (SceneView constructed exactly once; not re-instantiated per switch), without remounting the app root and without any full-document-reload call (`location.reload` / `location.href=`)."
     demonstrates: ["AC-3"]
     verify: "bash .ai/stages/1.2/verify.sh AC-3"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@236528c3e459"
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@71aa4f66250e"
   - id: "DC-4"
     text: "Disabling the Al Reem opening leaves a coherent Khalifa-only experience and the scene degrades without reload."
     demonstrates: ["AC-4"]
     verify: "bash .ai/stages/1.2/verify.sh AC-4"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@236528c3e459"
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@71aa4f66250e"
   - id: "DC-5"
     text: "All demo records carry provenance + IS_DEMO, no mockup-number literals appear in `src/`, and an attribution element is present."
     demonstrates: ["AC-5"]
     verify: "bash .ai/stages/1.2/verify.sh AC-5"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@236528c3e459"
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@71aa4f66250e"
 edges:
   - {from: "RR-1", to: "AC-1", type: roadmap_to_ac}
   - {from: "RR-2", to: "AC-2", type: roadmap_to_ac}
