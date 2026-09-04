@@ -1,7 +1,20 @@
 {
   "epic": "adpic-livex-2026-capital-intelligence-mvp",
   "status": "PLANNED",
-  "owner": null,
+  "owner": {
+    "id": "adres@MacBook-Air-4",
+    "model": "",
+    "runtime": "",
+    "claimedAt": "2026-09-04T12:21:59Z",
+    "origin": "claim",
+    "history": [
+      {
+        "action": "claim",
+        "id": "adres@MacBook-Air-4",
+        "at": "2026-09-04T12:21:59Z"
+      }
+    ]
+  },
   "mainSha": "e20d63508fbe66c4a6d44b238e2002167fdd7395",
   "branch": "main",
   "currentStage": "1.1",
