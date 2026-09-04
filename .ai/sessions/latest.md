@@ -1,11 +1,11 @@
 ## Last Session Summary
-- Timestamp: 2026-09-04T11:43:39Z
+- Timestamp: 2026-09-04T11:58:43Z
 - Stage: 1.1
 - Branch: main
 - Uncommitted files: 0
 
 Recent commits:
-4de445c Accept Stage 1.1 technical findings (provisional); keep Stage 1.1 OPEN for OQ-5
+f044984 Stage 1.1 OQ-5 inventory (demo-dataset basis) — AD-SDI verified
 
 Working tree:
 

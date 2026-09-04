@@ -1,9 +1,9 @@
 # Stage 1.1 — Technical / Data Spike + Snapshot Freeze — FINDINGS
 
 **Date:** 2026-09-04 · **Spike owner:** Project owner (WORK-OQ-9)
-**Status:** TECHNICAL FINDINGS ACCEPTED (PROVISIONAL) by owner 2026-09-04 — **Stage 1.1 REMAINS OPEN**,
-pending the WORK-OQ-5 dataset inventory (see `stage-1.1_oq5_dataset_inventory.md`). This is **NOT** final
-Stage 1.1 completion. Final PASS / PASS-WITH-CONDITIONS / FAIL is issued only after the dataset review.
+**Status:** OQ-5 dataset review COMPLETE (demo-dataset basis). **FINAL RECOMMENDATION: PASS WITH
+CONDITIONS** (see bottom). Stage 1.1 stays at the owner review gate — not marked complete until the owner
+accepts. Stage 1.2 NOT started.
 
 ## Owner-accepted boundaries (2026-09-04) — binding
 - Al Reem Island: **provisional GO** for the cinematic Explore opening.
@@ -142,3 +142,71 @@ cached)** as the richer default when network is present; live Esri basemap/routi
 feature-flagged enhancements behind adapters that degrade to the frozen path. Dark ground + muted grey
 massing delivers the cinematic look without a photoreal basemap dependency. (Whether Esri's hosted layer
 may be clipped/re-hosted offline is an OPEN owner/Esri licensing question, not assumed.)
+
+---
+
+# FINAL Stage 1.1 Recommendation — **PASS WITH CONDITIONS**
+
+Basis: technical spike (Esri 3D, harness, benchmark) + WORK-OQ-5 dataset review on the owner-approved
+demo-dataset basis (`stage-1.1_oq5_dataset_inventory.md`). The MVP is buildable to a credible, reliable,
+premium standard; the residual items are owner/legal confirmations and the hardware gate — none are
+architectural blockers.
+
+## 1. Final OQ-5 inventory (provenance-classified)
+See `stage-1.1_oq5_dataset_inventory.md`. Summary:
+- **OFFICIAL/PUBLIC (AD-SDI):** existing schools (212; Khalifa verified), road network, community/district/
+  admin boundaries (`KHALIFA CITY` + `AL REEM ISLAND` confirmed), building footprints, land use — geoJSON-
+  exportable, tokenless, UAE/Abu Dhabi open-data license (attribution).
+- **OFFICIAL/PUBLIC (SCAD):** population at district grain (tabular, join by name/ID).
+- **DERIVED:** service-area/accessibility from official roads; community-grain demand disaggregated from
+  SCAD district totals; assessment indicators from deterministic rules — reproducible, labeled.
+- **SYNTHETIC/DEMO:** project portfolio (curated, credible, NOT 219/139), strategic-theme mapping,
+  exhibition-only attributes — `IS_DEMO`, under the decision-support disclaimer.
+
+## 2. Frozen-snapshot feasibility — **YES (conditional)**
+AD-SDI geoJSON (paginated/AOI-clipped) + SCAD tabular + OSM/Overture GeoJSON + our synthetic/derived
+layers freeze into one sanitized event snapshot. Conditions: (C1) written ADDA/AD-SDI confirmation the
+OpenData service may be extracted+bundled offline; (C2) confirm SCAD Open Data Policy license; (C3) ship
+required attributions in-UI (© OpenStreetMap contributors / Overture / AD-SDI / SCAD).
+
+## 3. Confirmed 3D architecture
+Connected default = tokenless Esri 3D Buildings SceneLayer (CORS-open). Hard-offline guarantee =
+**own-built extruded footprints** from AD-SDI Building(353) / Overture, served locally (no Esri permission
+needed). No browser-direct `.slpk`. Dark ground + muted grey massing = the premium cinematic look without
+a photoreal-basemap key dependency.
+
+## 4. School-simulation feasibility — **YES**
+Khalifa City has real schools + road network + boundaries (OFFICIAL/PUBLIC). Proposed school is
+hypothetical/demo by design. Service areas, underserved, accessibility & KPI deltas are DERIVED
+(deterministic, precomputed). Population/demand is OFFICIAL(district)→DERIVED(community), labeled, never
+"official ADPIC analysis". Credible, non-misrepresenting substitutes confirmed — no fabricated official data.
+
+## 5. Service-area approach
+Precompute accessibility/service-area polygons deterministically from the official AD-SDI road network and
+bake into the frozen snapshot (exhibition reliability). Live ArcGIS routing REST = optional enhancement,
+off the critical path (needs credentials/credits — WORK-INT-9/DEP-8).
+
+## 6. Remaining external dependencies
+- Esri 3D Buildings service (connected default) — tokenless/CORS-open; offline handled by the own-built floor.
+- `DEP-ESRI-OFFLINE-LICENSE` — clip/re-host of Esri's hosted layer UNRESOLVED (avoided by the floor).
+- AD-SDI + SCAD offline-bundling written confirmation (C1/C2). OSM/Overture attribution (C3).
+- Live LLM — NOT a dependency (templates-first, WORK-DEC-8).
+
+## 7. Al Reem final recommendation — **GO, hardware-gated**
+Al Reem is the recommended cinematic Explore opening (dense tower massing, 60 FPS dev-Mac steady-state).
+Khalifa City = guaranteed Evaluate/Simulate spine. Yas = fallback only. **Final acceptance remains gated by
+OQ-10/OQ-11** (event-hardware validation, incl. FPS during fly-to/interaction on actual/equivalent hardware).
+Dev-hardware result is preliminary, not exhibition acceptance.
+
+## 8. Blockers / conditions carried into later stages
+- **Conditions to clear (owner/legal):** C1 AD-SDI offline-bundling confirmation · C2 SCAD license
+  confirmation · C3 UI attributions.
+- **Open OQs:** OQ-1/2 (public-attribute allowlist + data approver — governs exposed fields, incl. which
+  AD-SDI school attributes are shown) · OQ-3/4 (methodology/claim approver + final business owner) ·
+  OQ-7/8 (LLM allowlist + security/AI approver, only if live LLM later) · OQ-10/11 (hardware owner + specs).
+- **Design guardrails:** provenance labels (OFFICIAL/PUBLIC · DERIVED · SYNTHETIC/DEMO) surfaced so demo↔
+  real swap needs no redesign; disclaimer persistent; AI explains not approves; demo data `IS_DEMO`.
+
+**Recommendation: PASS WITH CONDITIONS.** Proceed to Stage 1.2 (3D shell + Explore) ONLY on the owner's
+go; C1–C3 must close before the exhibition-build commit (not before Stage 1.2). Stage 1.1 remains at the
+owner review gate.

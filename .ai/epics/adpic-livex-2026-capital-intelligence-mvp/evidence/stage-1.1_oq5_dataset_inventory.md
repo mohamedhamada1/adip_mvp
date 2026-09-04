@@ -35,10 +35,29 @@ provenance, freshness, and freeze/export feasibility are being verified, not ass
   = `DEP-ESRI-OFFLINE-LICENSE` UNRESOLVED. Own-built extruded footprints (from AD-SDI Building 353 /
   Overture) are the offline floor needing no Esri permission.
 
-## Pending (research subagent in progress)
-- SCAD population/census spatial granularity + reuse license.
-- OSM (ODbL) / Overture (ODbL/CDLA) offline-redistribution + attribution obligations.
-- AD-SDI open-data license terms (redistribution/offline).
+## Licensing / redistribution — VERIFIED (research, 2026-09-04)
+- **AD-SDI OpenData** (`.../agspublish/rest/services/OpenData/ADSDI_OpenData/MapServer`, ArcGIS Server
+  10.91, tokenless): governing terms are the **Abu Dhabi Open Data Platform license** (data.abudhabi,
+  "UAE Federal Open Data License") — **reuse, modification, redistribution & commercial use permitted
+  WITH ATTRIBUTION**, excludes logos/trademarks, non-misrepresentation. Districts layer confirms
+  **`KHALIFA CITY` and `AL REEM ISLAND`** by name. Export = geoJSON per-layer `query` (no server Extract;
+  bulk layers need pagination/envelope-clip, maxRecordCount 2000). **Districts `POPULATION` is NULL → use
+  SCAD for population.** ⚠️ **Residual condition:** the license is NOT machine-attached to the OpenData
+  service; get a **one-line written confirmation from ADDA/AD-SDI** that this service may be extracted +
+  bundled offline before the exhibition build.
+- **SCAD** (population): Census 2023 / 2024 estimate; published at **region/district** granularity
+  (community-level population not confirmed). Delivery is **tabular (CSV/Excel), not spatial** → join to
+  AD-SDI district geometry by name/ID. Open Data Policy exists; ⚠️ **confirm the SCAD license PDF** permits
+  offline bundling. Community-grain demand for the simulator will likely be a **DERIVED** disaggregation
+  of district population → labeled derived/synthetic, never "official ADPIC population analysis".
+- **OpenStreetMap** = **ODbL 1.0**: offline bundling OK; **attribution "© OpenStreetMap contributors"**;
+  share-alike binds the shipped DATA extract (keep it ODbL), NOT the app UI. Good roads/buildings; school
+  POI completeness unverified → AD-SDI schools remain authoritative.
+- **Overture** = buildings/transportation/divisions **ODbL**, places **CDLA-Permissive**: offline-
+  redistributable with attribution ("© OpenStreetMap contributors, Overture Maps Foundation"); GeoJSON
+  export clipped to bbox via CLI — ideal for the two AOIs / the extruded-footprint floor.
+- **Attribution obligation (build task):** the app must show "© OpenStreetMap contributors" (if OSM/
+  Overture ODbL data ships), Overture attribution, and AD-SDI/SCAD attribution. Track as a UI requirement.
 
 ---
 
@@ -58,10 +77,12 @@ bilingual names. Completeness: AOIs present (Reem confirmed; exact Khalifa City 
 Suitability: high. Sanitization: none (public boundaries). Missing: none material. Synthetic: no.
 Freezable: yes (geoJSON export) **subject to license confirmation**.
 
-### D4 — Population / demand — **DERIVED / SYNTHETIC-DEMO** (SCAD official where granular; else labeled synthetic)
-Prefer SCAD official statistics where spatially granular enough (PENDING granularity/licensing check). If
-the spatial demand grain the simulator needs is unavailable → a **derived/synthetic demonstration demand
-model** is approved, **explicitly NOT official ADPIC population analysis** (owner), `IS_DEMO`. Freezable: yes.
+### D4 — Population / demand — **OFFICIAL/PUBLIC (SCAD district totals) → DERIVED (community-grain demand)**
+SCAD publishes population at region/district grain (Census 2023 / 2024 est.), tabular (CSV/Excel), joined
+to AD-SDI district geometry by name/ID. The finer spatial demand grain the simulator needs is produced by
+**deterministic disaggregation** of official district totals = **DERIVED**, labeled, **explicitly NOT
+official ADPIC population analysis** (owner, WORK); `IS_DEMO` where synthetic. Freezable: yes. Condition:
+confirm SCAD license permits offline bundling.
 
 ### D5 — Existing facilities (esp. schools) — **OFFICIAL/PUBLIC** (AD-SDI), licensing PENDING
 Source: AD-SDI Public/Private/Charter Schools + Nurseries + Clinics. 212 public schools; 5 in Khalifa
@@ -91,7 +112,9 @@ Deterministic + reproducible (WORK-BR-3). Freezable: yes.
   demand model, never represented as official ADPIC analysis. ⇒ credible non-misrepresenting substitutes
   ARE possible; no fabricated "official" data required.
 
-## Snapshot-freeze feasibility (preliminary)
-Technically YES — AD-SDI supports geoJSON export; synthetic/derived layers are ours to freeze. **Gating
-condition: confirm AD-SDI (and OSM/Overture/SCAD) licenses permit export + offline redistribution for a
-public exhibition.** Final PASS/CONDITIONS depends on that confirmation (research in progress).
+## Snapshot-freeze feasibility — YES, with conditions
+Technically confirmed: AD-SDI geoJSON export (paginated/envelope-clipped), SCAD tabular join, OSM/Overture
+GeoJSON export; synthetic/derived layers are ours to freeze. Licenses permit offline redistribution WITH
+ATTRIBUTION (Abu Dhabi/UAE open-data license; ODbL for OSM/Overture data extracts). **Conditions:**
+(1) one-line written ADDA/AD-SDI confirmation the OpenData service may be extracted+bundled offline;
+(2) confirm the SCAD Open Data Policy license; (3) implement required attributions in the UI.
