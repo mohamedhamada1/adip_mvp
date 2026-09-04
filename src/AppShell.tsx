@@ -6,6 +6,9 @@ import { AoiSwitcher } from "./ui/AoiSwitcher";
 import { Attribution } from "./ui/Attribution";
 import { Assessment } from "./ui/Assessment";
 import { Simulator } from "./ui/Simulator";
+import { AskAdpicAi } from "./ui/AskAdpicAi";
+import { FallbackDemo } from "./ui/FallbackDemo";
+import { ProjectCard } from "./ui/ProjectCard";
 import { SceneController } from "./scene/sceneController";
 import type { SceneApi } from "./scene/sceneApi";
 import { SPINE_AOI } from "./scene/aoi";
@@ -13,6 +16,9 @@ import { computeKpis } from "./data/kpis";
 import { projectsForAoi } from "./data/portfolio.demo";
 import { filterProjects, toggleSector } from "./data/filters";
 import { scoreProject } from "./assessment/scoringEngine";
+import { assembleContext } from "./ai/context";
+import type { AllowlistedAction } from "./ai/actions";
+import { preloadFrozenData, isSafeMode, setSafeMode } from "./hardening/safeMode";
 import type { AoiId, ProjectRecord, Sector } from "./data/types";
 
 /**
@@ -23,11 +29,16 @@ import type { AoiId, ProjectRecord, Sector } from "./data/types";
  */
 export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
   const [started, setStarted] = useState(false);
-  const [view, setView] = useState<"explore" | "evaluate" | "simulate">("explore");
+  const [view, setView] = useState<"explore" | "evaluate" | "simulate" | "fallback">("explore");
   const [activeAoi, setActiveAoi] = useState<AoiId>(SPINE_AOI);
   const [activeSectors, setActiveSectors] = useState<Set<Sector>>(new Set());
   const [selected, setSelected] = useState<ProjectRecord | null>(null);
   const [degraded, setDegraded] = useState(false);
+  const [askOpen, setAskOpen] = useState(false);
+  const [safe, setSafe] = useState(isSafeMode());
+
+  // Exhibition hardening: warm the frozen in-bundle data once, so the scripted journey has no first-use latency.
+  useEffect(() => { preloadFrozenData(); }, []);
 
   const sceneDivRef = useRef<HTMLDivElement | null>(null);
   const controllerRef = useRef<SceneController | null>(null);
@@ -63,6 +74,18 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
   const visible = useMemo(() => filterProjects(projectsForAoi(activeAoi), activeSectors), [activeAoi, activeSectors]);
   const kpis = useMemo(() => computeKpis(visible), [visible]);
   const assessment = useMemo(() => (selected ? scoreProject(selected) : null), [selected]);
+  const aiContext = useMemo(() => assembleContext(activeAoi, selected ?? undefined, assessment ?? undefined), [activeAoi, selected, assessment]);
+
+  function onAiAction(a: AllowlistedAction) {
+    switch (a.kind) {
+      case "focus-project": if (selected) controllerRef.current?.focusProject(selected); break;
+      case "open-assessment": if (selected) setView("evaluate"); break;
+      case "open-simulator": setView("simulate"); break;
+      case "show-underserved": setView("simulate"); break;
+    }
+    setAskOpen(false);
+  }
+  function toggleSafe() { const n = !safe; setSafe(n); setSafeMode(n); }
 
   if (!started) return <Hero onStart={() => setStarted(true)} />;
 
@@ -84,6 +107,12 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
                   Simulate liveability impact →
                 </button>
               )}
+              <button type="button" onClick={toggleSafe} aria-pressed={safe} title="Deterministic offline/fallback mode" style={{ padding: "8px 12px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: safe ? "var(--accent-soft)" : "var(--bg-2)", color: safe ? "var(--good)" : "var(--text-2)", cursor: "pointer", fontSize: "13px" }}>
+                {safe ? "● Safe mode" : "○ Safe mode"}
+              </button>
+              <button type="button" onClick={() => setView("fallback")} style={{ padding: "8px 12px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--text-2)", cursor: "pointer", fontSize: "13px" }}>
+                Fallback
+              </button>
               <AoiSwitcher active={activeAoi} onSwitch={switchAoi} />
             </div>
           </div>
@@ -97,7 +126,12 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
           )}
           <div style={{ flex: 1 }} />
           <div style={{ padding: "var(--space-3)", pointerEvents: "auto" }}>
-            <ProjectPanel projects={visible} selected={selected} onSelect={selectProject} onEvaluate={() => setView("evaluate")} />
+            <div style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-end", flexWrap: "wrap" }}>
+              <ProjectPanel projects={visible} selected={selected} onSelect={selectProject} />
+              {selected && (
+                <ProjectCard project={selected} onEvaluate={() => setView("evaluate")} onSimulate={activeAoi === "khalifa" ? () => setView("simulate") : undefined} />
+              )}
+            </div>
           </div>
           <div style={{ pointerEvents: "auto" }}>
             <KpiStrip kpis={kpis} />
@@ -111,26 +145,39 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
       )}
 
       {view === "simulate" && <Simulator onBack={() => setView("explore")} />}
+
+      {view === "fallback" && <FallbackDemo onBack={() => setView("explore")} />}
+
+      {/* Ask ADPIC AI — cross-cutting overlay, available across Explore/Evaluate/Simulate (not a route) */}
+      {view !== "fallback" && (
+        <button type="button" onClick={() => setAskOpen((v) => !v)} aria-label="Ask ADPIC AI"
+          style={{ position: "absolute", right: "var(--space-3)", top: "var(--space-4)", padding: "10px 16px", borderRadius: "999px", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--accent-2)", cursor: "pointer", fontWeight: 600, fontSize: "13px" }}>
+          Ask ADPIC AI
+        </button>
+      )}
+      {askOpen && view !== "fallback" && (
+        <AskAdpicAi ctx={aiContext} onAction={onAiAction} onClose={() => setAskOpen(false)} />
+      )}
     </div>
   );
 }
 
-function ProjectPanel({ projects, selected, onSelect, onEvaluate }: { projects: ProjectRecord[]; selected: ProjectRecord | null; onSelect: (p: ProjectRecord) => void; onEvaluate: () => void }) {
+function ProjectPanel({ projects, selected, onSelect }: { projects: ProjectRecord[]; selected: ProjectRecord | null; onSelect: (p: ProjectRecord) => void }) {
   return (
-    <div style={{ maxWidth: "34ch", background: "var(--bg-1)", border: "1px solid var(--stroke)", borderRadius: "var(--radius-2)", padding: "var(--space-2)" }}>
-      <div style={{ color: "var(--text-2)", fontSize: "12px", marginBottom: "6px" }}>Projects (select to focus)</div>
-      <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-        {projects.slice(0, 6).map((p) => (
-          <button key={p.id} type="button" onClick={() => onSelect(p)} style={{ textAlign: "left", background: selected?.id === p.id ? "var(--accent-soft)" : "transparent", border: "none", color: "var(--text-1)", cursor: "pointer", padding: "6px 8px", borderRadius: "var(--radius-1)", fontSize: "13px" }}>
-            {p.nameEn} · {p.sector}
-          </button>
-        ))}
+    <div style={{ maxWidth: "30ch", background: "var(--bg-1)", border: "1px solid var(--stroke)", borderRadius: "var(--radius-2)", padding: "var(--space-2)" }}>
+      <div style={{ color: "var(--text-2)", fontSize: "12px", marginBottom: "6px" }}>Projects — select to focus</div>
+      <div style={{ display: "flex", flexDirection: "column", gap: "4px", maxHeight: "220px", overflow: "auto" }}>
+        {projects.slice(0, 8).map((p) => {
+          const on = selected?.id === p.id;
+          return (
+            <button key={p.id} type="button" onClick={() => onSelect(p)} aria-pressed={on}
+              style={{ textAlign: "left", display: "flex", justifyContent: "space-between", gap: "8px", background: on ? "var(--accent-soft)" : "transparent", border: on ? "1px solid var(--accent)" : "1px solid transparent", color: on ? "var(--text-0)" : "var(--text-1)", cursor: "pointer", padding: "8px 10px", borderRadius: "var(--radius-1)", fontSize: "13px" }}>
+              <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{p.nameEn}</span>
+              <span style={{ color: "var(--text-2)", fontSize: "11px", whiteSpace: "nowrap" }}>{p.sector}</span>
+            </button>
+          );
+        })}
       </div>
-      {selected && (
-        <button type="button" onClick={onEvaluate} style={{ marginTop: "var(--space-2)", width: "100%", padding: "10px", borderRadius: "var(--radius-1)", border: "none", background: "var(--accent)", color: "var(--text-0)", fontWeight: 600, cursor: "pointer" }}>
-          Evaluate this investment →
-        </button>
-      )}
     </div>
   );
 }

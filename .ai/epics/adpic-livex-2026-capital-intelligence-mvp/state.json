@@ -17,7 +17,7 @@
   },
   "mainSha": "e20d63508fbe66c4a6d44b238e2002167fdd7395",
   "branch": "main",
-  "currentStage": "1.4",
+  "currentStage": "1.5",
   "nextAction": null,
   "blockers": [],
   "dependencies": [],
@@ -86,7 +86,7 @@
       }
     },
     "1.5": {
-      "lifecycle": "planned"
+      "lifecycle": "in_progress"
     }
   }
 }

@@ -20,17 +20,28 @@ export function KpiStrip({ kpis }: { kpis: Kpis }) {
       aria-label="Portfolio indicators"
       style={{
         display: "flex",
-        gap: "var(--space-4)",
+        alignItems: "stretch",
+        gap: 0,
         padding: "var(--space-2) var(--space-3)",
-        background: "linear-gradient(180deg, transparent, var(--bg-0))",
+        borderTop: "1px solid var(--stroke)",
+        background: "linear-gradient(180deg, rgba(11,18,32,0.75), var(--bg-0))",
+        backdropFilter: "blur(2px)",
       }}
     >
-      {cells.map((c) => (
-        <div key={c.label} style={{ display: "flex", flexDirection: "column" }}>
-          <span data-testid="kpi-value" style={{ fontSize: "var(--kpi-size)", fontWeight: 700, color: "var(--text-0)" }}>
+      {cells.map((c, i) => (
+        <div
+          key={c.label}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "2px var(--space-4)",
+            borderLeft: i === 0 ? "none" : "1px solid var(--stroke)",
+          }}
+        >
+          <span data-testid="kpi-value" style={{ fontSize: "var(--kpi-size)", fontWeight: 800, color: "var(--text-0)", lineHeight: 1.05 }}>
             {c.value}
           </span>
-          <span style={{ fontSize: "12px", color: "var(--text-2)", letterSpacing: "0.04em" }}>{c.label}</span>
+          <span style={{ fontSize: "11px", color: "var(--text-2)", letterSpacing: "0.08em", textTransform: "uppercase", marginTop: "4px" }}>{c.label}</span>
         </div>
       ))}
     </div>
