@@ -3,8 +3,8 @@
   "certifier": "ai-certify-stage-readiness.sh",
   "epic": "adpic-livex-2026-capital-intelligence-mvp",
   "stage": "1.2",
-  "generated_at_utc": "2026-09-04T12:33:05Z",
-  "determinism_key": "cbf343c797ac5fb398a1183ec1c5de0c85b9b8ef77ecb1a30edc4e66f5207f3b",
+  "generated_at_utc": "2026-09-04T12:40:09Z",
+  "determinism_key": "c678d74252d1352c927d3b026eb8e7ea13fa310b986a6304923c313e0dd11c52",
   "declared_limits": [
     {
       "id": "L-SEM-1",
@@ -148,7 +148,7 @@
   "traceability": {
     "verdict": "PASS",
     "matrix_path": ".ai/epics/adpic-livex-2026-capital-intelligence-mvp/evidence/traceability_1.2.yaml",
-    "matrix_sha256": "ed687b2db2425da6fe609ebf352b8ceb28dd0a37fbb0e213157035afa83727ea",
+    "matrix_sha256": "d6f54aadeaab142a895eb91a0188bb640e05d44ec96fa43b79c876979df48acd",
     "counts": {
       "roadmap_requirements": 5,
       "acceptance_criteria": 5,
@@ -259,22 +259,22 @@
       "spec": {
         "path": ".ai/stages/1.2/spec.md",
         "section": null,
-        "sha256": "6dcc6db9fe4e308a3cf1137c6fbfaf71a363d2bd5af38fb359045db9d804bc45"
+        "sha256": "5375156a65d018cffc632b6e627dbc2802cbee1378bc151c22388e189f1af93a"
       },
       "plan": {
         "path": ".ai/stages/1.2/plan.md",
         "section": null,
-        "sha256": "2b9dd313c3b2982dcf5aa7eda2217bad1c2b17005e0ef1dbfd1d51197f8e0961"
+        "sha256": "0d1acf52508eff0a810c929d749a148fcc70808066cf63c5aa2502efce3e8cd0"
       },
       "test": {
         "path": ".ai/stages/1.2/plan.md",
         "section": "## Test plan",
-        "sha256": "48740dd25bc07de9ae0bd0a35e7638797e0de08dd17fecce332aa3840161a25c"
+        "sha256": "5a6235beb83e0b2f95e9cd249c2332c8baeb9de7b280c175093f1370d1c0f6ff"
       },
       "done": {
         "path": ".ai/stages/1.2/spec.md",
         "section": "## Success Proof",
-        "sha256": "5eba21a5b9326e734df9ef43450fb02f49de3287755ef4e93e67f1b50e300033"
+        "sha256": "88acb61322747b02b9833c753582d71d0dbb99088650b307695c05d4080e946d"
       }
     },
     "observed_state": {
@@ -287,7 +287,7 @@
           "done_criterion": "DC-1",
           "clause": "bash .ai/stages/1.2/verify.sh AC-1",
           "observable": true,
-          "detail": "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9",
+          "detail": "runner bash on path .ai/stages/1.2/verify.sh@7400fdb7b27e",
           "head": {
             "kind": "executable",
             "target": "bash",
@@ -301,7 +301,7 @@
             "target": ".ai/stages/1.2/verify.sh",
             "inside_root": true,
             "is_file": true,
-            "sha256": "f9534520a8e9ae6582339810628cf9d6da6c4fc836d4751aac3766adce531594",
+            "sha256": "7400fdb7b27e602159d116990fe1ca782d1240c8288ce8400f64da55a1e12a30",
             "path_dependent": false
           }
         },
@@ -309,7 +309,7 @@
           "done_criterion": "DC-2",
           "clause": "bash .ai/stages/1.2/verify.sh AC-2",
           "observable": true,
-          "detail": "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9",
+          "detail": "runner bash on path .ai/stages/1.2/verify.sh@7400fdb7b27e",
           "head": {
             "kind": "executable",
             "target": "bash",
@@ -323,7 +323,7 @@
             "target": ".ai/stages/1.2/verify.sh",
             "inside_root": true,
             "is_file": true,
-            "sha256": "f9534520a8e9ae6582339810628cf9d6da6c4fc836d4751aac3766adce531594",
+            "sha256": "7400fdb7b27e602159d116990fe1ca782d1240c8288ce8400f64da55a1e12a30",
             "path_dependent": false
           }
         },
@@ -331,7 +331,7 @@
           "done_criterion": "DC-3",
           "clause": "bash .ai/stages/1.2/verify.sh AC-3",
           "observable": true,
-          "detail": "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9",
+          "detail": "runner bash on path .ai/stages/1.2/verify.sh@7400fdb7b27e",
           "head": {
             "kind": "executable",
             "target": "bash",
@@ -345,7 +345,7 @@
             "target": ".ai/stages/1.2/verify.sh",
             "inside_root": true,
             "is_file": true,
-            "sha256": "f9534520a8e9ae6582339810628cf9d6da6c4fc836d4751aac3766adce531594",
+            "sha256": "7400fdb7b27e602159d116990fe1ca782d1240c8288ce8400f64da55a1e12a30",
             "path_dependent": false
           }
         },
@@ -353,7 +353,7 @@
           "done_criterion": "DC-4",
           "clause": "bash .ai/stages/1.2/verify.sh AC-4",
           "observable": true,
-          "detail": "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9",
+          "detail": "runner bash on path .ai/stages/1.2/verify.sh@7400fdb7b27e",
           "head": {
             "kind": "executable",
             "target": "bash",
@@ -367,7 +367,7 @@
             "target": ".ai/stages/1.2/verify.sh",
             "inside_root": true,
             "is_file": true,
-            "sha256": "f9534520a8e9ae6582339810628cf9d6da6c4fc836d4751aac3766adce531594",
+            "sha256": "7400fdb7b27e602159d116990fe1ca782d1240c8288ce8400f64da55a1e12a30",
             "path_dependent": false
           }
         },
@@ -375,7 +375,7 @@
           "done_criterion": "DC-5",
           "clause": "bash .ai/stages/1.2/verify.sh AC-5",
           "observable": true,
-          "detail": "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9",
+          "detail": "runner bash on path .ai/stages/1.2/verify.sh@7400fdb7b27e",
           "head": {
             "kind": "executable",
             "target": "bash",
@@ -389,7 +389,7 @@
             "target": ".ai/stages/1.2/verify.sh",
             "inside_root": true,
             "is_file": true,
-            "sha256": "f9534520a8e9ae6582339810628cf9d6da6c4fc836d4751aac3766adce531594",
+            "sha256": "7400fdb7b27e602159d116990fe1ca782d1240c8288ce8400f64da55a1e12a30",
             "path_dependent": false
           }
         }
@@ -413,17 +413,17 @@
       "reviewer": "reviewer_a",
       "role_flag": "--gemini-review",
       "stage": "independent_roadmap_review",
-      "payload_sha256": "bee6b6d60210b3d997fff642313657eed83618a2d5676a16fe81f35b417c8f68",
+      "payload_sha256": "5ebc3e316a8866c452bfc24f2930cc286131a9b61db14be1065163713ff49593",
       "payload_bytes": 11586,
-      "probe_lines_checked": 254,
+      "probe_lines_checked": 259,
       "downstream_leakage": false,
       "leaked_samples": [],
       "payload_captured": true,
       "attestation_valid": true,
-      "attestation_detail": "254 probe lines searched in 11586 captured payload bytes",
+      "attestation_detail": "259 probe lines searched in 11586 captured payload bytes",
       "status": "COMPLETED",
       "verdict": "PASS",
-      "response_sha256": "d1ebfaf003d80eb06327c893486319bea4253c61b39175eb60c0f70fb0c40ae7",
+      "response_sha256": "7488623aa3bb9edda642988288e1f07fb7c55a9cd75b75540ccfe84b06ad298c",
       "advisory": true
     },
     "reviewers": [
@@ -431,8 +431,8 @@
         "reviewer": "semantic_reviewer",
         "role_flag": "repo-grounded-claude-two-lens",
         "stage": "semantic_readiness",
-        "response_sha256": "06994538a0f3a85dccc008a25eaaf0c8a776056162dd5b0ff9ae3304cd94f18f",
-        "response_bytes": 5926,
+        "response_sha256": "87b9b7465a7ab1b49cd45f7a07ede12014ee3832ba749eea26792248583a2803",
+        "response_bytes": 8690,
         "status": "COMPLETED",
         "verdict": "CONCERN",
         "lens_a_verdict": "CONCERN",
@@ -440,20 +440,25 @@
         "lens_b_advisory": true,
         "overall_verdict": "CONCERN",
         "findings": [
-          "**Verification backbone missing:** All five DCs (`spec.md:356-370`) and every `done_criteria` in `traceability_1.2.yaml:119-149` (`observable: true`, `runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9`) require `bash .ai/stages/1.2/verify.sh AC-n`, but no `verify.sh` exists in `.ai/stages/1.2/` and it is not listed under \"Files to Create\" (`spec.md:86-98`) nor authored by any plan step. A Builder must invent what each `verify.sh AC-n` asserts; the \"observable: true\" traceability claim is presently unbacked.",
-          "**TEST-3 proves less than AC-3 asserts (green-while-intent-absent):** AC-3 requires \"camera + layers swap on the mounted view\" (`spec.md:59`), but TEST-3 only checks \"the app root component instance is preserved \u2026 fails_when: switching AOI remounts the root or reloads the document\" (`plan.md:143-145`). A Builder who disposes and fully re-creates the `SceneView` on each switch (re-adding all layers, re-querying) keeps the React root mounted \u2192 TEST-3 green, yet the intended in-place camera/layer swap is absent and the presenter sees a scene re-initialization flash.",
-          "**TEST-5 does not prove required attribution content:** AC-5/INV-attribution-present require the C3 source attributions (\u00a9 OpenStreetMap contributors / Overture / AD-SDI / SCAD per `architecture.md:596`), but TEST-5 only asserts \"an `Attribution` element renders\" (`plan.md:149-151`). An empty/generic `<Attribution/>` passes while the licensing obligation is unmet."
+          "Spec preserves roadmap/contract intent well and does not over-expand scope (Explore-only, Assessment/Simulate/Ask-AI explicitly deferred; matches epic \u00a7 Stage 1.2 \"Not Doing\"). Plan tasks T-1\u2026T-5 each genuinely map to their AC.",
+          "FORCED INVENTION (criterion 6): AC-5 / INV-no-mockup-numbers requires \"no hard-coded screenshot numbers (no literal 139/219/AED 85B)\" and \"KPI/count values in `src/ui/` are computed, not typed.\" The only mechanical enforcement of the *computed-not-literal* half is a claimed unit test (TEST-5) with **no specified mechanism**. A builder has no defined way to make TEST-5 fail on a typed `219`/`139`, so must invent the enforcement for the package's flagship invariant \u2014 and a good-faith-but-vacuous TEST-5 stays green.",
+          "Tests mostly PROVE behaviour, not just execute: TEST-3 (SceneView constructed exactly once across an AOI switch) and TEST-2 (filter toggles markers, select\u2192goTo) carry real negative controls. But the gating `verify.sh` checks are coarser than the ACs they gate \u2014 AC-4's degrade is satisfied by the literal string `degrade` (even in a comment); \"no live LLM in `src/`\" from the AC-4 text has no mechanical check anywhere. TEST-4 carries the real weight; the shell gate does not.",
+          "Concrete green-while-behaviour-absent scenario: `<div>{219}</div>` in `KpiStrip.tsx` (the exact WORK-RISK-5 mockup count) passes `verify.sh AC-5` \u2014 provenance files present, `IS_DEMO` present, `Attribution` present, no \"AED 85B\" token \u2014 and passes a vacuous TEST-5. Required behaviour (values sourced only from the computed dataset aggregate) is absent, gates green.",
+          "Done-Criteria would otherwise demonstrate success post-implementation (build + observable greps), and the matrix is internally sound."
         ],
         "lens_a_findings": [
-          "**Verification backbone missing:** All five DCs (`spec.md:356-370`) and every `done_criteria` in `traceability_1.2.yaml:119-149` (`observable: true`, `runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9`) require `bash .ai/stages/1.2/verify.sh AC-n`, but no `verify.sh` exists in `.ai/stages/1.2/` and it is not listed under \"Files to Create\" (`spec.md:86-98`) nor authored by any plan step. A Builder must invent what each `verify.sh AC-n` asserts; the \"observable: true\" traceability claim is presently unbacked.",
-          "**TEST-3 proves less than AC-3 asserts (green-while-intent-absent):** AC-3 requires \"camera + layers swap on the mounted view\" (`spec.md:59`), but TEST-3 only checks \"the app root component instance is preserved \u2026 fails_when: switching AOI remounts the root or reloads the document\" (`plan.md:143-145`). A Builder who disposes and fully re-creates the `SceneView` on each switch (re-adding all layers, re-querying) keeps the React root mounted \u2192 TEST-3 green, yet the intended in-place camera/layer swap is absent and the presenter sees a scene re-initialization flash.",
-          "**TEST-5 does not prove required attribution content:** AC-5/INV-attribution-present require the C3 source attributions (\u00a9 OpenStreetMap contributors / Overture / AD-SDI / SCAD per `architecture.md:596`), but TEST-5 only asserts \"an `Attribution` element renders\" (`plan.md:149-151`). An empty/generic `<Attribution/>` passes while the licensing obligation is unmet."
+          "Spec preserves roadmap/contract intent well and does not over-expand scope (Explore-only, Assessment/Simulate/Ask-AI explicitly deferred; matches epic \u00a7 Stage 1.2 \"Not Doing\"). Plan tasks T-1\u2026T-5 each genuinely map to their AC.",
+          "FORCED INVENTION (criterion 6): AC-5 / INV-no-mockup-numbers requires \"no hard-coded screenshot numbers (no literal 139/219/AED 85B)\" and \"KPI/count values in `src/ui/` are computed, not typed.\" The only mechanical enforcement of the *computed-not-literal* half is a claimed unit test (TEST-5) with **no specified mechanism**. A builder has no defined way to make TEST-5 fail on a typed `219`/`139`, so must invent the enforcement for the package's flagship invariant \u2014 and a good-faith-but-vacuous TEST-5 stays green.",
+          "Tests mostly PROVE behaviour, not just execute: TEST-3 (SceneView constructed exactly once across an AOI switch) and TEST-2 (filter toggles markers, select\u2192goTo) carry real negative controls. But the gating `verify.sh` checks are coarser than the ACs they gate \u2014 AC-4's degrade is satisfied by the literal string `degrade` (even in a comment); \"no live LLM in `src/`\" from the AC-4 text has no mechanical check anywhere. TEST-4 carries the real weight; the shell gate does not.",
+          "Concrete green-while-behaviour-absent scenario: `<div>{219}</div>` in `KpiStrip.tsx` (the exact WORK-RISK-5 mockup count) passes `verify.sh AC-5` \u2014 provenance files present, `IS_DEMO` present, `Attribution` present, no \"AED 85B\" token \u2014 and passes a vacuous TEST-5. Required behaviour (values sourced only from the computed dataset aggregate) is absent, gates green.",
+          "Done-Criteria would otherwise demonstrate success post-implementation (build + observable greps), and the matrix is internally sound."
         ],
         "lens_b_findings": [
-          "**AOI-switch integrity gap (same as Lens A TEST-3):** the AC-3 invariant is \"swap on the mounted view,\" but nothing in tests or DCs asserts the `SceneView` instance (or its camera/layers) is preserved \u2014 only the React root. A conforming-by-letter build can tear down/rebuild the view per switch, satisfying WORK-NFR-3's literal \"no full application reload\" while breaking the authored `SceneRoot` execution semantics (`spec.md:314-319`).",
-          "**No-mockup-number guard is over-broad / non-deterministic:** the guard `grep -rnE '\\b(139|219)\\b|AED[ ]?85B' src/` (`spec.md:287`, `plan.md:92`) matches any standalone `139`/`219` \u2014 e.g. a legitimate camera `heading: 219` in `src/scene/aoi.ts` \u2014 and would falsely fail a correct build (or force the Builder to avoid valid values). It also does not cover other screenshot literals beyond these three, so a Builder could hard-code a different mockup number and stay green.",
-          "**Provenance guard scope narrower than invariant:** INV-provenance-tagged demands \"every dataset/field\" carry a tag, but TEST-5 checks only demo-portfolio records (`plan.md:149`); the AD-SDI `aoiBoundaries` dataset (OFFICIAL/PUBLIC) can ship untagged with the test green.",
-          "**Minor mis-citation (grounding, non-blocking):** AC-4 attributes \"no live LLM\" to WORK-NFR-5 (`spec.md:62`), but WORK-NFR-5 is connectivity-tolerance; the no-live-LLM rule is WORK-NFR-6/WORK-DEC-8. Both exist and are grounded, so this is a citation slip, not a missing requirement."
+          "MOCKUP-NUMBER GUARD SCOPING GAP (`verify.sh:32`, `spec.md:287-297`): the guard greps only `AED[ ]*85[ ]*B|\\b85B\\b`. That token catches the distinctive dashboard screenshot literal (fair), but the contract's *named* forbidden counts are **219 (Khalifa) / 139 (Al Reem)** \u2014 flagged as WORK-RISK-5 (MEDIUM) at `WORK\u2026FINAL.md:99,288,503,742,747` \u2014 and the guard deliberately excludes them. Failing path: a `219`/`139` literal rendered in `src/ui/` violates INV-no-mockup-numbers while `verify.sh AC-5` and TEST-5 stay green. Cheap remedy: scope a bare `\\b219\\b|\\b139\\b` grep to `src/ui/` display code, or specify TEST-5 to assert each rendered KPI equals the computed aggregate (dataset sized \u2260 219/139).",
+          "PROVENANCE GATE SKIPS FROZEN JSON (`verify.sh:27`): `check_data` iterates `find src/data -name '*.ts' ! -name 'provenance.ts'`, but plan Step 4 states AD-SDI boundaries are \"fetched/frozen to local JSON.\" A `src/data/aoiBoundaries.json` dataset falls entirely outside the `*.ts` scan, so the file-level provenance gate silently skips it \u2014 INV-provenance-tagged (\"every dataset/field\") is under-enforced for exactly the OFFICIAL/PUBLIC boundary data. TEST-5's prose claims record-level coverage across all sources, but again with no specified mechanism.",
+          "AC-3 no-reload: `verify.sh:20-22` enforces `new SceneView` appears exactly once in `src/` \u2014 a good proxy against per-switch re-instantiation, consistent with DC-3. Absence of a full reload (`location.reload`/anchor nav) is not checked by the shell gate; TEST-3's `fails_when` covers it non-vacuously, so this is acceptable but rests entirely on the test.",
+          "No authorization / IDOR / cross-tenant / money / settlement / concurrency / idempotency exposure exists to audit: this is a read-only single-user exhibition UI with no backend, no writes, and a frozen read-only dataset (Risk Surface: none, correctly declared). I could not construct a failing path in any of those classes because none applies.",
+          "Minor metadata inconsistencies (non-blocking, worth reconciling): Execution Model is `hybrid` in the roadmap projection vs `app_package` in the spec; `ui_reference_manifest.yaml` declares `ui_mode: \"native\"` for what the spec correctly calls a direct_ui React web app; and its one `required: true` primary reference has `approved: false` \u2014 verify whether the owner gate requires that approval before build rather than assuming it blocks."
         ]
       }
     ],
@@ -465,10 +470,11 @@
     "lens_b_advisory": {
       "verdict": "CONCERN",
       "findings": [
-        "**AOI-switch integrity gap (same as Lens A TEST-3):** the AC-3 invariant is \"swap on the mounted view,\" but nothing in tests or DCs asserts the `SceneView` instance (or its camera/layers) is preserved \u2014 only the React root. A conforming-by-letter build can tear down/rebuild the view per switch, satisfying WORK-NFR-3's literal \"no full application reload\" while breaking the authored `SceneRoot` execution semantics (`spec.md:314-319`).",
-        "**No-mockup-number guard is over-broad / non-deterministic:** the guard `grep -rnE '\\b(139|219)\\b|AED[ ]?85B' src/` (`spec.md:287`, `plan.md:92`) matches any standalone `139`/`219` \u2014 e.g. a legitimate camera `heading: 219` in `src/scene/aoi.ts` \u2014 and would falsely fail a correct build (or force the Builder to avoid valid values). It also does not cover other screenshot literals beyond these three, so a Builder could hard-code a different mockup number and stay green.",
-        "**Provenance guard scope narrower than invariant:** INV-provenance-tagged demands \"every dataset/field\" carry a tag, but TEST-5 checks only demo-portfolio records (`plan.md:149`); the AD-SDI `aoiBoundaries` dataset (OFFICIAL/PUBLIC) can ship untagged with the test green.",
-        "**Minor mis-citation (grounding, non-blocking):** AC-4 attributes \"no live LLM\" to WORK-NFR-5 (`spec.md:62`), but WORK-NFR-5 is connectivity-tolerance; the no-live-LLM rule is WORK-NFR-6/WORK-DEC-8. Both exist and are grounded, so this is a citation slip, not a missing requirement."
+        "MOCKUP-NUMBER GUARD SCOPING GAP (`verify.sh:32`, `spec.md:287-297`): the guard greps only `AED[ ]*85[ ]*B|\\b85B\\b`. That token catches the distinctive dashboard screenshot literal (fair), but the contract's *named* forbidden counts are **219 (Khalifa) / 139 (Al Reem)** \u2014 flagged as WORK-RISK-5 (MEDIUM) at `WORK\u2026FINAL.md:99,288,503,742,747` \u2014 and the guard deliberately excludes them. Failing path: a `219`/`139` literal rendered in `src/ui/` violates INV-no-mockup-numbers while `verify.sh AC-5` and TEST-5 stay green. Cheap remedy: scope a bare `\\b219\\b|\\b139\\b` grep to `src/ui/` display code, or specify TEST-5 to assert each rendered KPI equals the computed aggregate (dataset sized \u2260 219/139).",
+        "PROVENANCE GATE SKIPS FROZEN JSON (`verify.sh:27`): `check_data` iterates `find src/data -name '*.ts' ! -name 'provenance.ts'`, but plan Step 4 states AD-SDI boundaries are \"fetched/frozen to local JSON.\" A `src/data/aoiBoundaries.json` dataset falls entirely outside the `*.ts` scan, so the file-level provenance gate silently skips it \u2014 INV-provenance-tagged (\"every dataset/field\") is under-enforced for exactly the OFFICIAL/PUBLIC boundary data. TEST-5's prose claims record-level coverage across all sources, but again with no specified mechanism.",
+        "AC-3 no-reload: `verify.sh:20-22` enforces `new SceneView` appears exactly once in `src/` \u2014 a good proxy against per-switch re-instantiation, consistent with DC-3. Absence of a full reload (`location.reload`/anchor nav) is not checked by the shell gate; TEST-3's `fails_when` covers it non-vacuously, so this is acceptable but rests entirely on the test.",
+        "No authorization / IDOR / cross-tenant / money / settlement / concurrency / idempotency exposure exists to audit: this is a read-only single-user exhibition UI with no backend, no writes, and a frozen read-only dataset (Risk Surface: none, correctly declared). I could not construct a failing path in any of those classes because none applies.",
+        "Minor metadata inconsistencies (non-blocking, worth reconciling): Execution Model is `hybrid` in the roadmap projection vs `app_package` in the spec; `ui_reference_manifest.yaml` declares `ui_mode: \"native\"` for what the spec correctly calls a direct_ui React web app; and its one `required: true` primary reference has `approved: false` \u2014 verify whether the owner gate requires that approval before build rather than assuming it blocks."
       ],
       "note": "ADVISORY (phase-1): recorded + surfaced; does NOT block dispatch. Promote to blocking = add Lens B to the final_gate threshold (one line)."
     },
@@ -494,13 +500,13 @@
   },
   "section_seals": {
     "certifier": "e2c09ac91c419ad08a53d1eb645c524e9a0dcab4b8d7fb52cee77522723db47e",
-    "generated_at_utc": "3b7f76ddc0977a89490ca561f7ee1b021139ae47a1000ddb544a0f27d8f4c27b",
+    "generated_at_utc": "0a1180f5cf21d4fd12b2fdb7704cd58653d638a2c43d6a9bd37e80cfc9680c3a",
     "declared_limits": "a1cd0994e032074fe0ccea58c3480371e9abd98ca0bc8fb01c5508bfac7bd448",
     "inputs": "dc2df0b4d5512f9f4b12e43e423f604a1daf9fb252744cf4b00b4c07cbd168d3",
-    "traceability": "fb417f3af79fc7f388764b01658ef51cbfb1ec55bec476ead443cc7e2330626e",
-    "semantic_readiness": "78d93522434dfc072364e5fcb99bfceeaf67fa32e347b14f6272380a4e543d7b",
+    "traceability": "49440ef31b912d63aed3eda24bc9ab40813669a5d24f27c0dbbd7ad225790e8b",
+    "semantic_readiness": "a05f608d2afe1b91b1b58a7475704372c0ca29d75688dc1c83c895740034faa3",
     "final_gate": "0c74c4958995c0f48b7c8af6fa603a984e52c702912672395846a9cfc09405e9",
     "contract_binding": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
   },
-  "certificate_seal": "4d33f160be3af30c4170b96cfd549a1388ba3b27bea8acaab6db53d06585d369"
+  "certificate_seal": "a9f7e628252d3661753fc08d4c4dff51de82b14c0342d666a86626f3e9874d55"
 }

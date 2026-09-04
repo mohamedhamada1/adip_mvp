@@ -141,12 +141,12 @@ Greenfield — abandoning removes `src/` scaffold; no data/schema to revert.
 - TEST-2: Interaction test asserts a sector filter toggles visible markers and selecting a marker triggers a fly-to/emphasis call.
   proves: AC-2
   fails_when: filter change leaves the marker set unchanged, or select does not call goTo.
-- TEST-3: AOI-switch test asserts the **`SceneView` instance is preserved** across a Khalifa↔Al Reem switch — the SceneView is constructed exactly once and the switch only updates its camera/layers (the app root is not remounted and the document does not reload).
+- TEST-3: AOI-switch test asserts the **`SceneView` instance is preserved** across a Khalifa↔Al Reem switch — the SceneView is constructed exactly once and the switch only updates its camera/layers (the app root is not remounted and there is no full-document-reload call such as `location.reload`/`location.href=`).
   proves: AC-3
-  fails_when: switching AOI constructs a new SceneView (or remounts the root / reloads the document) instead of updating the existing view.
+  fails_when: switching AOI constructs a new SceneView, remounts the root, or triggers a full document reload (`location.reload`/`location.href=`) instead of updating the existing view.
 - TEST-4: Degrade test asserts disabling Al Reem yields a coherent Khalifa-only state and a simulated 3D-layer load failure swaps to the degrade path without reload.
   proves: AC-4
   fails_when: disabling Al Reem crashes/blanks the app, or a layer failure forces a reload.
-- TEST-5: Data guard asserts **every dataset record across ALL sources in `src/data/**`** (synthetic portfolio AND AD-SDI-derived boundaries) carries a provenance tag (synthetic records also `IS_DEMO`), that KPI/count values in `src/ui/` are computed (no typed mockup literals) and no "AED 85B" token appears, and that an `Attribution` element renders.
+- TEST-5: Data guard asserts **every dataset module across ALL sources in `src/data/**` — both `.ts` and frozen `.json`** (synthetic portfolio AND AD-SDI-derived boundaries) carries a provenance tag (synthetic records also `IS_DEMO`), that KPI/count values are computed (no distinctive mockup budget literal `AED <n>B` appears in `src/`), and that an `Attribution` element renders.
   proves: AC-5
-  fails_when: any dataset record lacks a provenance tag, a synthetic record lacks `IS_DEMO`, a KPI/count is a typed mockup literal in `src/ui/` (or "AED 85B" appears), or no attribution renders.
+  fails_when: any dataset module (`.ts` or `.json`) lacks a provenance tag, a synthetic record lacks `IS_DEMO`, a mockup budget literal (`AED <n>B`) appears in `src/`, or no attribution renders.

@@ -18,20 +18,25 @@ check_explore(){ grep -rqiE 'KpiStrip' src/ && grep -rqiE 'Filters' src/ && grep
 check_switch(){ grep -rqiE 'AoiSwitcher' src/ || { say "AC-3: switcher missing"; return 1; }
   # SceneView must be constructed exactly once (swap on the mounted view, not re-instantiated per switch)
   local n; n=$(grep -rhoE 'new[[:space:]]+SceneView' src/ 2>/dev/null | wc -l | tr -d ' ')
-  [ "${n:-0}" = "1" ] && say "AC-3: AOI switcher present; SceneView constructed once (n=$n)" \
-    || { say "AC-3: SceneView constructed $n times (expected exactly 1 — swap on mounted view)"; return 1; }; }
+  [ "${n:-0}" = "1" ] || { say "AC-3: SceneView constructed $n times (expected exactly 1 — swap on mounted view)"; return 1; }
+  # AOI switching must NOT force a full document reload
+  ! grep -rnE 'location\.reload|location\.href[[:space:]]*=|window\.location[[:space:]]*=' src/ >/dev/null 2>&1 \
+    || { say "AC-3: full-reload call (location.reload/href=) present — switch must update the mounted view"; return 1; }
+  say "AC-3: AOI switcher present; SceneView constructed once (n=$n); no full-reload call"; }
 check_degrade(){ grep -rqiE 'reem.*(enabled|disable)|alReemEnabled|degrade' src/ 2>/dev/null \
   && say "AC-4: Al Reem degrade path present" || { say "AC-4: degrade path missing"; return 1; }; }
 check_data(){ [ -f src/data/provenance.ts ] || { say "AC-5: provenance.ts missing"; return 1; }
-  # every dataset module under src/data (excluding the type module) must reference a provenance tag
-  local missing=""; for f in $(find src/data -name '*.ts' ! -name 'provenance.ts' 2>/dev/null); do
+  # EVERY dataset module under src/data — .ts AND frozen .json (e.g. AD-SDI boundaries) — must carry a
+  # provenance tag; only the type module provenance.ts is exempt.
+  local missing=""; for f in $(find src/data \( -name '*.ts' -o -name '*.json' \) ! -name 'provenance.ts' 2>/dev/null); do
     grep -qE 'provenance|OFFICIAL_PUBLIC|DERIVED|SYNTHETIC_DEMO' "$f" || missing="$missing $f"; done
   [ -z "$missing" ] || { say "AC-5: datasets missing provenance tag:$missing"; return 1; }
   grep -rqE 'IS_DEMO|isDemo' src/data 2>/dev/null || { say "AC-5: synthetic records lack IS_DEMO"; return 1; }
-  # scoped, deterministic mockup guard: the specific token only; NOT bare 139/219
-  ! grep -rnE 'AED[ ]*85[ ]*B|\b85B\b' src/ >/dev/null 2>&1 || { say "AC-5: mockup token 'AED 85B' present"; return 1; }
+  # deterministic mockup guard: distinctive budget literals (AED <n>B, incl. 85B/1.42B) — NOT bare 139/219
+  ! grep -rnE 'AED[ ]*[0-9]+([.][0-9]+)?[ ]*B|\b[0-9]+([.][0-9]+)?B\b' src/ >/dev/null 2>&1 \
+    || { say "AC-5: mockup budget literal (AED <n>B) present in src/ — KPIs must be computed"; return 1; }
   grep -rqiE 'Attribution' src/ || { say "AC-5: attribution element missing"; return 1; }
-  say "AC-5: all datasets provenance-tagged, IS_DEMO present, no mockup token, attribution present"; }
+  say "AC-5: all datasets (.ts+.json) provenance-tagged, IS_DEMO present, no mockup budget literal, attribution present"; }
 
 case "$AC" in
   AC-1) check_build && check_scene ;;

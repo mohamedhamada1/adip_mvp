@@ -333,6 +333,13 @@ None. No backend.
 
 ## Execution Model
 - **Model:** app_package
+> Reconciliation with the epic architecture (which classifies every stage's Execution Model as **`hybrid`**):
+> at the spec taxonomy (`app_package | engine_only | documentation`) this stage is `app_package` — it
+> creates application code (`src/`). It corresponds to the epic's `hybrid` because the stage also ships its
+> own verification tooling (`.ai/stages/1.2/verify.sh`). No contradiction: `app_package` is the spec-level
+> value; `hybrid` is the epic-level value covering app code + the stage's verify tooling.
+> (UI mode: the spec's `direct_ui` equals the auto-emitted `ui_reference_manifest.yaml` `ui_mode: native`
+> — i.e. native/direct components, not SDUI/Stac.)
 
 ## Ambiguity Rule
 - If a required real dataset is unavailable, use a clearly-tagged SYNTHETIC/DEMO or DERIVED substitute —
@@ -364,7 +371,7 @@ None. No backend.
 - DC-2: `src/` renders a KPI strip, sector filters, and selectable markers with fly-to/emphasis.
   demonstrates: AC-2
   verify: bash .ai/stages/1.2/verify.sh AC-2
-- DC-3: An AOI switcher swaps Khalifa/Al Reem by updating the camera/layers of the SAME persisted `SceneView` instance (SceneView constructed exactly once; not re-instantiated per switch), without remounting the app root.
+- DC-3: An AOI switcher swaps Khalifa/Al Reem by updating the camera/layers of the SAME persisted `SceneView` instance (SceneView constructed exactly once; not re-instantiated per switch), without remounting the app root and without any full-document-reload call (`location.reload` / `location.href=`).
   demonstrates: AC-3
   verify: bash .ai/stages/1.2/verify.sh AC-3
 - DC-4: Disabling the Al Reem opening leaves a coherent Khalifa-only experience and the scene degrades without reload.
