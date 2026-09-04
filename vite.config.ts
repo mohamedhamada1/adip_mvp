@@ -5,6 +5,8 @@ import react from "@vitejs/plugin-react";
 // no API key (tokenless Esri 3D Buildings service, verified in Stage 1.1).
 export default defineConfig({
   plugins: [react()],
+  // Additional build input: the isolated evidence gallery (dev/exhibition-QA harness, not the product entry).
+  build: { rollupOptions: { input: { main: "index.html", gallery: "gallery.html" } } },
   test: {
     environment: "jsdom",
     globals: true,
