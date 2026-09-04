@@ -1,4 +1,5 @@
 import { AOI_BOUNDARIES } from "../data/aoiBoundaries";
+import { KHALIFA_GEOGRAPHY } from "../data/khalifaBoundaryRoads";
 
 /**
  * Data attribution — visible from the first Explore render (condition C3). Names the open-data
@@ -7,7 +8,7 @@ import { AOI_BOUNDARIES } from "../data/aoiBoundaries";
  */
 export function Attribution() {
   const sources = [
-    AOI_BOUNDARIES.khalifa.attribution ?? "",
+    KHALIFA_GEOGRAPHY.attribution ?? AOI_BOUNDARIES.khalifa.attribution ?? "",
     "3D buildings © Esri, TomTom, Vantor, Esri Community Maps, Overture Maps Foundation",
     "Projects shown are synthetic demonstration data (not official ADPIC records)",
   ].filter(Boolean);

@@ -14,7 +14,7 @@ export function AskAdpicAi({ ctx, onAction, onClose }: { ctx: AiContext; onActio
   const questions = suggestedQuestions(ctx);
 
   return (
-    <div role="dialog" aria-label="Ask ADPIC AI" style={{ position: "absolute", right: "var(--space-3)", bottom: "var(--space-3)", width: "min(420px, 90vw)", maxHeight: "70vh", overflow: "auto", background: "var(--bg-1)", border: "1px solid var(--stroke)", borderRadius: "var(--radius-2)", padding: "var(--space-3)", boxShadow: "0 10px 40px var(--shadow)" }}>
+    <div role="dialog" aria-label="Ask ADPIC AI" style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: "min(400px, 92vw)", overflow: "auto", background: "var(--bg-1)", borderLeft: "1px solid var(--stroke)", padding: "var(--space-3)", boxShadow: "-10px 0 40px var(--shadow)", display: "flex", flexDirection: "column" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <strong style={{ color: "var(--text-0)" }}>Ask ADPIC AI</strong>
         <button type="button" onClick={onClose} aria-label="Close" style={{ background: "transparent", border: "none", color: "var(--text-2)", cursor: "pointer", fontSize: "18px" }}>×</button>
@@ -46,6 +46,10 @@ export function AskAdpicAi({ ctx, onAction, onClose }: { ctx: AiContext; onActio
           </div>
         </div>
       )}
+      <div style={{ flex: 1 }} />
+      <div style={{ marginTop: "var(--space-3)", paddingTop: "var(--space-2)", borderTop: "1px solid var(--stroke)", color: "var(--text-2)", fontSize: "11px", lineHeight: 1.4 }}>
+        Deterministic explanation from approved demo data — not an official project approval. Works without a live LLM.
+      </div>
     </div>
   );
 }

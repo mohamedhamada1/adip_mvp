@@ -89,10 +89,20 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
 
   if (!started) return <Hero onStart={() => setStarted(true)} />;
 
+  const panelOpen = askOpen && view !== "fallback";
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      {/* 3D scene surface — mounted ONCE and preserved beneath the Evaluate overlay */}
+      {/* Content reflows LEFT of the Ask-AI right rail so the panel never obscures the evidence it explains */}
+      <div style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: panelOpen ? "min(400px, 92vw)" : 0, transition: "right 0.18s ease" }}>
+      {/* 3D scene surface — mounted ONCE and preserved beneath overlays */}
       <div ref={sceneDivRef} style={{ position: "absolute", inset: 0, background: "var(--bg-0)" }} />
+      {/* Ask-AI toggle — cross-cutting, stays within the (reflowing) content, left of the panel */}
+      {view !== "fallback" && (
+        <button type="button" onClick={() => setAskOpen((v) => !v)} aria-label="Ask ADPIC AI"
+          style={{ position: "absolute", right: "var(--space-3)", top: "var(--space-4)", zIndex: 5, padding: "10px 16px", borderRadius: "999px", border: "1px solid var(--stroke)", background: panelOpen ? "var(--accent)" : "var(--bg-2)", color: panelOpen ? "var(--text-0)" : "var(--accent-2)", cursor: "pointer", fontWeight: 600, fontSize: "13px" }}>
+          Ask ADPIC AI
+        </button>
+      )}
 
       {view === "explore" && (
         <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", pointerEvents: "none" }}>
@@ -147,15 +157,10 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
       {view === "simulate" && <Simulator onBack={() => setView("explore")} />}
 
       {view === "fallback" && <FallbackDemo onBack={() => setView("explore")} />}
+      </div>{/* end reflow content container */}
 
-      {/* Ask ADPIC AI — cross-cutting overlay, available across Explore/Evaluate/Simulate (not a route) */}
-      {view !== "fallback" && (
-        <button type="button" onClick={() => setAskOpen((v) => !v)} aria-label="Ask ADPIC AI"
-          style={{ position: "absolute", right: "var(--space-3)", top: "var(--space-4)", padding: "10px 16px", borderRadius: "999px", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--accent-2)", cursor: "pointer", fontWeight: 600, fontSize: "13px" }}>
-          Ask ADPIC AI
-        </button>
-      )}
-      {askOpen && view !== "fallback" && (
+      {/* Ask ADPIC AI — cross-cutting right-docked panel (content reflows beside it; never overlaps evidence) */}
+      {panelOpen && (
         <AskAdpicAi ctx={aiContext} onAction={onAiAction} onClose={() => setAskOpen(false)} />
       )}
     </div>
