@@ -1,0 +1,19 @@
+{
+  "exploration_id": "2026-09-04_work-adpic-livex-2026-capital-intelligence-geoai-m",
+  "topic": "WORK_ADPIC_LIVEX_2026_Capital_Intelligence_GeoAI_MVP_FINAL",
+  "goal": "",
+  "repos": "",
+  "max_rounds": 1,
+  "current_round": 1,
+  "status": "PROMOTED",
+  "chatgpt_done": "true",
+  "gemini_done": "true",
+  "claude_done": true,
+  "synthesized": "true",
+  "human_decided": "true",
+  "chosen_direction": "EPIC: Build the ADPIC LIVEX 2026 Capital Intelligence GeoAI MVP as a multi-stage epic using the Reliability-First Deterministic Twin architecture (Vite/React/TS + ArcGIS JS). First stage is the technical/data spike; owner-supplied screenshots are the visual reference. WORK.md is authoritative.",
+  "next_action": "create_stage_spec",
+  "promoted_stage_id": null,
+  "created_at": "2026-09-04T09:43:57Z",
+  "last_updated": "2026-09-04T10:57:03.561562Z"
+}

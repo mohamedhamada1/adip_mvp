@@ -1,0 +1,15 @@
+{
+  "schemaVersion": "1",
+  "kind": "planner_execution",
+  "actor": "planner",
+  "epic": "adpic-livex-2026-capital-intelligence-mvp",
+  "status": "completed",
+  "launch": {
+    "pid": 45863,
+    "host": "MacBook-Air-4.local",
+    "launchedAtEpoch": 1788519782
+  },
+  "runDir": "/Users/adres/Documents/GitHub/adip_mvp/.ai/orchestration/planner/adpic-livex-2026-capital-intelligence-mvp/run",
+  "exitCode": 0,
+  "sessionId": "b207d9b3-b169-46db-90ee-6c6426c00c64"
+}
