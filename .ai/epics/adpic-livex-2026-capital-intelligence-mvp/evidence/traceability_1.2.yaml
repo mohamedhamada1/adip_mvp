@@ -14,19 +14,19 @@ artifacts:
   spec:
     path: ".ai/stages/1.2/spec.md"
     section: null
-    sha256: "5375156a65d018cffc632b6e627dbc2802cbee1378bc151c22388e189f1af93a"
+    sha256: "58c8a5c530ea8274fe8903b8c3900637ceb7cf95c0d1ad8af88f65d784972f82"
   plan:
     path: ".ai/stages/1.2/plan.md"
     section: null
-    sha256: "0d1acf52508eff0a810c929d749a148fcc70808066cf63c5aa2502efce3e8cd0"
+    sha256: "4ca6e52c06220e20bb55d5cddc39d7784115421035d47fc9e4697c51b3e02386"
   test:
     path: ".ai/stages/1.2/plan.md"
     section: "## Test plan"
-    sha256: "5a6235beb83e0b2f95e9cd249c2332c8baeb9de7b280c175093f1370d1c0f6ff"
+    sha256: "42f9053de4da7f8798d26297733c3545dc7676568e8b24765710c75e47508e50"
   done:
     path: ".ai/stages/1.2/spec.md"
     section: "## Success Proof"
-    sha256: "88acb61322747b02b9833c753582d71d0dbb99088650b307695c05d4080e946d"
+    sha256: "3ca2f7ff6d49b49521eb44fd45979ebc69c1eeb9e4f907e8c8e50374f71ea0b0"
 requirements:
   - id: "RR-1"
     text: "The standalone Vite/React/TS app renders a dark cinematic `SceneView` with contextual buildings muted and projects emphasized — source: WORK-CON-7, WORK-UX-1/2."
@@ -105,48 +105,48 @@ tests:
     proves: ["AC-2"]
     fails_when: "filter change leaves the marker set unchanged, or select does not call goTo."
   - id: "TEST-3"
-    text: "AOI-switch test asserts the **`SceneView` instance is preserved** across a Khalifa↔Al Reem switch — the SceneView is constructed exactly once and the switch only updates its camera/layers (the app root is not remounted and the document does not reload)."
+    text: "AOI-switch test asserts the **`SceneView` instance is preserved** across a Khalifa↔Al Reem switch — the SceneView is constructed exactly once and the switch only updates its camera/layers (the app root is not remounted and there is no full-document-reload call such as `location.reload`/`location.href=`)."
     proves: ["AC-3"]
-    fails_when: "switching AOI constructs a new SceneView (or remounts the root / reloads the document) instead of updating the existing view."
+    fails_when: "switching AOI constructs a new SceneView, remounts the root, or triggers a full document reload (`location.reload`/`location.href=`) instead of updating the existing view."
   - id: "TEST-4"
     text: "Degrade test asserts disabling Al Reem yields a coherent Khalifa-only state and a simulated 3D-layer load failure swaps to the degrade path without reload."
     proves: ["AC-4"]
     fails_when: "disabling Al Reem crashes/blanks the app, or a layer failure forces a reload."
   - id: "TEST-5"
-    text: "Data guard asserts **every dataset record across ALL sources in `src/data/**`** (synthetic portfolio AND AD-SDI-derived boundaries) carries a provenance tag (synthetic records also `IS_DEMO`), that KPI/count values in `src/ui/` are computed (no typed mockup literals) and no \"AED 85B\" token appears, and that an `Attribution` element renders."
+    text: "Data guard asserts **every dataset module across ALL sources in `src/data/**` — both `.ts` and frozen `.json`** (synthetic portfolio AND AD-SDI-derived boundaries) carries a provenance tag (synthetic records also `IS_DEMO`), that KPI/count values are computed (no distinctive mockup budget literal `AED <n>B` appears in `src/`), and that an `Attribution` element renders."
     proves: ["AC-5"]
-    fails_when: "any dataset record lacks a provenance tag, a synthetic record lacks `IS_DEMO`, a KPI/count is a typed mockup literal in `src/ui/` (or \"AED 85B\" appears), or no attribution renders."
+    fails_when: "any dataset module (`.ts` or `.json`) lacks a provenance tag, a synthetic record lacks `IS_DEMO`, a mockup budget literal (`AED <n>B`) appears in `src/`, or no attribution renders."
 done_criteria:
   - id: "DC-1"
     text: "`npm run build` succeeds and `src/` contains a SceneView instantiating the tokenless Esri 3D Buildings SceneLayer with muted context and emphasized markers."
     demonstrates: ["AC-1"]
     verify: "bash .ai/stages/1.2/verify.sh AC-1"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@7400fdb7b27e"
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@236528c3e459"
   - id: "DC-2"
     text: "`src/` renders a KPI strip, sector filters, and selectable markers with fly-to/emphasis."
     demonstrates: ["AC-2"]
     verify: "bash .ai/stages/1.2/verify.sh AC-2"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@7400fdb7b27e"
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@236528c3e459"
   - id: "DC-3"
-    text: "An AOI switcher swaps Khalifa/Al Reem by updating the camera/layers of the SAME persisted `SceneView` instance (SceneView constructed exactly once; not re-instantiated per switch), without remounting the app root."
+    text: "An AOI switcher swaps Khalifa/Al Reem by updating the camera/layers of the SAME persisted `SceneView` instance (SceneView constructed exactly once; not re-instantiated per switch), without remounting the app root and without any full-document-reload call (`location.reload` / `location.href=`)."
     demonstrates: ["AC-3"]
     verify: "bash .ai/stages/1.2/verify.sh AC-3"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@7400fdb7b27e"
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@236528c3e459"
   - id: "DC-4"
     text: "Disabling the Al Reem opening leaves a coherent Khalifa-only experience and the scene degrades without reload."
     demonstrates: ["AC-4"]
     verify: "bash .ai/stages/1.2/verify.sh AC-4"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@7400fdb7b27e"
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@236528c3e459"
   - id: "DC-5"
     text: "All demo records carry provenance + IS_DEMO, no mockup-number literals appear in `src/`, and an attribution element is present."
     demonstrates: ["AC-5"]
     verify: "bash .ai/stages/1.2/verify.sh AC-5"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@7400fdb7b27e"
+    observable_detail: "runner bash on path .ai/stages/1.2/verify.sh@236528c3e459"
 edges:
   - {from: "RR-1", to: "AC-1", type: roadmap_to_ac}
   - {from: "RR-2", to: "AC-2", type: roadmap_to_ac}

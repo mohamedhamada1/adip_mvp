@@ -62,8 +62,16 @@ covers: RR-3
 #### AC-4 — The Al Reem opening degrades gracefully to a disabled/hidden switcher state leaving a coherent Khalifa-only experience; the scene also degrades without a page reload if the tokenless 3D service is unreachable (WORK-EX-4, WORK-DEC-5, WORK-NFR-5 connectivity-tolerance), and no live LLM is introduced on the core path (WORK-NFR-6, WORK-DEC-8).
 covers: RR-4
 
-#### AC-5 — Every displayed KPI/marker value derives from the frozen synthetic IS_DEMO snapshot; every dataset/field is provenance-tagged (OFFICIAL/PUBLIC, DERIVED, or SYNTHETIC/DEMO) with no hard-coded screenshot numbers (no literal 139/219/AED 85B), and required source attribution is visible from the first Explore render (WORK-AC-19, WORK-DEC-7; condition C3).
+#### AC-5 — Every displayed KPI/marker value derives from the frozen synthetic IS_DEMO snapshot; every dataset/field is provenance-tagged (OFFICIAL/PUBLIC, DERIVED, or SYNTHETIC/DEMO) with no hard-coded screenshot numbers (no numeric KPI literal typed in JSX), and required source attribution is visible from the first Explore render (WORK-AC-19, WORK-DEC-7; condition C3).
 covers: RR-5
+
+> **Named intent-softening (RR-5 → AC-5):** ROADMAP RR-5 / WORK-AC-19 say "frozen **validated** snapshot."
+> For this MVP the snapshot is a **synthetic IS_DEMO** snapshot, which is a DELIBERATE, owner-approved
+> softening licensed by WORK-BR-12 (representative/synthetic demo records) and the 2026-09-04 demo-dataset
+> decision. It fully satisfies WORK-AC-19's **negative** constraint (never present 219/139 as authoritative).
+> WORK-AC-4's **positive** half ("retains validated portfolio KPI counts") is **deferred** to the later
+> real-data integration — the "validated snapshot" is the swap target, and provenance tagging (AC-5) makes
+> that swap a data change, not a redesign. This is called out so the softening is explicit, not silent.
 
 ---
 
@@ -283,18 +291,20 @@ None. No backend.
 - [ ] SceneView renders 3D buildings for both AOIs with no API key.
 - [ ] KPI strip values derive from the demo portfolio aggregate (not literals).
 - [ ] Filters change visible markers; selecting a marker flies to / emphasizes it.
-#### Safety / Invariants
-- [ ] No mockup numbers in UI display code: `grep -rnE 'AED[ ]*85[ ]*B|\b85B\b' src/ → 0`, AND no KPI/count
-  is a numeric literal in `src/ui/` (KPI values are computed from the dataset aggregate, not typed). The
-  guard is scoped to display code (`src/ui/`) and the specific "AED 85B" token — it deliberately does NOT
-  blanket-match bare `139`/`219`, which can be legitimate coordinates/ids/pixels (deterministic, no false positives).
-- [ ] No live LLM / Assessment / Simulate / Ask-AI code in `src/`.
-- [ ] No raw hex colors in components (tokens only).
+#### Safety / Invariants (ALL mechanically checked by `.ai/stages/1.2/verify.sh` — no manual-only items)
+- [ ] **No hard-coded KPI numbers (structural guard, `verify.sh` AC-5):** no numeric literal is rendered as a
+  JSX **text node** in `src/ui/` — the guard greps for a number typed between tags (`>219<`, `>AED 85B<`,
+  `>~250,000<`, `>85%<`) and fails on any. This catches a bare `219` typed as a KPI (the previous
+  AED-only guard did not) while ignoring code numbers (coords/ids/px), which are never JSX text nodes.
+  Documented guard == implemented guard.
+- [ ] **No live LLM / Assessment / Simulate / Ask-AI code (`verify.sh` AC-4):** `grep -rniE
+  'assessment|simulat|ask[-_]?adpic|openai|anthropic|\bllm\b|chat[-_]?complet' src --include='*.ts*' → 0`.
+- [ ] **No raw hex colors in components (`verify.sh` AC-1):** `grep -rnE '#[0-9a-fA-F]{3,8}\b' src
+  --include='*.tsx' → 0` (hex lives only in `src/theme/*.css` tokens; components reference tokens).
 #### Tests
-- [ ] A unit test asserts **every dataset record across ALL sources** (`src/data/**` — synthetic portfolio
-  AND AD-SDI-derived boundaries) carries a provenance tag; synthetic records also carry `IS_DEMO` (matching
-  INV-provenance-tagged "every dataset/field").
-- [ ] A guard asserts KPI/count values in `src/ui/` are computed (no typed mockup literals) and no "AED 85B" token appears.
+- [ ] TEST-5 (unit) asserts **every dataset module across ALL sources** (`src/data/**` — `.ts` synthetic
+  portfolio AND frozen `.json` AD-SDI boundaries) carries a provenance tag; synthetic records also `IS_DEMO`.
+- [ ] The structural JSX guard, no-LLM guard, and no-raw-hex guard above run under `verify.sh` AC-5/AC-4/AC-1.
 
 ### Optional / Quality
 - [ ] Loading + empty states for the scene.

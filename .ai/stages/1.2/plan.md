@@ -32,36 +32,36 @@ path. Explore only; no Assessment/Simulate/Ask-AI/LLM.
 
 ### Step 2: Design tokens (dark cinematic)
 **File:** `src/theme/tokens.css` **Action:** Create. **What:** navy bg, blue highlight, spacing/radius/type
-tokens; components reference tokens only (no raw hex). **Why:** AC-10, design-system alignment.
+tokens; components reference tokens only (no raw hex). **Why:** AC-1 (dark cinematic look uses tokens).
 
 ### Step 3: Provenance + demo data model
 **Files:** `src/data/provenance.ts`, `src/data/portfolio.demo.ts`
 **Action:** Create. **What:** provenance tag union (`OFFICIAL_PUBLIC|DERIVED|SYNTHETIC_DEMO`); `ProjectRecord`
 (WORK-DATA-aligned incl. `IS_DEMO`); ~20–40 curated synthetic projects per AOI with credible geometry, each
-tagged SYNTHETIC/DEMO + `IS_DEMO:true`. **Why:** AC-4/5/8, INV-no-mockup-numbers, INV-provenance-tagged.
-**Notes:** NO literal 139/219/AED 85B anywhere; KPIs are computed aggregates.
+tagged SYNTHETIC/DEMO + `IS_DEMO:true`. **Why:** AC-5, INV-no-mockup-numbers, INV-provenance-tagged.
+**Notes:** KPIs are computed aggregates from the dataset — never typed numeric literals in JSX (verify.sh AC-5 structural guard).
 
 ### Step 4: AOI definitions + boundaries
 **Files:** `src/scene/aoi.ts`, `src/data/aoiBoundaries.ts`
 **Action:** Create. **What:** Khalifa/Al Reem camera positions; load AD-SDI Districts polygons (OFFICIAL/
-PUBLIC, attributed) — fetched/frozen to local JSON for dev; provenance-tagged. **Why:** AC-3/7.
+PUBLIC, attributed) — fetched/frozen to local JSON for dev; provenance-tagged. **Why:** AC-3, AC-5 (boundary provenance).
 
 ### Step 5: SceneRoot (SceneView + 3D buildings + degrade)
 **File:** `src/scene/SceneRoot.tsx`
 **Action:** Create. **What:** instantiate `SceneView` (dark ground, muted massing), add tokenless Esri 3D
 Buildings SceneLayer + AOI boundary + demo markers; on layer load failure → degrade path (own-built extruded
-footprints from boundary/building data or reduced labeled state) WITHOUT reload. **Why:** AC-2/5/11,
+footprints from boundary/building data or reduced labeled state) WITHOUT reload. **Why:** AC-1, AC-4,
 INV-no-live-llm-core. **Notes:** camera/layers swap on the existing view for AOI switch.
 
 ### Step 6: Explore UI components
 **Files:** `src/ui/Hero.tsx`, `src/ui/KpiStrip.tsx`, `src/ui/Filters.tsx`, `src/ui/AoiSwitcher.tsx`, `src/ui/Attribution.tsx`
 **Action:** Create. **What:** Hero → Explore transition; KPI strip (computed from demo portfolio); filters
 (Mobility/Education/Health/Public Realm/Community/Utilities) toggling markers; AOI switcher (no reload; Al
-Reem disable-able); attribution element always visible. **Why:** AC-3/4/6/9/10, INV-attribution-present.
+Reem disable-able); attribution element always visible. **Why:** AC-2, AC-3, AC-4, AC-5 (attribution), INV-attribution-present.
 
 ### Step 7: Wire App + interactions
 **File:** `src/App.tsx` **Action:** Modify. **What:** compose Hero/Explore; marker select → fly-to/emphasize;
-filter state; AOI switch. **Why:** AC-5/6.
+filter state; AOI switch. **Why:** AC-2, AC-3.
 
 ### Step 8: Tests + guards
 **Files:** `tests/provenance.test.ts`, `tests/no-mockup-numbers.test.ts` (or a grep guard script)
@@ -81,16 +81,15 @@ N/A — pure web (no native/CocoaPods/Gradle). No env vars/keys required for the
 ## Test Plan
 | Test File | Test Cases | Behavior Verified |
 |-----------|-----------|-------------------|
-| `tests/provenance.test.ts` | all records tagged; IS_DEMO true | INV-provenance-tagged, AC-8 |
-| `tests/no-mockup-numbers.test.ts` | grep src for 139/219/AED 85B → 0 | INV-no-mockup-numbers, AC-4 |
+| `tests/provenance.test.ts` | all records tagged; IS_DEMO true | INV-provenance-tagged, AC-5 |
+| `tests/no-mockup-numbers.test.ts` | structural JSX-literal guard in src/ui → 0 | INV-no-mockup-numbers, AC-5 |
 
 ## Verification Commands
 ```bash
 npm install
 npm run build          # type-check + bundle
 npm test               # unit tests (vitest)
-grep -rnE 'AED[ ]*85[ ]*B|\b85B\b' src/     # expect 0 matches (specific mockup token; deterministic)
-# KPI/count values must be computed in src/ui — not typed literals (reviewed manually + by TEST-5)
+bash .ai/stages/1.2/verify.sh all           # structural JSX-literal guard + provenance + no-hex + no-LLM (deterministic)
 ```
 
 ## P0/P1 Validation Plan
@@ -135,18 +134,18 @@ Greenfield — abandoning removes `src/` scaffold; no data/schema to revert.
 
 > Anchored tests (TEST-n) — each proves ≥1 AC and declares a negative control (fails_when:).
 
-- TEST-1: Component/render test asserts `SceneRoot` mounts a `SceneView` and adds the Esri 3D Buildings `SceneLayer`.
+- TEST-1: Component/render test asserts `SceneRoot` mounts a `SceneView` and adds the Esri 3D Buildings `SceneLayer`; a guard (`verify.sh` AC-1) asserts no raw hex color literal appears in any `*.tsx` component (hex only in `src/theme/*.css` tokens).
   proves: AC-1
-  fails_when: SceneRoot renders without a SceneLayer (3D layer omitted).
+  fails_when: SceneRoot renders without a SceneLayer (3D layer omitted), or a raw hex color is used in a component instead of a token.
 - TEST-2: Interaction test asserts a sector filter toggles visible markers and selecting a marker triggers a fly-to/emphasis call.
   proves: AC-2
   fails_when: filter change leaves the marker set unchanged, or select does not call goTo.
 - TEST-3: AOI-switch test asserts the **`SceneView` instance is preserved** across a Khalifa↔Al Reem switch — the SceneView is constructed exactly once and the switch only updates its camera/layers (the app root is not remounted and there is no full-document-reload call such as `location.reload`/`location.href=`).
   proves: AC-3
   fails_when: switching AOI constructs a new SceneView, remounts the root, or triggers a full document reload (`location.reload`/`location.href=`) instead of updating the existing view.
-- TEST-4: Degrade test asserts disabling Al Reem yields a coherent Khalifa-only state and a simulated 3D-layer load failure swaps to the degrade path without reload.
+- TEST-4: Degrade test asserts disabling Al Reem yields a coherent Khalifa-only state and a simulated 3D-layer load failure swaps to the degrade path without reload; a guard (`verify.sh` AC-4) asserts no live-LLM / Assessment / Simulate / Ask-AI module reference exists anywhere in `src/`.
   proves: AC-4
-  fails_when: disabling Al Reem crashes/blanks the app, or a layer failure forces a reload.
+  fails_when: disabling Al Reem crashes/blanks the app, a layer failure forces a reload, or a forbidden module (LLM/Assessment/Simulate/Ask-AI) is referenced in src/.
 - TEST-5: Data guard asserts **every dataset module across ALL sources in `src/data/**` — both `.ts` and frozen `.json`** (synthetic portfolio AND AD-SDI-derived boundaries) carries a provenance tag (synthetic records also `IS_DEMO`), that KPI/count values are computed (no distinctive mockup budget literal `AED <n>B` appears in `src/`), and that an `Attribution` element renders.
   proves: AC-5
   fails_when: any dataset module (`.ts` or `.json`) lacks a provenance tag, a synthetic record lacks `IS_DEMO`, a mockup budget literal (`AED <n>B`) appears in `src/`, or no attribution renders.
