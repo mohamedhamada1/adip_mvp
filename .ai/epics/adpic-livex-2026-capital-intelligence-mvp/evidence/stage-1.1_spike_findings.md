@@ -1,6 +1,21 @@
 # Stage 1.1 — Technical / Data Spike + Snapshot Freeze — FINDINGS
 
-**Date:** 2026-09-04 · **Spike owner:** Project owner (WORK-OQ-9) · **Status:** FINDINGS READY — awaiting human/review gate.
+**Date:** 2026-09-04 · **Spike owner:** Project owner (WORK-OQ-9)
+**Status:** TECHNICAL FINDINGS ACCEPTED (PROVISIONAL) by owner 2026-09-04 — **Stage 1.1 REMAINS OPEN**,
+pending the WORK-OQ-5 dataset inventory (see `stage-1.1_oq5_dataset_inventory.md`). This is **NOT** final
+Stage 1.1 completion. Final PASS / PASS-WITH-CONDITIONS / FAIL is issued only after the dataset review.
+
+## Owner-accepted boundaries (2026-09-04) — binding
+- Al Reem Island: **provisional GO** for the cinematic Explore opening.
+- Khalifa City: **guaranteed** Evaluate + Simulate spine.
+- Yas Island: fallback only.
+- Dev-machine 60 FPS = no immediate rendering red flag, **NOT** exhibition-performance acceptance.
+- Final 3D/performance acceptance stays gated by **OQ-10/OQ-11** + testing **during fly-to/interaction**
+  on actual/equivalent event hardware.
+- Preserve deterministic/local-first architecture + **no-live-LLM** requirement.
+- Preserve the `.slpk` finding: **do NOT assume browser-direct SLPK loading**.
+- Esri clip/re-host/offline **licensing is an explicit UNRESOLVED dependency/question** — no licensing
+  permission is assumed (tracked as DEP-ESRI-OFFLINE-LICENSE below and in the epic).
 **Confidence tags:** `[confirmed]` empirical this session · `[estimated]` measured but not on event hardware · `[assumption]` reasoned, unverified · `[pending-data]` needs owner-supplied dataset/approval.
 
 Method: anonymous Esri REST metadata calls (curl) + a live ArcGIS Maps SDK for JS 4.31
@@ -107,6 +122,17 @@ Needed, with per-item status/source/approval (WORK-OQ-5):
 Plus the still-OPEN gates: WORK-OQ-1 (attribute allowlist), OQ-2 (data approver), OQ-3 (methodology
 approver), OQ-4 (final business owner), OQ-7/8 (LLM allowlist + security/AI approver), OQ-10/11
 (hardware owner + specs).
+
+## Open dependencies carried forward (Stage 1.1-derived)
+- **DEP-ESRI-OFFLINE-LICENSE `[UNRESOLVED]`:** whether Esri 3D Buildings (Esri-hosted, not owned by us)
+  may be extracted/clipped and re-hosted for offline/local use. Technical extractability AND
+  licensing/ToS both unconfirmed. **No permission assumed.** Owner/Esri follow-up. Does not block the
+  own-built extruded-footprint offline floor (option ii), which needs no Esri permission.
+- **OQ-10 / OQ-11 `[OPEN]`:** event-hardware owner + specs → final 3D/performance acceptance
+  (fly-to/interaction on actual hardware). Dev-machine result is preliminary only.
+- **OQ-1/2 `[OPEN]`:** public-attribute allowlist + named data approver → gates what can be shown.
+- **OQ-3/4 `[OPEN]`:** methodology/claim approver + final business owner.
+- **OQ-7/8 `[OPEN]`:** LLM prompt-info allowlist + security/AI approver (only if a live LLM is ever added).
 
 ## Recommended architecture (carried into later stages)
 Reliability-First Deterministic Twin: **own-built extruded-footprint 3D floor** (owner GIS / openly-

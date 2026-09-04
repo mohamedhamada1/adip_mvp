@@ -590,6 +590,7 @@ Khalifa City is the guaranteed spine (mandatory for Evaluate and Simulate). Al R
 - WORK-RISK-3 (HIGH): external Esri/network failure at the event — mitigation: local-first + precompute + deterministic fallback + backup video (Stage 1.5).
 - WORK-RISK-4 (HIGH): exhibition-only priority mistaken for official methodology — mitigation: deterministic rules + persistent disclaimer + traceable evidence + no AI approval.
 - WORK-RISK-5/6/8 (MEDIUM): stale 219/139 counts, full-portfolio 3D overload, hardware cannot sustain 3D — mitigation: validated-snapshot-only, curate 20–40 + decluttering, profile early.
+- DEP-ESRI-OFFLINE-LICENSE (DERIVED — Stage 1.1 spike, 2026-09-04): whether Esri's hosted 3D Buildings layer may be extracted/clipped and re-hosted for offline use is UNRESOLVED (technical + licensing/ToS); no permission assumed — mitigation: own-built extruded-footprint offline floor (owner GIS / openly-licensed Overture) needs no Esri permission; clip/re-host is an owner/Esri follow-up only.
 
 ### Assumptions to Verify
 - Esri 3D Buildings item coverage for both AOIs — verify via the Stage 1.1 3D spike (WORK-INT-2, RISK-1).

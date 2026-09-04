@@ -1,12 +1,12 @@
 ## Last Session Summary
-- Timestamp: 2026-09-04T11:28:40Z
+- Timestamp: 2026-09-04T11:38:30Z
 - Stage: 1.1
 - Branch: main
 - Uncommitted files: 0
 
 Recent commits:
-5a72fcc Seed Stage 1.1 (Technical/Data Spike + Snapshot Freeze) — registrar only
-0445939 Resolve WORK-OQ-5/6/9 (spike-gating) to unblock Stage 1.1
+63a7198 Correct Stage 1.1 offline-3D recommendation (licensing-honest)
+bf243ce Stage 1.1 spike findings + evidence (Esri 3D, benchmark, harness)
 
 Working tree:
 
