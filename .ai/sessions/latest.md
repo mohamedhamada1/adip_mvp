@@ -1,18 +1,11 @@
 ## Last Session Summary
-- Timestamp: 2026-09-04T15:55:46Z
+- Timestamp: 2026-09-04T16:04:09Z
 - Stage: 1.4
-- Branch: main
-- Uncommitted files: 4
+- Branch: feat/stage-1.4
+- Uncommitted files: 0
 
 Recent commits:
-99987eb Stage 1.3 lifecycle -> done (audited exception; owner-accepted)
-5b0658b Merge Stage 1.3 (Deterministic Assessment + Evidence) — owner accepted
-05670a5 Record Stage 1.3 acceptance (owner)
-a5f94bb Build Stage 1.3 — Deterministic Assessment + Evidence (direct-build override)
-b7f721a Record Stage 1.3 direct-build override (owner-authorized)
+10d7df2 Build Stage 1.4 — Liveability Impact Simulator (direct-build override)
 
 Working tree:
- D .ai/sessions/2026-09-04T12-47-31.md
- M .ai/sessions/latest.md
- M CURRENT_STAGE.md
- M ROADMAP.md
+

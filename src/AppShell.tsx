@@ -5,6 +5,7 @@ import { Filters } from "./ui/Filters";
 import { AoiSwitcher } from "./ui/AoiSwitcher";
 import { Attribution } from "./ui/Attribution";
 import { Assessment } from "./ui/Assessment";
+import { Simulator } from "./ui/Simulator";
 import { SceneController } from "./scene/sceneController";
 import type { SceneApi } from "./scene/sceneApi";
 import { SPINE_AOI } from "./scene/aoi";
@@ -22,7 +23,7 @@ import type { AoiId, ProjectRecord, Sector } from "./data/types";
  */
 export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
   const [started, setStarted] = useState(false);
-  const [view, setView] = useState<"explore" | "evaluate">("explore");
+  const [view, setView] = useState<"explore" | "evaluate" | "simulate">("explore");
   const [activeAoi, setActiveAoi] = useState<AoiId>(SPINE_AOI);
   const [activeSectors, setActiveSectors] = useState<Set<Sector>>(new Set());
   const [selected, setSelected] = useState<ProjectRecord | null>(null);
@@ -77,7 +78,14 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
               <strong style={{ color: "var(--text-0)" }}>ADPIC</strong>
               <span style={{ color: "var(--text-2)", fontSize: "13px" }}>Capital Intelligence</span>
             </div>
-            <AoiSwitcher active={activeAoi} onSwitch={switchAoi} />
+            <div style={{ display: "flex", gap: "var(--space-2)", alignItems: "center" }}>
+              {activeAoi === "khalifa" && (
+                <button type="button" onClick={() => setView("simulate")} style={{ padding: "8px 16px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--accent-2)", cursor: "pointer", fontSize: "14px", fontWeight: 600 }}>
+                  Simulate liveability impact →
+                </button>
+              )}
+              <AoiSwitcher active={activeAoi} onSwitch={switchAoi} />
+            </div>
           </div>
           <div style={{ padding: "0 var(--space-3)", pointerEvents: "auto" }}>
             <Filters active={activeSectors} onToggle={onToggleSector} />
@@ -101,6 +109,8 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
       {view === "evaluate" && assessment && (
         <Assessment result={assessment} onBack={() => setView("explore")} />
       )}
+
+      {view === "simulate" && <Simulator onBack={() => setView("explore")} />}
     </div>
   );
 }
