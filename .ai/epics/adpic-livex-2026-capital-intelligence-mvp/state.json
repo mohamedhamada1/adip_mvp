@@ -17,7 +17,7 @@
   "seams": [],
   "stages": {
     "1.1": {
-      "lifecycle": "in_progress",
+      "lifecycle": "stage_qa",
       "conformance": {
         "status": "PASS",
         "matrix": {},
