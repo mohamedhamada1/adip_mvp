@@ -1,0 +1,13 @@
+{
+  "schemaVersion": "1",
+  "kind": "event_envelope",
+  "eventId": "adpic-livex-2026-capital-intelligence-mvp.1.4.stage.done.1788537954.12467",
+  "type": "stage.done",
+  "epic": "adpic-livex-2026-capital-intelligence-mvp",
+  "stage": "1.4",
+  "correlationId": "state.adpic-livex-2026-capital-intelligence-mvp",
+  "causationId": "advance",
+  "idempotencyKey": "adpic-livex-2026-capital-intelligence-mvp.1.4.stage.done.1788537954.12467",
+  "timestamp": "2026-09-04T16:05:54Z",
+  "producer": "epic-state"
+}

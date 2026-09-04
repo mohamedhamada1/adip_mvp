@@ -72,7 +72,18 @@
       }
     },
     "1.4": {
-      "lifecycle": "in_progress"
+      "lifecycle": "done",
+      "conformance": {
+        "status": "PASS",
+        "matrix": {},
+        "orphanWork": []
+      },
+      "proof": "legacy_unproven",
+      "legacy_exception": {
+        "reason": "Stage 1.4 built via owner-authorized direct-build override; proof is 34/34 vitest behavioural tests + verify.sh all PASS + live-browser evidence (evidence/stage-1.4_build_evidence.md), not an independent-verifier AC matrix (environment certifier is a non-deterministic injected/hermetic actor).",
+        "authorized_by": "Project owner \u2014 decisions/DECISION-stage-1.4-accepted.md (2026-09-04)",
+        "at": "2026-09-04T16:05:54Z"
+      }
     },
     "1.5": {
       "lifecycle": "planned"
