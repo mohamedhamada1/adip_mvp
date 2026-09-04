@@ -180,3 +180,93 @@ a presenter can open Explore, filter, select a project, and switch AOI without r
 - **Customer Value** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.2 → Customer Value (referenced, not duplicated)
 - **Go-Live Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.2 → Go-Live Impact (referenced, not duplicated)
 
+
+### Stage 1.3 — Deterministic Assessment + Evidence
+
+**Status:** Planned
+**Source:** epic (.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md)
+**Date:** 2026-09-04
+**Artifact Type:** scoring engine + Assessment UI
+**Execution Model:** hybrid
+**Depends on:** 1.2
+
+#### Core Invariant
+- The assessment result is reproducible from the same frozen inputs plus configuration and is attributed to deterministic rules, never to AI.
+
+#### Ownership
+- Owns: a Low/Medium/High assessment with per-dimension evidence and the persistent approved disclaimer.
+
+#### Inputs → Outputs
+- **Inputs:** the frozen dataset, a business-rule/weight configuration, and screenshots 03/04.
+- **Outputs:** a Low/Medium/High assessment with per-dimension evidence and the persistent approved disclaimer.
+
+#### Transformation Order
+1. the frozen dataset, a business-rule/weight configuration, and screenshots 03/04. → VALIDATE: The assessment result is reproducible from the same frozen inputs plus configuration and is attributed to deterministic rules, never to AI.
+2. a Low/Medium/High assessment with per-dimension evidence and the persistent approved disclaimer. → VALIDATE: selecting a planned project yields a reproducible Low/Medium/High with visible per-dimension evidence and disclaimer, with no AI-as-approver phrasing.
+
+#### Breaking Rules
+- A breaking change is any violation of § Must Not: the scoring engine as the sole owner of the result; the template/AI layer must not produce the result.
+
+#### Must Preserve
+- the authority boundary and the WORK-BR-15 disclaimer wording.
+
+#### Must Not
+- the scoring engine as the sole owner of the result; the template/AI layer must not produce the result.
+
+#### Validation & Determinism
+- The assessment result is reproducible from the same frozen inputs plus configuration and is attributed to deterministic rules, never to AI.
+
+#### Success Proof
+- selecting a planned project yields a reproducible Low/Medium/High with visible per-dimension evidence and disclaimer, with no AI-as-approver phrasing.
+
+#### Example
+```
+selecting a planned project yields a reproducible Low/Medium/High with visible per-dimension evidence and disclaimer, with no AI-as-approver phrasing.
+```
+
+
+#### Stage Contract Propagation (stage-propagation-matrix/v1)
+
+- **Source of truth:** `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.3 — this projection never overrides it.
+
+- **Stage ID:** 1.3
+- **Title:** Deterministic Assessment + Evidence
+- **Artifact Type:** scoring engine + Assessment UI
+- **Execution Model:** hybrid
+- **Affected Repos:** single-repo (web frontend)
+- **Estimated Effort:** M — a pure-TS config-driven engine plus the evidence UI.
+- **Depends On:** 1.2
+- **Core Invariant:** The assessment result is reproducible from the same frozen inputs plus configuration and is attributed to deterministic rules, never to AI.
+- **Outputs:** a Low/Medium/High assessment with per-dimension evidence and the persistent approved disclaimer.
+
+##### Requirements
+
+- RR-1: A pure-TypeScript, config-driven engine produces Low/Medium/High deterministically from approved inputs and configured rules — source: WORK-REQ-11, WORK-BR-3, WORK-CON-9.
+- RR-2: Each result exposes the contributing indicators/evidence, not only the category — source: WORK-REQ-10, WORK-AC-6.
+- RR-3: The approved WORK-BR-15 disclaimer wording is persistently visible on the assessment screen — source: WORK-BR-15, WORK-AC-7.
+- RR-4: The result is attributed to GIS/rules and no screen presents AI as the approver/decider — source: WORK-BR-1/2, WORK-SEC-7.
+- RR-5: Configurable weights are not presented as official ADPIC methodology unless separately validated — source: WORK-BR-9/10.
+- RR-6: Negative/edge cases (missing indicator inputs) yield a defined, evidence-visible outcome rather than an invented score — source: DERIVED — WORK-NFR-11 traceability implies every displayed result must be backed by present inputs.
+
+##### Not Doing
+
+- **Out of scope:** production AI approval or autonomous investment decisions (WORK-OOS-3); numerical score as official methodology.
+- **Intentionally deferred:** methodology validation and approver sign-off (WORK-OQ-3).
+- **Must not expand into:** an AI-decided or AI-approved result.
+
+##### Roadmap Position
+
+- **Milestone:** Decision Support.
+- **Dependencies:** Stage 1.2 shell + frozen data; WORK-OQ-3 methodology approver for claim wording.
+- **Unblocked after this stage:** the simulator and the Ask-AI explanation of assessment results.
+- **Future stages that depend on it:** 1.4, 1.5.
+
+##### Governance References (canonical in the epic — referenced, not duplicated)
+
+- **Business Context** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.3 → Business Context (referenced, not duplicated)
+- **Revenue Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.3 → Revenue Impact (referenced, not duplicated)
+- **Readiness Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.3 → Readiness Impact (referenced, not duplicated)
+- **Multi-Vertical Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.3 → Multi-Vertical Impact (referenced, not duplicated)
+- **Customer Value** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.3 → Customer Value (referenced, not duplicated)
+- **Go-Live Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.3 → Go-Live Impact (referenced, not duplicated)
+

@@ -1,12 +1,13 @@
 ## Last Session Summary
-- Timestamp: 2026-09-04T14:34:39Z
+- Timestamp: 2026-09-04T14:45:46Z
 - Stage: 1.2
-- Branch: feat/stage-1.2
+- Branch: main
 - Uncommitted files: 0
 
 Recent commits:
-b8a0bb8 chore: gitignore tsbuildinfo + engine session logs
-6313df3 Build Stage 1.2 — Explore / 3D shell + AOI switch (direct-build override)
+94208fb Stage 1.2 lifecycle -> done (audited exception; owner-accepted)
+dac6180 Merge Stage 1.2 (Explore / 3D shell + AOI switch) — owner accepted
+6aec919 Record Stage 1.2 acceptance (owner)
 
 Working tree:
 
