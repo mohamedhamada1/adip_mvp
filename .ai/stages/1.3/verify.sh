@@ -29,14 +29,16 @@ check_disclaimer(){ grep -rqF "$DISCLAIMER" src/ 2>/dev/null \
   && say "AC-3: exact WORK-BR-15 disclaimer present" || { say "AC-3: approved disclaimer wording missing/altered"; return 1; }; }
 
 check_authority(){
-  # No AI-as-approver/decider phrasing in the UI.
-  local bad; bad=$(grep -rniE 'AI[ -]?(approv|reject|authoriz|decid|recommend)|approved by AI|AI (decision|verdict|approval)' src/ui 2>/dev/null || true)
+  # No AI-as-approver/decider phrasing in the UI — "AI approves/rejects/authorizes/decides" (verbs), or
+  # "approved by AI". Precise verb forms so negations/comments like "not an AI verdict" don't false-match.
+  local bad; bad=$(grep -rniE 'AI[ -]?(approv|reject|authoriz|decides|deciding)|approved by AI|AI approval of' src/ui 2>/dev/null || true)
   [ -z "$bad" ] || { say "AC-4: AI-as-approver phrasing in src/ui (AI explains, never approves):"; printf '%s\n' "$bad" | head -4; return 1; }
   # Result attributed to GIS/rules (a marker must exist somewhere in the assessment code).
   grep -rqiE 'GIS indicators \+ business rules|attributedTo|business rules' src/assessment src/ui 2>/dev/null \
     || { say "AC-4: no rules-attribution marker (result must be attributed to GIS/rules)"; return 1; }
-  # No live-LLM client and no Simulate/Ask-AI module (Assessment-only).
-  local fb; fb=$(grep -rniE 'openai|anthropic|\bllm\b|chat[-_]?completion' src --include='*.ts' --include='*.tsx' 2>/dev/null || true)
+  # No live-LLM CLIENT and no Simulate/Ask-AI module (Assessment-only). Targets client/library names +
+  # network calls — NOT the prose word "LLM" (comments legitimately say "no live LLM").
+  local fb; fb=$(grep -rniE 'openai|anthropic|@ai-sdk|langchain|chat[-_]?completion|completions\.create' src --include='*.ts' --include='*.tsx' 2>/dev/null || true)
   fb="$fb$(grep -rnE "from[[:space:]]+['\"][^'\"]*(simulat|ask[-_]?adpic|ask[-_]?ai)" src --include='*.ts' --include='*.tsx' 2>/dev/null || true)"
   [ -z "$fb" ] || { say "AC-4: live-LLM client or Simulate/Ask-AI module in src/:"; printf '%s\n' "$fb" | head -4; return 1; }
   # No raw hex in components.
@@ -56,17 +58,24 @@ check_wiring(){ [ -f src/AppShell.tsx ] || { say "AC-7: src/AppShell.tsx missing
   grep -qiE 'evaluate|scoreProject|selected' src/AppShell.tsx 2>/dev/null || { say "AC-7: AppShell has no Evaluate/select wiring"; return 1; }
   say "AC-7: Assessment wired into AppShell (Explore→Evaluate)"; }
 
+rc=0
 case "$AC" in
-  AC-1) check_build && check_engine && run_tests "AC-1" ;;
-  AC-2) run_tests "AC-2" ;;
-  AC-3) check_disclaimer ;;
-  AC-4) check_authority ;;
-  AC-5) check_weights_label ;;
-  AC-6) run_tests "AC-6" ;;
-  AC-7) check_wiring && run_tests "AC-7" ;;
-  all)  check_build; check_engine; check_disclaimer; check_authority; check_weights_label; check_wiring; run_tests "TESTS" ;;
+  AC-1) check_build && check_engine && run_tests "AC-1"; rc=$? ;;
+  AC-2) run_tests "AC-2"; rc=$? ;;
+  AC-3) check_disclaimer; rc=$? ;;
+  AC-4) check_authority; rc=$? ;;
+  AC-5) check_weights_label; rc=$? ;;
+  AC-6) run_tests "AC-6"; rc=$? ;;
+  AC-7) check_wiring && run_tests "AC-7"; rc=$? ;;
+  all)  # accumulate: the gate fails if ANY check fails
+    check_build      || rc=1
+    check_engine     || rc=1
+    check_disclaimer || rc=1
+    check_authority  || rc=1
+    check_weights_label || rc=1
+    check_wiring     || rc=1
+    run_tests "TESTS"   || rc=1 ;;
   *) say "unknown AC '$AC'"; exit 2 ;;
 esac
-rc=$?
 [ $rc -eq 0 ] && say "verify($AC): PASS" || say "verify($AC): NOT SATISFIED (pre-build or failing)"
 exit $rc
