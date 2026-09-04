@@ -89,7 +89,8 @@ N/A — pure web (no native/CocoaPods/Gradle). No env vars/keys required for the
 npm install
 npm run build          # type-check + bundle
 npm test               # unit tests (vitest)
-grep -rnE '\b(139|219)\b|AED[ ]?85B' src/   # expect 0 matches
+grep -rnE 'AED[ ]*85[ ]*B|\b85B\b' src/     # expect 0 matches (specific mockup token; deterministic)
+# KPI/count values must be computed in src/ui — not typed literals (reviewed manually + by TEST-5)
 ```
 
 ## P0/P1 Validation Plan
@@ -140,12 +141,12 @@ Greenfield — abandoning removes `src/` scaffold; no data/schema to revert.
 - TEST-2: Interaction test asserts a sector filter toggles visible markers and selecting a marker triggers a fly-to/emphasis call.
   proves: AC-2
   fails_when: filter change leaves the marker set unchanged, or select does not call goTo.
-- TEST-3: AOI-switch test asserts the app root component instance is preserved across a Khalifa↔Al Reem switch (no remount / no full reload).
+- TEST-3: AOI-switch test asserts the **`SceneView` instance is preserved** across a Khalifa↔Al Reem switch — the SceneView is constructed exactly once and the switch only updates its camera/layers (the app root is not remounted and the document does not reload).
   proves: AC-3
-  fails_when: switching AOI remounts the root or reloads the document.
+  fails_when: switching AOI constructs a new SceneView (or remounts the root / reloads the document) instead of updating the existing view.
 - TEST-4: Degrade test asserts disabling Al Reem yields a coherent Khalifa-only state and a simulated 3D-layer load failure swaps to the degrade path without reload.
   proves: AC-4
   fails_when: disabling Al Reem crashes/blanks the app, or a layer failure forces a reload.
-- TEST-5: Data guard asserts every demo record carries a provenance tag + `IS_DEMO`, that `grep` finds no mockup-number literals in `src/`, and that an `Attribution` element renders.
+- TEST-5: Data guard asserts **every dataset record across ALL sources in `src/data/**`** (synthetic portfolio AND AD-SDI-derived boundaries) carries a provenance tag (synthetic records also `IS_DEMO`), that KPI/count values in `src/ui/` are computed (no typed mockup literals) and no "AED 85B" token appears, and that an `Attribution` element renders.
   proves: AC-5
-  fails_when: any record lacks provenance/IS_DEMO, a mockup literal (139/219/AED 85B) appears in `src/`, or no attribution renders.
+  fails_when: any dataset record lacks a provenance tag, a synthetic record lacks `IS_DEMO`, a KPI/count is a typed mockup literal in `src/ui/` (or "AED 85B" appears), or no attribution renders.

@@ -3,8 +3,8 @@
   "certifier": "ai-certify-stage-readiness.sh",
   "epic": "adpic-livex-2026-capital-intelligence-mvp",
   "stage": "1.2",
-  "generated_at_utc": "2026-09-04T12:27:51Z",
-  "determinism_key": "0ae2a287e5215b30fe8756d98c679c56f955d0f0248f9fb940af066d5f26eda2",
+  "generated_at_utc": "2026-09-04T12:33:05Z",
+  "determinism_key": "cbf343c797ac5fb398a1183ec1c5de0c85b9b8ef77ecb1a30edc4e66f5207f3b",
   "declared_limits": [
     {
       "id": "L-SEM-1",
@@ -146,15 +146,15 @@
     }
   },
   "traceability": {
-    "verdict": "FAIL",
+    "verdict": "PASS",
     "matrix_path": ".ai/epics/adpic-livex-2026-capital-intelligence-mvp/evidence/traceability_1.2.yaml",
-    "matrix_sha256": "0ccf3d44850d9b73e864b33942ee182be52c704e8b0ce36c0a68acefaeaadb97",
+    "matrix_sha256": "ed687b2db2425da6fe609ebf352b8ceb28dd0a37fbb0e213157035afa83727ea",
     "counts": {
       "roadmap_requirements": 5,
-      "acceptance_criteria": 0,
-      "plan_tasks": 0,
-      "tests": 0,
-      "done_criteria": 0
+      "acceptance_criteria": 5,
+      "plan_tasks": 5,
+      "tests": 5,
+      "done_criteria": 5
     },
     "checks": [
       {
@@ -167,22 +167,16 @@
       {
         "id": "L1-2",
         "description": "spec declares at least one acceptance criterion (AC-n)",
-        "result": "FAIL",
-        "detail": "0 acceptance criteria parsed",
+        "result": "PASS",
+        "detail": "5 acceptance criteria parsed",
         "offenders": []
       },
       {
         "id": "L1-3",
         "description": "every roadmap requirement is covered by at least one acceptance criterion",
-        "result": "FAIL",
-        "detail": "uncovered roadmap requirements: RR-1, RR-2, RR-3, RR-4, RR-5",
-        "offenders": [
-          "RR-1",
-          "RR-2",
-          "RR-3",
-          "RR-4",
-          "RR-5"
-        ]
+        "result": "PASS",
+        "detail": "uncovered roadmap requirements: none",
+        "offenders": []
       },
       {
         "id": "L1-4",
@@ -250,19 +244,12 @@
       {
         "id": "L1-13",
         "description": "all five artifact types resolve and hash (roadmap / spec / plan / test / done)",
-        "result": "FAIL",
-        "detail": "unresolved artifact types: test, done",
-        "offenders": [
-          "test",
-          "done"
-        ]
+        "result": "PASS",
+        "detail": "unresolved artifact types: none",
+        "offenders": []
       }
     ],
-    "failed_checks": [
-      "L1-2",
-      "L1-3",
-      "L1-13"
-    ],
+    "failed_checks": [],
     "bindings": {
       "roadmap": {
         "path": "ROADMAP.md",
@@ -272,22 +259,22 @@
       "spec": {
         "path": ".ai/stages/1.2/spec.md",
         "section": null,
-        "sha256": "32b44cf28a5d29227473031f87a88a3f935657cc0c68e592e743e8d89066f24b"
+        "sha256": "6dcc6db9fe4e308a3cf1137c6fbfaf71a363d2bd5af38fb359045db9d804bc45"
       },
       "plan": {
         "path": ".ai/stages/1.2/plan.md",
         "section": null,
-        "sha256": "a00e3709ef497a64398ddb7fb23ea98105bb48160605fa431724007168f4dc08"
+        "sha256": "2b9dd313c3b2982dcf5aa7eda2217bad1c2b17005e0ef1dbfd1d51197f8e0961"
       },
       "test": {
         "path": ".ai/stages/1.2/plan.md",
         "section": "## Test plan",
-        "sha256": null
+        "sha256": "48740dd25bc07de9ae0bd0a35e7638797e0de08dd17fecce332aa3840161a25c"
       },
       "done": {
         "path": ".ai/stages/1.2/spec.md",
         "section": "## Success Proof",
-        "sha256": null
+        "sha256": "5eba21a5b9326e734df9ef43450fb02f49de3287755ef4e93e67f1b50e300033"
       }
     },
     "observed_state": {
@@ -295,20 +282,211 @@
       "consulted_by": [
         "L1-11"
       ],
-      "verify_targets": []
+      "verify_targets": [
+        {
+          "done_criterion": "DC-1",
+          "clause": "bash .ai/stages/1.2/verify.sh AC-1",
+          "observable": true,
+          "detail": "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9",
+          "head": {
+            "kind": "executable",
+            "target": "bash",
+            "inside_root": false,
+            "is_file": true,
+            "sha256": null,
+            "path_dependent": true
+          },
+          "operand": {
+            "kind": "path",
+            "target": ".ai/stages/1.2/verify.sh",
+            "inside_root": true,
+            "is_file": true,
+            "sha256": "f9534520a8e9ae6582339810628cf9d6da6c4fc836d4751aac3766adce531594",
+            "path_dependent": false
+          }
+        },
+        {
+          "done_criterion": "DC-2",
+          "clause": "bash .ai/stages/1.2/verify.sh AC-2",
+          "observable": true,
+          "detail": "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9",
+          "head": {
+            "kind": "executable",
+            "target": "bash",
+            "inside_root": false,
+            "is_file": true,
+            "sha256": null,
+            "path_dependent": true
+          },
+          "operand": {
+            "kind": "path",
+            "target": ".ai/stages/1.2/verify.sh",
+            "inside_root": true,
+            "is_file": true,
+            "sha256": "f9534520a8e9ae6582339810628cf9d6da6c4fc836d4751aac3766adce531594",
+            "path_dependent": false
+          }
+        },
+        {
+          "done_criterion": "DC-3",
+          "clause": "bash .ai/stages/1.2/verify.sh AC-3",
+          "observable": true,
+          "detail": "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9",
+          "head": {
+            "kind": "executable",
+            "target": "bash",
+            "inside_root": false,
+            "is_file": true,
+            "sha256": null,
+            "path_dependent": true
+          },
+          "operand": {
+            "kind": "path",
+            "target": ".ai/stages/1.2/verify.sh",
+            "inside_root": true,
+            "is_file": true,
+            "sha256": "f9534520a8e9ae6582339810628cf9d6da6c4fc836d4751aac3766adce531594",
+            "path_dependent": false
+          }
+        },
+        {
+          "done_criterion": "DC-4",
+          "clause": "bash .ai/stages/1.2/verify.sh AC-4",
+          "observable": true,
+          "detail": "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9",
+          "head": {
+            "kind": "executable",
+            "target": "bash",
+            "inside_root": false,
+            "is_file": true,
+            "sha256": null,
+            "path_dependent": true
+          },
+          "operand": {
+            "kind": "path",
+            "target": ".ai/stages/1.2/verify.sh",
+            "inside_root": true,
+            "is_file": true,
+            "sha256": "f9534520a8e9ae6582339810628cf9d6da6c4fc836d4751aac3766adce531594",
+            "path_dependent": false
+          }
+        },
+        {
+          "done_criterion": "DC-5",
+          "clause": "bash .ai/stages/1.2/verify.sh AC-5",
+          "observable": true,
+          "detail": "runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9",
+          "head": {
+            "kind": "executable",
+            "target": "bash",
+            "inside_root": false,
+            "is_file": true,
+            "sha256": null,
+            "path_dependent": true
+          },
+          "operand": {
+            "kind": "path",
+            "target": ".ai/stages/1.2/verify.sh",
+            "inside_root": true,
+            "is_file": true,
+            "sha256": "f9534520a8e9ae6582339810628cf9d6da6c4fc836d4751aac3766adce531594",
+            "path_dependent": false
+          }
+        }
+      ]
     }
   },
   "semantic_readiness": {
-    "status": "NOT_CONSULTED",
-    "reason": "Layer 1 did not pass; a Layer-1 FAIL is never overruled by Layer 2"
+    "invoker": "/Users/adres/Repos/ai-engineering-workflow/scripts/ai-ask.sh",
+    "invoker_realpath": "/Users/adres/Repos/ai-engineering-workflow/scripts/ai-ask.sh",
+    "invoker_sha256": "79650169fd1fc7a2fc969e114a7b50923c32cb87782e788c9240e824e04b6a8d",
+    "default_invoker_realpath": "/Users/adres/Repos/ai-engineering-workflow/scripts/ai-ask.sh",
+    "invoker_is_default_anchor": true,
+    "semantic_invoker": "/Users/adres/Repos/ai-engineering-workflow/scripts/ai-certify-semantic-reviewer.sh",
+    "semantic_invoker_realpath": "/Users/adres/Repos/ai-engineering-workflow/scripts/ai-certify-semantic-reviewer.sh",
+    "semantic_invoker_sha256": "3f976f091a10357c4bc4875b6b5d8956d5b0ddb6e82588052c1c928830e3f96e",
+    "semantic_invoker_is_default_anchor": true,
+    "actor_binary_injected": true,
+    "actor_injection_opt_in": false,
+    "transport": "injected-actor",
+    "independent_roadmap_review": {
+      "reviewer": "reviewer_a",
+      "role_flag": "--gemini-review",
+      "stage": "independent_roadmap_review",
+      "payload_sha256": "bee6b6d60210b3d997fff642313657eed83618a2d5676a16fe81f35b417c8f68",
+      "payload_bytes": 11586,
+      "probe_lines_checked": 254,
+      "downstream_leakage": false,
+      "leaked_samples": [],
+      "payload_captured": true,
+      "attestation_valid": true,
+      "attestation_detail": "254 probe lines searched in 11586 captured payload bytes",
+      "status": "COMPLETED",
+      "verdict": "PASS",
+      "response_sha256": "d1ebfaf003d80eb06327c893486319bea4253c61b39175eb60c0f70fb0c40ae7",
+      "advisory": true
+    },
+    "reviewers": [
+      {
+        "reviewer": "semantic_reviewer",
+        "role_flag": "repo-grounded-claude-two-lens",
+        "stage": "semantic_readiness",
+        "response_sha256": "06994538a0f3a85dccc008a25eaaf0c8a776056162dd5b0ff9ae3304cd94f18f",
+        "response_bytes": 5926,
+        "status": "COMPLETED",
+        "verdict": "CONCERN",
+        "lens_a_verdict": "CONCERN",
+        "lens_b_verdict": "CONCERN",
+        "lens_b_advisory": true,
+        "overall_verdict": "CONCERN",
+        "findings": [
+          "**Verification backbone missing:** All five DCs (`spec.md:356-370`) and every `done_criteria` in `traceability_1.2.yaml:119-149` (`observable: true`, `runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9`) require `bash .ai/stages/1.2/verify.sh AC-n`, but no `verify.sh` exists in `.ai/stages/1.2/` and it is not listed under \"Files to Create\" (`spec.md:86-98`) nor authored by any plan step. A Builder must invent what each `verify.sh AC-n` asserts; the \"observable: true\" traceability claim is presently unbacked.",
+          "**TEST-3 proves less than AC-3 asserts (green-while-intent-absent):** AC-3 requires \"camera + layers swap on the mounted view\" (`spec.md:59`), but TEST-3 only checks \"the app root component instance is preserved \u2026 fails_when: switching AOI remounts the root or reloads the document\" (`plan.md:143-145`). A Builder who disposes and fully re-creates the `SceneView` on each switch (re-adding all layers, re-querying) keeps the React root mounted \u2192 TEST-3 green, yet the intended in-place camera/layer swap is absent and the presenter sees a scene re-initialization flash.",
+          "**TEST-5 does not prove required attribution content:** AC-5/INV-attribution-present require the C3 source attributions (\u00a9 OpenStreetMap contributors / Overture / AD-SDI / SCAD per `architecture.md:596`), but TEST-5 only asserts \"an `Attribution` element renders\" (`plan.md:149-151`). An empty/generic `<Attribution/>` passes while the licensing obligation is unmet."
+        ],
+        "lens_a_findings": [
+          "**Verification backbone missing:** All five DCs (`spec.md:356-370`) and every `done_criteria` in `traceability_1.2.yaml:119-149` (`observable: true`, `runner bash on path .ai/stages/1.2/verify.sh@f9534520a8e9`) require `bash .ai/stages/1.2/verify.sh AC-n`, but no `verify.sh` exists in `.ai/stages/1.2/` and it is not listed under \"Files to Create\" (`spec.md:86-98`) nor authored by any plan step. A Builder must invent what each `verify.sh AC-n` asserts; the \"observable: true\" traceability claim is presently unbacked.",
+          "**TEST-3 proves less than AC-3 asserts (green-while-intent-absent):** AC-3 requires \"camera + layers swap on the mounted view\" (`spec.md:59`), but TEST-3 only checks \"the app root component instance is preserved \u2026 fails_when: switching AOI remounts the root or reloads the document\" (`plan.md:143-145`). A Builder who disposes and fully re-creates the `SceneView` on each switch (re-adding all layers, re-querying) keeps the React root mounted \u2192 TEST-3 green, yet the intended in-place camera/layer swap is absent and the presenter sees a scene re-initialization flash.",
+          "**TEST-5 does not prove required attribution content:** AC-5/INV-attribution-present require the C3 source attributions (\u00a9 OpenStreetMap contributors / Overture / AD-SDI / SCAD per `architecture.md:596`), but TEST-5 only asserts \"an `Attribution` element renders\" (`plan.md:149-151`). An empty/generic `<Attribution/>` passes while the licensing obligation is unmet."
+        ],
+        "lens_b_findings": [
+          "**AOI-switch integrity gap (same as Lens A TEST-3):** the AC-3 invariant is \"swap on the mounted view,\" but nothing in tests or DCs asserts the `SceneView` instance (or its camera/layers) is preserved \u2014 only the React root. A conforming-by-letter build can tear down/rebuild the view per switch, satisfying WORK-NFR-3's literal \"no full application reload\" while breaking the authored `SceneRoot` execution semantics (`spec.md:314-319`).",
+          "**No-mockup-number guard is over-broad / non-deterministic:** the guard `grep -rnE '\\b(139|219)\\b|AED[ ]?85B' src/` (`spec.md:287`, `plan.md:92`) matches any standalone `139`/`219` \u2014 e.g. a legitimate camera `heading: 219` in `src/scene/aoi.ts` \u2014 and would falsely fail a correct build (or force the Builder to avoid valid values). It also does not cover other screenshot literals beyond these three, so a Builder could hard-code a different mockup number and stay green.",
+          "**Provenance guard scope narrower than invariant:** INV-provenance-tagged demands \"every dataset/field\" carry a tag, but TEST-5 checks only demo-portfolio records (`plan.md:149`); the AD-SDI `aoiBoundaries` dataset (OFFICIAL/PUBLIC) can ship untagged with the test green.",
+          "**Minor mis-citation (grounding, non-blocking):** AC-4 attributes \"no live LLM\" to WORK-NFR-5 (`spec.md:62`), but WORK-NFR-5 is connectivity-tolerance; the no-live-LLM rule is WORK-NFR-6/WORK-DEC-8. Both exist and are grounded, so this is a citation slip, not a missing requirement."
+        ]
+      }
+    ],
+    "roadmap_lint": {
+      "ok": true,
+      "detail": "roadmap entry has no TODO-stub / truncated-projection scaffolding",
+      "offending": []
+    },
+    "lens_b_advisory": {
+      "verdict": "CONCERN",
+      "findings": [
+        "**AOI-switch integrity gap (same as Lens A TEST-3):** the AC-3 invariant is \"swap on the mounted view,\" but nothing in tests or DCs asserts the `SceneView` instance (or its camera/layers) is preserved \u2014 only the React root. A conforming-by-letter build can tear down/rebuild the view per switch, satisfying WORK-NFR-3's literal \"no full application reload\" while breaking the authored `SceneRoot` execution semantics (`spec.md:314-319`).",
+        "**No-mockup-number guard is over-broad / non-deterministic:** the guard `grep -rnE '\\b(139|219)\\b|AED[ ]?85B' src/` (`spec.md:287`, `plan.md:92`) matches any standalone `139`/`219` \u2014 e.g. a legitimate camera `heading: 219` in `src/scene/aoi.ts` \u2014 and would falsely fail a correct build (or force the Builder to avoid valid values). It also does not cover other screenshot literals beyond these three, so a Builder could hard-code a different mockup number and stay green.",
+        "**Provenance guard scope narrower than invariant:** INV-provenance-tagged demands \"every dataset/field\" carry a tag, but TEST-5 checks only demo-portfolio records (`plan.md:149`); the AD-SDI `aoiBoundaries` dataset (OFFICIAL/PUBLIC) can ship untagged with the test green.",
+        "**Minor mis-citation (grounding, non-blocking):** AC-4 attributes \"no live LLM\" to WORK-NFR-5 (`spec.md:62`), but WORK-NFR-5 is connectivity-tolerance; the no-live-LLM rule is WORK-NFR-6/WORK-DEC-8. Both exist and are grounded, so this is a citation slip, not a missing requirement."
+      ],
+      "note": "ADVISORY (phase-1): recorded + surfaced; does NOT block dispatch. Promote to blocking = add Lens B to the final_gate threshold (one line)."
+    },
+    "unavailable": [],
+    "reviewer_threshold_met": false,
+    "reviewer_threshold_detail": "Lens A (Builder Readiness) CONCERN (blocking threshold is Lens A PASS)",
+    "questions": {
+      "independent_advisory": "INDEPENDENT ROADMAP REVIEW. You are shown ONE artifact: a roadmap stage entry. You are deliberately NOT shown the spec, plan, tests or done-criteria. State, as a numbered list, exactly what this stage must deliver, and what would constitute lost intent if a downstream spec omitted it. End with '## Verdict: PASS' if the roadmap entry is itself intelligible and actionable, 'CONCERN' if ambiguous, 'REJECT' if it cannot be acted on.",
+      "combined_two_lens": "TWO-LENS SEMANTIC REVIEW (pre-implementation). Produce TWO independent, separately-verdicted lenses over the SAME grounded inspection of THIS repo. Do NOT let one overall narrative substitute for the two lens results. Complete Lens A fully, THEN RESET posture for Lens B \u2014 Lens B is an adversary, not a continuation of Lens A. Apply each check only when relevant to this stage; do not force domain-specific checks that do not apply.\n\n## Lens A \u2014 Builder Readiness\nJudge ONLY whether a Builder with no human in the loop could DELIVER this stage from these artifacts (no implementation exists yet). Answer, citing the artifact: (1) does the Spec preserve roadmap intent \u2014 any LOST intent or UNINTENDED SCOPE EXPANSION? (2) does each Plan task genuinely satisfy the criterion it claims? (3) do the Tests PROVE behaviour or merely execute code? (4) name a concrete scenario where the tests stay GREEN while the required behaviour is ABSENT (or say you cannot construct one); (5) would the Done-Criteria demonstrate success post-implementation? A traceability matrix is supplied \u2014 judge it, do not reconstruct it; (6) any ambiguity that would force the Builder to INVENT? Emit EXACTLY:\n## Lens A Verdict: PASS|CONCERN|REJECT\n#### Lens A Findings\n(one '- ' bullet each; '- none' if empty)\n\n## Lens B \u2014 Hostile Implementation Audit\nRESET your posture: assume that following this package LITERALLY could still produce a WRONG system, and it is your job to prove it against the ACTUAL repository. Hunt, citing file:line: GROUNDING (do every named symbol / DTO field / method / enum value / route / config key EXIST with the claimed semantics?); contract/schema mismatch; authorization / IDOR / cross-tenant / cross-branch access; money, discount, commission, refund, rounding, settlement integrity where applicable; invalid or incomplete state transitions; CONCURRENCY, REPLAY and IDEMPOTENCY problems (races, double-apply, non-atomic read-modify-write); uniqueness / collision assumptions; read-only vs write boundary violations; determinism; stale-data / race behaviour; failure/retry semantics; any path where tests stay GREEN while required behaviour is absent; any implementation that technically satisfies the written package while violating its intended behaviour. For each, exhibit the concrete failing path (inputs -> wrong result, file:line) or state you could not construct one. Emit EXACTLY:\n## Lens B Verdict: PASS|CONCERN|REJECT\n#### Lens B Findings\n(one '- ' bullet each; '- none' if empty)\n\n## Overall\nThen emit the single final overall verdict = the WORSE of Lens A and Lens B (PASS only if BOTH are PASS)."
+    }
   },
   "final_gate": {
-    "verdict": "FAIL",
+    "verdict": "LOW_CONFIDENCE",
     "dispatch_allowed": false,
-    "reason": "layer1_fail",
-    "detail": "deterministic traceability FAILED; Layer 2 was not consulted and cannot overrule a Layer-1 FAIL",
-    "layer2_consulted": false,
-    "routes_to_human_owner": false,
+    "reason": "reviewer_threshold_not_met",
+    "detail": "Lens A (Builder Readiness) CONCERN (blocking threshold is Lens A PASS)",
+    "layer2_consulted": true,
+    "routes_to_human_owner": true,
     "ref_consistency": {
       "state": true,
       "detail": "authored artifacts committed on 'main' and byte-match the working tree"
@@ -316,13 +494,13 @@
   },
   "section_seals": {
     "certifier": "e2c09ac91c419ad08a53d1eb645c524e9a0dcab4b8d7fb52cee77522723db47e",
-    "generated_at_utc": "0c9914838a03a0192de59e301be1b88872869949855f25cc731ccabb7817e238",
+    "generated_at_utc": "3b7f76ddc0977a89490ca561f7ee1b021139ae47a1000ddb544a0f27d8f4c27b",
     "declared_limits": "a1cd0994e032074fe0ccea58c3480371e9abd98ca0bc8fb01c5508bfac7bd448",
     "inputs": "dc2df0b4d5512f9f4b12e43e423f604a1daf9fb252744cf4b00b4c07cbd168d3",
-    "traceability": "85be9dfbaeb26b901636f54f123131192ad3d5476a2a8df85b5bb03db277f44e",
-    "semantic_readiness": "cf37e3ed595082309db7e6ef0eee212d37edccc4aa1ba79f1752d0b6403b11a7",
-    "final_gate": "1aa0656a849c38b9418bb4b62dd1ff447f7a5f6aba492e3c5f26a82506bab98f",
+    "traceability": "fb417f3af79fc7f388764b01658ef51cbfb1ec55bec476ead443cc7e2330626e",
+    "semantic_readiness": "78d93522434dfc072364e5fcb99bfceeaf67fa32e347b14f6272380a4e543d7b",
+    "final_gate": "0c74c4958995c0f48b7c8af6fa603a984e52c702912672395846a9cfc09405e9",
     "contract_binding": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
   },
-  "certificate_seal": "283de6875a0c0c31ba7140d8f8e60d42e7fcd14429ff5d8db668e43b31ad1314"
+  "certificate_seal": "4d33f160be3af30c4170b96cfd549a1388ba3b27bea8acaab6db53d06585d369"
 }

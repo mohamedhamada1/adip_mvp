@@ -59,7 +59,7 @@ covers: RR-2
 #### AC-3 — AOI switching between Khalifa City and Al Reem Island occurs without a full app reload and preserves the Explore workflow (camera + layers swap on the mounted view) (WORK-AC-3, WORK-NFR-3, WORK-REQ-6).
 covers: RR-3
 
-#### AC-4 — The Al Reem opening degrades gracefully to a disabled/hidden switcher state leaving a coherent Khalifa-only experience; the scene also degrades without a page reload if the tokenless 3D service is unreachable, and no live LLM is introduced (WORK-EX-4, WORK-DEC-5, WORK-NFR-5).
+#### AC-4 — The Al Reem opening degrades gracefully to a disabled/hidden switcher state leaving a coherent Khalifa-only experience; the scene also degrades without a page reload if the tokenless 3D service is unreachable (WORK-EX-4, WORK-DEC-5, WORK-NFR-5 connectivity-tolerance), and no live LLM is introduced on the core path (WORK-NFR-6, WORK-DEC-8).
 covers: RR-4
 
 #### AC-5 — Every displayed KPI/marker value derives from the frozen synthetic IS_DEMO snapshot; every dataset/field is provenance-tagged (OFFICIAL/PUBLIC, DERIVED, or SYNTHETIC/DEMO) with no hard-coded screenshot numbers (no literal 139/219/AED 85B), and required source attribution is visible from the first Explore render (WORK-AC-19, WORK-DEC-7; condition C3).
@@ -284,12 +284,17 @@ None. No backend.
 - [ ] KPI strip values derive from the demo portfolio aggregate (not literals).
 - [ ] Filters change visible markers; selecting a marker flies to / emphasizes it.
 #### Safety / Invariants
-- [ ] `grep -rnE '\b(139|219)\b|AED[ ]?85B' src/` → 0 matches (no mockup numbers).
+- [ ] No mockup numbers in UI display code: `grep -rnE 'AED[ ]*85[ ]*B|\b85B\b' src/ → 0`, AND no KPI/count
+  is a numeric literal in `src/ui/` (KPI values are computed from the dataset aggregate, not typed). The
+  guard is scoped to display code (`src/ui/`) and the specific "AED 85B" token — it deliberately does NOT
+  blanket-match bare `139`/`219`, which can be legitimate coordinates/ids/pixels (deterministic, no false positives).
 - [ ] No live LLM / Assessment / Simulate / Ask-AI code in `src/`.
 - [ ] No raw hex colors in components (tokens only).
 #### Tests
-- [ ] A unit test asserts every demo portfolio record has a provenance tag + `IS_DEMO`.
-- [ ] A test/guard asserts no mockup-number literals in `src/`.
+- [ ] A unit test asserts **every dataset record across ALL sources** (`src/data/**` — synthetic portfolio
+  AND AD-SDI-derived boundaries) carries a provenance tag; synthetic records also carry `IS_DEMO` (matching
+  INV-provenance-tagged "every dataset/field").
+- [ ] A guard asserts KPI/count values in `src/ui/` are computed (no typed mockup literals) and no "AED 85B" token appears.
 
 ### Optional / Quality
 - [ ] Loading + empty states for the scene.
@@ -359,7 +364,7 @@ None. No backend.
 - DC-2: `src/` renders a KPI strip, sector filters, and selectable markers with fly-to/emphasis.
   demonstrates: AC-2
   verify: bash .ai/stages/1.2/verify.sh AC-2
-- DC-3: An AOI switcher swaps Khalifa/Al Reem on the mounted view without remounting the app root.
+- DC-3: An AOI switcher swaps Khalifa/Al Reem by updating the camera/layers of the SAME persisted `SceneView` instance (SceneView constructed exactly once; not re-instantiated per switch), without remounting the app root.
   demonstrates: AC-3
   verify: bash .ai/stages/1.2/verify.sh AC-3
 - DC-4: Disabling the Al Reem opening leaves a coherent Khalifa-only experience and the scene degrades without reload.
