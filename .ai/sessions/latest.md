@@ -1,18 +1,12 @@
 ## Last Session Summary
-- Timestamp: 2026-09-04T13:09:44Z
+- Timestamp: 2026-09-04T14:34:39Z
 - Stage: 1.2
-- Branch: main
-- Uncommitted files: 4
+- Branch: feat/stage-1.2
+- Uncommitted files: 0
 
 Recent commits:
-1509149 Stage 1.2: close 3rd-round Lens-A items (structural guard, mechanical checks, refs, softening)
-88133f6 Stage 1.2: close residual Layer-2 items (JSON provenance, no-reload, metadata)
-8fd86e3 Stage 1.2: address Layer-2 reviewer concerns (SceneView instance, guard determinism, provenance breadth, citation)
-8a798ec Stage 1.2 spec/plan: anchored traceability (AC↔RR↔T↔TEST↔DC) + verify.sh
-7a255f4 Author Stage 1.2 spec + plan (Explore/3D shell) with guardrails
+b8a0bb8 chore: gitignore tsbuildinfo + engine session logs
+6313df3 Build Stage 1.2 — Explore / 3D shell + AOI switch (direct-build override)
 
 Working tree:
- M .ai/epics/adpic-livex-2026-capital-intelligence-mvp/evidence/prep_1.2.json
- M .ai/epics/adpic-livex-2026-capital-intelligence-mvp/evidence/traceability_1.2.yaml
- M .ai/sessions/latest.md
-?? .ai/sessions/2026-09-04T13-03-41.md
+

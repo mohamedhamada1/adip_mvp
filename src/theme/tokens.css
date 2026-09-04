@@ -1,0 +1,31 @@
+/* Stage 1.2 — dark cinematic design tokens.
+   This is the ONLY place raw hex colors live; components reference these tokens
+   (var(--...)) and never hard-code hex (enforced by verify.sh AC-1). */
+:root {
+  --bg-0: #070c16;          /* deepest navy */
+  --bg-1: #0b1220;          /* panel navy */
+  --bg-2: #111c30;          /* raised panel */
+  --stroke: #24406b;        /* restrained blue stroke */
+  --text-0: #eef4ff;        /* primary text */
+  --text-1: #a9bbd8;        /* secondary text */
+  --text-2: #6f83a6;        /* muted */
+  --accent: #3d7bff;        /* restrained blue highlight */
+  --accent-soft: rgba(61, 123, 255, 0.16);
+  --accent-2: #7cc0ff;
+  --good: #7cfc9b;
+  --warn: #ffd479;
+  --shadow: rgba(3, 8, 18, 0.6);
+
+  --space-1: 6px;
+  --space-2: 12px;
+  --space-3: 20px;
+  --space-4: 32px;
+  --radius-1: 8px;
+  --radius-2: 14px;
+  --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+  --kpi-size: clamp(28px, 3vw, 44px);
+  --title-size: clamp(28px, 4vw, 56px);
+}
+
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; background: var(--bg-0); color: var(--text-0); font-family: var(--font-ui); }
