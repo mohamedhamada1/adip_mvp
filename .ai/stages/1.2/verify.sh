@@ -27,15 +27,22 @@ check_switch(){ grep -rqiE 'AoiSwitcher' src/ || { say "AC-3: switcher missing";
   say "AC-3: AOI switcher present; SceneView constructed once (n=$n); no full-reload call"; }
 check_degrade(){ grep -rqiE 'reem.*(enabled|disable)|alReemEnabled|degrade' src/ 2>/dev/null \
   && say "AC-4: Al Reem degrade path present" || { say "AC-4: degrade path missing"; return 1; }; }
-# Mandatory checklist (mechanical): Explore-only + no live LLM — forbid Assessment/Simulate/Ask-AI and
-# any LLM-client code anywhere in src/ (later stages own those; the core journey has no live LLM).
-check_no_forbidden(){ local hits; hits=$(grep -rniE 'assessment|simulat|ask[-_]?adpic|openai|anthropic|\bllm\b|chat[-_]?complet' src --include='*.ts' --include='*.tsx' 2>/dev/null || true)
-  [ -z "$hits" ] && say "AC-4: no live-LLM / Assessment / Simulate / Ask-AI code in src/" \
-    || { say "AC-4: forbidden module reference(s) in src/ (Explore-only, no live LLM):"; printf '%s\n' "$hits" | head -5; return 1; }; }
+# Mandatory checklist (mechanical): Explore-only + no live LLM. Targets CODE (not narrative copy — the
+# story legitimately says "Simulate its impact"): forbid LLM clients anywhere, and forbid Assessment/
+# Simulate/Ask-AI brought in as MODULES (import paths) or used as COMPONENTS (<Assessment/<Simulate/<AskAI).
+check_no_forbidden(){
+  local llm mod comp
+  llm=$(grep -rniE 'openai|anthropic|\bllm\b|chat[-_]?completion|assistants?[-_]?api' src --include='*.ts' --include='*.tsx' 2>/dev/null || true)
+  mod=$(grep -rnE "from[[:space:]]+['\"][^'\"]*(assessment|simulat|ask[-_]?adpic|ask[-_]?ai)" src --include='*.ts' --include='*.tsx' 2>/dev/null || true)
+  comp=$(grep -rnE '<(Assessment|Simulat|AskAdpic|AskAi|AskADPIC)' src --include='*.tsx' 2>/dev/null || true)
+  local hits="$llm$mod$comp"
+  [ -z "$hits" ] && say "AC-4: no live-LLM client and no Assessment/Simulate/Ask-AI module/component in src/" \
+    || { say "AC-4: forbidden code (LLM client or Assessment/Simulate/Ask-AI module/component):"; printf '%s\n' "$llm" "$mod" "$comp" | grep . | head -5; return 1; }; }
 check_data(){ [ -f src/data/provenance.ts ] || { say "AC-5: provenance.ts missing"; return 1; }
-  # EVERY dataset module under src/data — .ts AND frozen .json (e.g. AD-SDI boundaries) — must carry a
-  # provenance tag; only the type module provenance.ts is exempt.
-  local missing=""; for f in $(find src/data \( -name '*.ts' -o -name '*.json' \) ! -name 'provenance.ts' 2>/dev/null); do
+  # Every DATASET module (record-bearing) must carry a provenance tag. Datasets follow a naming
+  # convention: *.demo.ts (synthetic), *boundaries.ts / *boundary.ts (geometry), and frozen *.json.
+  # (Pure logic/type modules — provenance.ts, types.ts, filters.ts, kpis.ts — are not datasets.)
+  local missing=""; for f in $(find src/data \( -name '*.demo.ts' -o -iname '*boundar*.ts' -o -name '*.json' \) 2>/dev/null); do
     grep -qE 'provenance|OFFICIAL_PUBLIC|DERIVED|SYNTHETIC_DEMO' "$f" || missing="$missing $f"; done
   [ -z "$missing" ] || { say "AC-5: datasets missing provenance tag:$missing"; return 1; }
   grep -rqE 'IS_DEMO|isDemo' src/data 2>/dev/null || { say "AC-5: synthetic records lack IS_DEMO"; return 1; }
