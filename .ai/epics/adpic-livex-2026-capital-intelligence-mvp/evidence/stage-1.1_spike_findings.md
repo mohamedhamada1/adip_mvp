@@ -26,12 +26,20 @@ item over Al Reem and Khalifa extents. Evidence files in this folder.
 
 ## 2. Deterministic / local-first 3D delivery mechanism — `[confirmed]` (+ `[assumption]` for offline)
 - Browser ArcGIS JS **cannot load `.slpk` directly** (confirmed in exploration grounding).
-- **Runtime-viable now:** consume the I3S Scene Service by URL directly in `SceneLayer` — works with
-  **no token** (see #7). Good for a connected runtime.
-- **For true offline/local-first `[assumption]`:** extract the two AOI extents (ArcGIS Pro) and
-  **serve the clipped I3S scene tiles from a local/on-prem web server**, consumed by the same
-  `SceneLayer` by local URL. Avoids Portal WebScene dependency (WORK-INT-5/6). This is the
-  recommended packaging path; it must be built + verified (not done this session — needs ArcGIS Pro).
+- **Runtime-viable now `[confirmed]`:** consume the I3S Scene Service by URL directly in `SceneLayer`
+  — works with **no token** (see #7). This is the connected-path mechanism, de-risked.
+- **Offline options — three, honestly ranked:**
+  - **(i) Connected + aggressive caching `[confirmed]`:** the tokenless Esri service (above) with HTTP/
+    tile caching + preload. Tolerates blips; not a hard-offline guarantee.
+  - **(ii) OWN-BUILT offline floor `[confirmed feasible]` — recommended offline PRIMARY:** generate
+    extruded building footprints from **owner GIS or openly-licensed Overture data** and serve them
+    locally (own content, no third-party hosting/licensing question). This is the deterministic floor
+    from the exploration grounding; it guarantees a 3D scene with the venue network unplugged.
+  - **(iii) Clip-and-rehost Esri's layer `[OPEN QUESTION — do NOT assume]`:** Esri 3D Buildings is
+    **Esri-hosted content we do NOT own**; there is no standard user extract/clip, and re-hosting clips
+    raises a **licensing/ToS** question as much as a technical one. This is a Stage-1.1 follow-up to
+    raise with the owner/Esri — NOT a recommendation and NOT a proven mitigation.
+  - All viable options avoid Portal WebScene dependency (WORK-INT-5/6).
 
 ## 3. Frozen/sanitized event dataset pipeline & validated portfolio-count strategy — `[pending-data]`
 - No portfolio dataset is available to the project side yet. Per WORK-OQ-5 resolution, each dataset's
@@ -51,12 +59,13 @@ item over Al Reem and Khalifa extents. Evidence files in this folder.
 - **Recommendation:** precompute the school service-area polygons offline and **bake them into the
   frozen dataset**; live routing is an optional post-spike enhancement, never on the critical path.
 
-## 6. Network-independent operation of the 60–90s journey — `[confirmed]` (path) / `[assumption]` (full offline)
+## 6. Network-independent operation of the 60–90s journey — `[confirmed]` (path) / `[assumption]` (hard-offline)
 - The single hard external dependency for the scripted journey is the 3D buildings service
   (`basemaps3d.arcgis.com`). Everything else (scores, templates, precomputed sim) is deterministic/local.
-- **To go fully network-independent:** host the AOI-clipped I3S tiles + frozen data locally (#2/#3).
-  With that, the journey runs with the venue network disconnected. Confirmed feasible in principle;
-  the local-hosting build must be verified before build-commit.
+- **Hard-offline guarantee** comes from the **own-built extruded-footprint floor** (#2 option ii) +
+  frozen data — own content, no third-party hosting/licensing question. With that, the journey runs
+  with the venue network disconnected. Confirmed feasible; the floor must be built + verified before
+  build-commit. (Clip-and-rehost of Esri's layer is an OPEN licensing question, not the plan — see #2.)
 
 ## 7. External Esri dependencies / auth / CORS / keys / credits — `[confirmed]`
 - **Esri 3D Buildings service: no token required, `access-control-allow-origin: *`.** Service root,
@@ -100,7 +109,10 @@ approver), OQ-4 (final business owner), OQ-7/8 (LLM allowlist + security/AI appr
 (hardware owner + specs).
 
 ## Recommended architecture (carried into later stages)
-Reliability-First Deterministic Twin: local-hosted AOI-clipped I3S 3D + frozen sanitized data +
-precomputed scores/service-areas + template explanations; live Esri basemap/routing/LLM as optional,
-feature-flagged, tokenless-where-possible enhancements behind adapters that degrade to the frozen path.
-Dark ground + muted grey massing delivers the cinematic look without a photoreal basemap dependency.
+Reliability-First Deterministic Twin: **own-built extruded-footprint 3D floor** (owner GIS / openly-
+licensed Overture, served locally) as the hard-offline guarantee + frozen sanitized data + precomputed
+scores/service-areas + template explanations; the **tokenless Esri 3D Buildings service (connected +
+cached)** as the richer default when network is present; live Esri basemap/routing/LLM as optional,
+feature-flagged enhancements behind adapters that degrade to the frozen path. Dark ground + muted grey
+massing delivers the cinematic look without a photoreal basemap dependency. (Whether Esri's hosted layer
+may be clipped/re-hosted offline is an OPEN owner/Esri licensing question, not assumed.)
