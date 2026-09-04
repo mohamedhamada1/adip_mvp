@@ -58,7 +58,18 @@
       }
     },
     "1.3": {
-      "lifecycle": "in_progress"
+      "lifecycle": "done",
+      "conformance": {
+        "status": "PASS",
+        "matrix": {},
+        "orphanWork": []
+      },
+      "proof": "legacy_unproven",
+      "legacy_exception": {
+        "reason": "Stage 1.3 built via owner-authorized direct-build override; proof is 30/30 vitest behavioural tests + verify.sh all PASS + live-browser evidence (evidence/stage-1.3_build_evidence.md), not an independent-verifier AC matrix (environment's certifier semantic reviewer is a non-deterministic injected/hermetic actor). Spec reached Lens A PASS on merit.",
+        "authorized_by": "Project owner \u2014 decisions/DECISION-stage-1.3-accepted.md (2026-09-04)",
+        "at": "2026-09-04T15:50:53Z"
+      }
     },
     "1.4": {
       "lifecycle": "planned"
