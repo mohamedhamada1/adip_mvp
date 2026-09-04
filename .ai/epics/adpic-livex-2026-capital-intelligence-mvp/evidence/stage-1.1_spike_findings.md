@@ -16,7 +16,11 @@ accepts. Stage 1.2 NOT started.
 - Preserve the `.slpk` finding: **do NOT assume browser-direct SLPK loading**.
 - Esri clip/re-host/offline **licensing is an explicit UNRESOLVED dependency/question** — no licensing
   permission is assumed (tracked as DEP-ESRI-OFFLINE-LICENSE below and in the epic).
+
 **Confidence tags:** `[confirmed]` empirical this session · `[estimated]` measured but not on event hardware · `[assumption]` reasoned, unverified · `[pending-data]` needs owner-supplied dataset/approval.
+**Reading note:** §1–§10 below are the original technical spike. §3 and §4 were written before the owner's
+demo-dataset data strategy (2026-09-04) and are **SUPERSEDED** by it — see the FINAL recommendation (§1/§4)
+and `stage-1.1_oq5_dataset_inventory.md`.
 
 Method: anonymous Esri REST metadata calls (curl) + a live ArcGIS Maps SDK for JS 4.31
 `SceneView` harness driven in a real Chromium at 1920×1080, pointed at the WORK-INT-2
@@ -56,7 +60,7 @@ item over Al Reem and Khalifa extents. Evidence files in this folder.
     raise with the owner/Esri — NOT a recommendation and NOT a proven mitigation.
   - All viable options avoid Portal WebScene dependency (WORK-INT-5/6).
 
-## 3. Frozen/sanitized event dataset pipeline & validated portfolio-count strategy — `[pending-data]`
+## 3. Frozen/sanitized event dataset pipeline & validated portfolio-count strategy — **SUPERSEDED** (2026-09-04, demo-dataset basis — see FINAL §1/§2)
 - No portfolio dataset is available to the project side yet. Per WORK-OQ-5 resolution, each dataset's
   status is **to be validated**, not assumed approved.
 - Recommended pipeline `[assumption]`: Enterprise 10.8.1 (offline prep only) → sanitize (attribute
@@ -64,10 +68,11 @@ item over Al Reem and Khalifa extents. Evidence files in this folder.
 - **Counts:** 219/139 remain provisional (WORK-DEC-7, AC-19); display only validated frozen values.
   The screenshots' numbers (139, 219, AED 85B, etc.) are mockup, not to be hard-coded.
 
-## 4. School-simulation inputs availability & quality — `[pending-data]`
-- Needs population/demand zones, existing facilities, roads/network or service-area inputs
-  (WORK-DATA-26..29, DEP-6/7). **None supplied.** Must be inventoried + approved, or replaced with
-  **precomputed deterministic equivalents** (WORK-INT-7) — decided here at the spike, not late.
+## 4. School-simulation inputs availability & quality — **SUPERSEDED** (2026-09-04, demo-dataset basis — see FINAL §4)
+- (Original) Needs population/demand zones, existing facilities, roads/network or service-area inputs
+  (WORK-DATA-26..29, DEP-6/7). **None supplied.** — RESOLVED by the demo-dataset review: existing schools,
+  roads, and boundaries are OFFICIAL/PUBLIC (AD-SDI); population is OFFICIAL(district, SCAD)→DERIVED; the
+  proposed school is hypothetical/demo; service areas are DERIVED/precomputed. See FINAL §4.
 
 ## 5. Service-area / network calculation approach + fallback — `[confirmed]` (approach) / `[pending-data]` (inputs)
 - ArcGIS routing/service-area REST exists but needs credentials + consumes credits (WORK-INT-9, DEP-8).
@@ -91,7 +96,8 @@ item over Al Reem and Khalifa extents. Evidence files in this folder.
   here. **Removable from the critical path** by using a dark ground color / self-hosted dark tiles —
   the muted-context aesthetic may not need a photoreal basemap at all.
 - **Net:** the biggest feared dependency (3D buildings auth/CORS/credits) is **de-risked** for a
-  connected runtime; offline still needs local tile hosting.
+  connected runtime; **hard-offline is met by the own-built extruded-footprint floor** (AD-SDI Building 353
+  / Overture) — no Esri tile re-hosting required (see §2 option ii and FINAL §3).
 
 ## 8. Initial 3D/rendering performance benchmark — `[estimated]`
 - **60 FPS steady-state** at BOTH Al Reem and Khalifa, 1920×1080, `qualityProfile:"high"`, on this

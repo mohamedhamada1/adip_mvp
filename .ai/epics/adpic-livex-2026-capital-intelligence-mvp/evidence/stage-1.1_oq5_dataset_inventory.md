@@ -64,41 +64,56 @@ provenance, freshness, and freeze/export feasibility are being verified, not ass
 ## Per-dataset record (D1–D7)
 
 ### D1 — Khalifa City portfolio — **SYNTHETIC/DEMO** (owner-directed)
-Owner: do NOT reconstruct an alleged official portfolio from unofficial sources. Build a curated
-synthetic/sanitized exhibition portfolio, geographically/functionally credible, explicitly demo, sized
-for a strong responsive MVP (NOT 219). `IS_DEMO=true`. Freezable: yes. Swap-ready to real internal data.
+1. Source: curated by us (owner: do NOT reconstruct an official portfolio from unofficial sources).
+2. Availability: to be authored. 3. Structure: point/polygon projects + WORK-DATA-4..22 attributes.
+4. Completeness: sized for a strong responsive MVP (**NOT 219**). 5. Suitability: high — drives Explore/
+Evaluate. 6. Approval: n/a (synthetic; not official). 7. Sanitization: n/a (born sanitized). 8. Missing: n/a.
+9. Synthetic replacement: **YES — `IS_DEMO=true`**, explicitly demo. 10. Freezable: yes; swap-ready to real
+internal data without redesign.
 
 ### D2 — Al Reem Island portfolio — **SYNTHETIC/DEMO** (owner-directed)
-Same as D1; NOT 139. Curated synthetic showcase portfolio for the cinematic Explore opening. Freezable: yes.
+1. Source: curated by us. 2. Availability: to be authored. 3. Structure: as D1. 4. Completeness: showcase
+set (**NOT 139**) for the cinematic opening. 5. Suitability: high (Explore hero). 6. Approval: n/a. 7.
+Sanitization: n/a. 8. Missing: n/a. 9. Synthetic replacement: **YES — `IS_DEMO`**. 10. Freezable: yes.
 
-### D3 — AOI boundaries — **OFFICIAL/PUBLIC** (AD-SDI), licensing PENDING
-Source: AD-SDI Community(2)/Districts(4)/Administrative Boundaries(0). Structure: polygons, WGS84,
-bilingual names. Completeness: AOIs present (Reem confirmed; exact Khalifa City community to be selected).
-Suitability: high. Sanitization: none (public boundaries). Missing: none material. Synthetic: no.
-Freezable: yes (geoJSON export) **subject to license confirmation**.
+### D3 — AOI boundaries — **OFFICIAL/PUBLIC** (AD-SDI)
+1. Source: AD-SDI Districts(4)/Community(2)/Administrative Boundaries(0). 2. Availability: **CONFIRMED
+own-verified** — Districts layer 4 field `NAMEENGLISH` contains **"KHALIFA CITY"** and **"AL REEM ISLAND"**.
+3. Structure: polygons, WGS84, bilingual (`NAMEENGLISH`/`NAMEARABIC`). 4. Completeness: both AOIs present.
+5. Suitability: high (AOI framing, clip extent). 6. Approval: UAE/Abu Dhabi open-data license (attribution)
+— pending written confirmation (C1). 7. Sanitization: none (public boundaries). 8. Missing: none material.
+9. Synthetic replacement: no. 10. Freezable: yes (geoJSON), subject to C1.
 
-### D4 — Population / demand — **OFFICIAL/PUBLIC (SCAD district totals) → DERIVED (community-grain demand)**
-SCAD publishes population at region/district grain (Census 2023 / 2024 est.), tabular (CSV/Excel), joined
-to AD-SDI district geometry by name/ID. The finer spatial demand grain the simulator needs is produced by
-**deterministic disaggregation** of official district totals = **DERIVED**, labeled, **explicitly NOT
-official ADPIC population analysis** (owner, WORK); `IS_DEMO` where synthetic. Freezable: yes. Condition:
-confirm SCAD license permits offline bundling.
+### D4 — Population / demand — **OFFICIAL/PUBLIC (SCAD district) → DERIVED (community grain)**
+1. Source: SCAD Census 2023 / 2024 est. (AD-SDI Districts `POPULATION` is NULL). 2. Availability: district
+totals available (tabular CSV/Excel). 3. Structure: tabular, join to AD-SDI district geometry by name/ID.
+4. Completeness: district grain (community grain not confirmed). 5. Suitability: good as demand base.
+6. Approval: SCAD Open Data Policy — pending license confirmation (C2). 7. Sanitization: n/a (aggregate).
+8. Missing: sub-district spatial demand → produced by **deterministic disaggregation = DERIVED**, labeled,
+**explicitly NOT official ADPIC population analysis**. 9. Synthetic replacement: partial (community demand
+model, `IS_DEMO`). 10. Freezable: yes.
 
-### D5 — Existing facilities (esp. schools) — **OFFICIAL/PUBLIC** (AD-SDI), licensing PENDING
-Source: AD-SDI Public/Private/Charter Schools + Nurseries + Clinics. 212 public schools; 5 in Khalifa
-envelope. Rich attributes (curriculum, gender, grades, cycle, plot). Suitability: high — real schools
-anchor the deterministic school-simulation context. Sanitization: minimal (public facility data).
-Synthetic: no. Freezable: yes (geoJSON) **subject to license confirmation**.
+### D5 — Existing facilities (esp. schools) — **OFFICIAL/PUBLIC** (AD-SDI)
+1. Source: AD-SDI Public/Private/Charter Schools + Nurseries + Clinics. 2. Availability: **CONFIRMED** —
+212 public schools; **5 own-verified in Khalifa City envelope**. 3. Structure: points, WGS84, rich bilingual
+attrs (name, curriculum, gender, grades, cycle, plot). 4. Completeness: high for schools; Al Reem public-
+school count to re-check with exact polygon. 5. Suitability: high — real schools anchor the sim context.
+6. Approval: open-data license (attribution) — pending C1. 7. Sanitization: minimal (public facility data).
+8. Missing: none material for the story. 9. Synthetic replacement: no. 10. Freezable: yes (geoJSON), sub. C1.
 
-### D6 — Roads / network / service-area inputs — **OFFICIAL/PUBLIC (roads)** → **DERIVED (service areas)**
-Source: AD-SDI RoadCenterline(101) + network layers. Approach: precompute service-area/accessibility
-deterministically from the official network and **bake results into the frozen snapshot** (owner-approved;
-live routing off critical path). Service-area polygons are `DERIVED`. Freezable: yes.
+### D6 — Roads / network / service-area inputs — **OFFICIAL/PUBLIC (roads) → DERIVED (service areas)**
+1. Source: AD-SDI RoadCenterline(101) + network layers. 2. Availability: **CONFIRMED** present. 3. Structure:
+polylines, WGS84. 4. Completeness: full emirate network (AOI-clip). 5. Suitability: high — basis for
+deterministic service areas. 6. Approval: open-data license (attribution) — pending C1. 7. Sanitization:
+none. 8. Missing: none material. 9. Synthetic replacement: no for roads; **service-area polygons are DERIVED
+(precomputed, baked into snapshot)** — live routing off critical path. 10. Freezable: yes.
 
 ### D7 — Strategic-theme mapping / assessment inputs — **SYNTHETIC/DEMO** (exhibition-only)
-Owner: synthetic exhibition-only project attributes + deterministic rules acceptable where approved
-internal methodology/data is unavailable, under the decision-support disclaimer (WORK-BR-15). `IS_DEMO`.
-Deterministic + reproducible (WORK-BR-3). Freezable: yes.
+1. Source: authored exhibition-only attributes + deterministic rules. 2. Availability: to be authored.
+3. Structure: per-project theme/indicator fields feeding the scoring engine. 4. Completeness: as needed for
+the assessment story. 5. Suitability: high (Evaluate). 6. Approval: under decision-support disclaimer
+(WORK-BR-15); methodology approver = OQ-3 (OPEN). 7. Sanitization: n/a. 8. Missing: n/a. 9. Synthetic
+replacement: **YES — `IS_DEMO`**, deterministic + reproducible (WORK-BR-3). 10. Freezable: yes.
 
 ---
 
