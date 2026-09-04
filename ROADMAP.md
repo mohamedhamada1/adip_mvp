@@ -270,3 +270,93 @@ selecting a planned project yields a reproducible Low/Medium/High with visible p
 - **Customer Value** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.3 → Customer Value (referenced, not duplicated)
 - **Go-Live Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.3 → Go-Live Impact (referenced, not duplicated)
 
+
+### Stage 1.4 — Liveability Impact Simulator (School, precomputed)
+
+**Status:** Planned
+**Source:** epic (.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md)
+**Date:** 2026-09-04
+**Artifact Type:** simulation capability
+**Execution Model:** hybrid
+**Depends on:** 1.3
+
+#### Core Invariant
+- The hypothetical school is never presented as an approved real project, and all before/after values come from precomputed frozen simulation data.
+
+#### Ownership
+- Owns: a Current vs With-Proposed-School comparison with service-area, underserved, accessibility, and KPI deltas.
+
+#### Inputs → Outputs
+- **Inputs:** precomputed service areas / population inputs (or deterministic equivalents from Stage 1.1) and screenshot 05.
+- **Outputs:** a Current vs With-Proposed-School comparison with service-area, underserved, accessibility, and KPI deltas.
+
+#### Transformation Order
+1. precomputed service areas / population inputs (or deterministic equivalents from Stage 1.1) and screenshot 05. → VALIDATE: The hypothetical school is never presented as an approved real project, and all before/after values come from precomputed frozen simulation data.
+2. a Current vs With-Proposed-School comparison with service-area, underserved, accessibility, and KPI deltas. → VALIDATE: the simulator shows Current → Simulate → proposed intervention → changed coverage → KPI change → concise explanation, entirely from precomputed data.
+
+#### Breaking Rules
+- A breaking change is any violation of § Must Not: the precomputed-data contract for the fallback path.
+
+#### Must Preserve
+- the demo/hypothetical identification of the school and validated-data-only display.
+
+#### Must Not
+- the precomputed-data contract for the fallback path.
+
+#### Validation & Determinism
+- The hypothetical school is never presented as an approved real project, and all before/after values come from precomputed frozen simulation data.
+
+#### Success Proof
+- the simulator shows Current → Simulate → proposed intervention → changed coverage → KPI change → concise explanation, entirely from precomputed data.
+
+#### Example
+```
+the simulator shows Current → Simulate → proposed intervention → changed coverage → KPI change → concise explanation, entirely from precomputed data.
+```
+
+
+#### Stage Contract Propagation (stage-propagation-matrix/v1)
+
+- **Source of truth:** `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.4 — this projection never overrides it.
+
+- **Stage ID:** 1.4
+- **Title:** Liveability Impact Simulator (School, precomputed)
+- **Artifact Type:** simulation capability
+- **Execution Model:** hybrid
+- **Affected Repos:** single-repo (web frontend)
+- **Estimated Effort:** M — before/after simulation UI over precomputed service-area data.
+- **Depends On:** 1.3
+- **Core Invariant:** The hypothetical school is never presented as an approved real project, and all before/after values come from precomputed frozen simulation data.
+- **Outputs:** a Current vs With-Proposed-School comparison with service-area, underserved, accessibility, and KPI deltas.
+
+##### Requirements
+
+- RR-1: The simulator compares Current and With-Proposed-Project for the approved hypothetical school scenario — source: WORK-REQ-12, WORK-AC-8, WORK-DEC-2.
+- RR-2: The simulation map shows current coverage, underserved areas, proposed location, new service area, and newly covered communities where approved data supports them — source: WORK-REQ-14, WORK-AC-9.
+- RR-3: The simulator reports population within service area, coverage, average access distance, underserved population, and a Liveability Impact Score where approved data supports them — source: WORK-REQ-13.
+- RR-4: The interaction follows the exhibition sequence current → Simulate → intervention → changed coverage → KPI change → explanation — source: WORK-REQ-15.
+- RR-5: The school is labeled hypothetical/demo and never reads as an approved real project — source: WORK-BR-14, WORK-DATA-32.
+- RR-6: Every before/after value is sourced from precomputed frozen simulation data rather than any mockup figure — source: WORK-AC-19; DERIVED — Core Invariant 4 applied to simulation outputs.
+
+##### Not Doing
+
+- **Out of scope:** emirate-wide scenario optimization (WORK-OOS-14); live routing as a dependency.
+- **Intentionally deferred:** additional proposal types beyond the approved school scenario.
+- **Must not expand into:** presenting the hypothetical school as a real approved project.
+
+##### Roadmap Position
+
+- **Milestone:** Decision Support.
+- **Dependencies:** Stage 1.3 assessment context; precompute from Stage 1.1; WORK-DEP-6/7 data.
+- **Unblocked after this stage:** the full scripted journey and hardening.
+- **Future stages that depend on it:** 1.5.
+
+##### Governance References (canonical in the epic — referenced, not duplicated)
+
+- **Business Context** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.4 → Business Context (referenced, not duplicated)
+- **Revenue Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.4 → Revenue Impact (referenced, not duplicated)
+- **Readiness Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.4 → Readiness Impact (referenced, not duplicated)
+- **Multi-Vertical Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.4 → Multi-Vertical Impact (referenced, not duplicated)
+- **Customer Value** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.4 → Customer Value (referenced, not duplicated)
+- **Go-Live Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.4 → Go-Live Impact (referenced, not duplicated)
+
