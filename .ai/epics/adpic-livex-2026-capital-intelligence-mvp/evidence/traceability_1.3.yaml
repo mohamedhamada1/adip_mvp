@@ -14,23 +14,23 @@ artifacts:
   spec:
     path: ".ai/stages/1.3/spec.md"
     section: null
-    sha256: "2ad1084f48936e7d57c20e10fdb8af039663e6a3b48426cf95a4de89d7235724"
+    sha256: "a9f975b425f6e71e1acfa29215bbd3faa290a063e394a3c0fcfd9a8de61c2240"
   plan:
     path: ".ai/stages/1.3/plan.md"
     section: null
-    sha256: "1c8dca5975554b839a75d791d511e8e98b36cf35014dcbcc052054c256a6d8ce"
+    sha256: "d720a897d92050df8ee6c3e6eab990f9ccda5c004689cc7837654af782664c52"
   test:
     path: ".ai/stages/1.3/plan.md"
     section: "## Test plan"
-    sha256: "750d4b077c054431472dbb8340c0ae3bc964fc631d19277355502a248d1369a1"
+    sha256: "215057bef34ff0fb459be00564ebc851bfb12143032570027c2df4265233d499"
   done:
     path: ".ai/stages/1.3/spec.md"
     section: "## Success Proof"
-    sha256: "ed0870c09f18bd4a3412024a99ad9b62c85fe2192fe94659b274f52503c529c5"
+    sha256: "7f6b2591b872b494f83a99ac4bd953cfc47447bb0790657287ced42e583c5223"
 requirements:
   - id: "RR-1"
     text: "A pure-TypeScript, config-driven engine produces Low/Medium/High deterministically from approved inputs and configured rules — source: WORK-REQ-11, WORK-BR-3, WORK-CON-9."
-    covered_by: ["AC-1"]
+    covered_by: ["AC-1", "AC-7"]
   - id: "RR-2"
     text: "Each result exposes the contributing indicators/evidence, not only the category — source: WORK-REQ-10, WORK-AC-6."
     covered_by: ["AC-2"]
@@ -83,6 +83,12 @@ acceptance_criteria:
     plan_tasks: ["T-6"]
     tests: ["TEST-6"]
     done_criteria: ["DC-6"]
+  - id: "AC-7"
+    text: "The assessment is REACHABLE from Explore: selecting a project and choosing Evaluate opens the Assessment for THAT project and renders its deterministic result — the engine and screen are actually WIRED into the app flow, not shipped unreachable (roadmap Success Proof \"selecting a planned project yields a reproducible Low/Medium/High\"; WORK-UX-5, WORK-REQ-9)."
+    covers: ["RR-1"]
+    plan_tasks: ["T-7"]
+    tests: ["TEST-7"]
+    done_criteria: ["DC-7"]
 plan_tasks:
   - id: "T-1"
     text: "Build the pure, config-driven `scoringEngine.ts` + `weights.config.ts` + `indicators.ts` producing deterministic Low/Med/High from inputs+rules (no random/clock/network)."
@@ -105,8 +111,12 @@ plan_tasks:
     satisfies: ["AC-5"]
     tags: []
   - id: "T-6"
-    text: "Handle a missing indicator input as an \"Insufficient data\" dimension with a reason, keeping the overall priority deterministic."
+    text: "Handle a missing indicator input as an \"Insufficient data\" dimension with a reason, keeping the overall priority deterministic via exclude-and-renormalize."
     satisfies: ["AC-6"]
+    tags: []
+  - id: "T-7"
+    text: "Extract `AppShell` (injected `SceneApi`) and wire Explore→Evaluate so selecting a project opens the Assessment for that project; `App.tsx` becomes the thin `@arcgis/core` wrapper."
+    satisfies: ["AC-7"]
     tags: []
 tests:
   - id: "TEST-1"
@@ -130,48 +140,59 @@ tests:
     proves: ["AC-5"]
     fails_when: "weights are presented without the non-official label."
   - id: "TEST-6"
-    text: "Missing-input test scores a project with a removed indicator and asserts the affected dimension band is \"Insufficient data\" with a reason and no numeric score, while the overall priority is still a deterministic Low/Med/High."
+    text: "Missing-input test scores a project with a removed indicator and asserts the affected dimension band is \"Insufficient data\" with a reason and no numeric score, while the overall priority is still a deterministic Low/Med/High (exclude-and-renormalize)."
     proves: ["AC-6"]
     fails_when: "a missing input produces an invented numeric score or a non-deterministic/NaN overall."
+  - id: "TEST-7"
+    text: "Integration test renders `AppShell` with an injected fake `SceneApi` (no @arcgis/core), selects a project, activates Evaluate, and asserts the Assessment renders for THAT project (its name + a Low/Med/High result + the disclaimer)."
+    proves: ["AC-7"]
+    fails_when: "selecting a project + Evaluate does not open the Assessment, or the Assessment is not wired into AppShell (Assessment shippable unreachable)."
 done_criteria:
   - id: "DC-1"
     text: "`scoringEngine.ts` + `weights.config.ts` exist, engine is pure (no random/clock/network in src/assessment), and determinism tests pass."
     demonstrates: ["AC-1"]
     verify: "bash .ai/stages/1.3/verify.sh AC-1"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f"
+    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@c37f19ac6ad9"
   - id: "DC-2"
     text: "Each dimension result carries per-dimension evidence; the Assessment screen renders the dimension table with evidence."
     demonstrates: ["AC-2"]
     verify: "bash .ai/stages/1.3/verify.sh AC-2"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f"
+    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@c37f19ac6ad9"
   - id: "DC-3"
     text: "The exact WORK-BR-15 disclaimer string is present and rendered on the Assessment screen."
     demonstrates: ["AC-3"]
     verify: "bash .ai/stages/1.3/verify.sh AC-3"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f"
+    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@c37f19ac6ad9"
   - id: "DC-4"
     text: "The result is attributed to GIS/rules, explanation is separated from evidence, and no AI-as-approver phrasing appears; no raw hex / no live-LLM / no forbidden module."
     demonstrates: ["AC-4"]
     verify: "bash .ai/stages/1.3/verify.sh AC-4"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f"
+    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@c37f19ac6ad9"
   - id: "DC-5"
     text: "The weights config carries the illustrative / not-official-methodology label."
     demonstrates: ["AC-5"]
     verify: "bash .ai/stages/1.3/verify.sh AC-5"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f"
+    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@c37f19ac6ad9"
   - id: "DC-6"
-    text: "A missing indicator input yields a defined \"Insufficient data\" outcome (with reason) and a still-deterministic overall priority (proven by tests)."
+    text: "A missing indicator input yields a defined \"Insufficient data\" outcome (with reason) and a still-deterministic overall priority via the exclude-and-renormalize rule (proven by tests)."
     demonstrates: ["AC-6"]
     verify: "bash .ai/stages/1.3/verify.sh AC-6"
     observable: true
-    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f"
+    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@c37f19ac6ad9"
+  - id: "DC-7"
+    text: "`AppShell.tsx` wires the Assessment into the app flow (imports Assessment + a select→Evaluate handler); an integration test renders AppShell with an injected fake SceneApi, selects a project, opens Evaluate, and asserts the Assessment shows that project's deterministic result."
+    demonstrates: ["AC-7"]
+    verify: "bash .ai/stages/1.3/verify.sh AC-7"
+    observable: true
+    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@c37f19ac6ad9"
 edges:
   - {from: "RR-1", to: "AC-1", type: roadmap_to_ac}
+  - {from: "RR-1", to: "AC-7", type: roadmap_to_ac}
   - {from: "RR-2", to: "AC-2", type: roadmap_to_ac}
   - {from: "RR-3", to: "AC-3", type: roadmap_to_ac}
   - {from: "RR-4", to: "AC-4", type: roadmap_to_ac}
@@ -195,3 +216,6 @@ edges:
   - {from: "AC-6", to: "T-6", type: ac_to_plan_task}
   - {from: "AC-6", to: "TEST-6", type: ac_to_test}
   - {from: "AC-6", to: "DC-6", type: ac_to_done_criterion}
+  - {from: "AC-7", to: "T-7", type: ac_to_plan_task}
+  - {from: "AC-7", to: "TEST-7", type: ac_to_test}
+  - {from: "AC-7", to: "DC-7", type: ac_to_done_criterion}

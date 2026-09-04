@@ -249,7 +249,9 @@ template text — no live LLM), the persistent WORK-BR-15 disclaimer, and a non-
 
 ## Data Model Changes
 New: `DimensionResult { key, label, score|null, band, evidence[], inputsPresent }`, `AssessmentResult
-{ projectId, overall: "Low"|"Medium"|"High", overallScore, dimensions[], attributedTo: "GIS indicators + business rules" }`.
+{ projectId, overall: "Low"|"Medium"|"High"|"Insufficient data", overallScore: number|null, dimensions[],
+attributedTo: "GIS indicators + business rules" }`. The `"Insufficient data"` overall (with `overallScore:
+null`) is the defined all-dimensions-missing outcome per the Resolution Rules — the type MUST represent it.
 
 ## Public API Changes
 None. No backend.
@@ -282,7 +284,9 @@ None new (reuses Stage 1.2 stack). No secrets/keys. No live LLM.
 - [ ] No raw hex in components (`verify.sh` AC-4).
 - [ ] Engine purity: no `Math.random`, `Date.now`/`new Date`, or `fetch` in `src/assessment/` (`verify.sh` AC-1).
 #### Tests
-- [ ] `tests/scoring.test.ts` (determinism, banding, evidence, missing-input) + `tests/assessment.ui.test.tsx` (disclaimer, no-AI-approval, evidence rendering).
+- [ ] `tests/scoring.test.ts` (determinism, banding, evidence, one-missing + ALL-missing→"Insufficient data") +
+  `tests/assessment.ui.test.tsx` (disclaimer, no-AI-approval, evidence rendering) +
+  `tests/appShell.test.tsx` (TEST-7: Explore→Evaluate wiring renders the Assessment for the selected project).
 
 ### Optional / Quality
 - [ ] Smooth reveal animation for the assessment; keyboard focus order.

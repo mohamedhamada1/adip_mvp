@@ -60,9 +60,11 @@ returns to Explore with the mounted SceneView preserved. `App.tsx` becomes a thi
 **Why:** AC-7 (wiring is anchored + testable), and keeps AC-1..AC-6 reachable in the UI. No Explore regression.
 
 ### Step 6: Tests
-**Files:** `tests/scoring.test.ts`, `tests/assessment.ui.test.tsx`
-**Action:** Create. **What:** determinism, banding, evidence, missing-input; disclaimer render, no-AI-approval,
-evidence rendering. **Why:** spec Tests + Success Proof.
+**Files:** `tests/scoring.test.ts`, `tests/assessment.ui.test.tsx`, `tests/appShell.test.tsx`
+**Action:** Create. **What:** `scoring.test.ts` — determinism, banding, evidence, one-missing AND
+ALL-missing→overall "Insufficient data"; `assessment.ui.test.tsx` — disclaimer render, no-AI-approval,
+evidence rendering; `appShell.test.tsx` — TEST-7 Explore→Evaluate wiring (render AppShell w/ fake SceneApi,
+select project → Evaluate → Assessment for that project). **Why:** spec Tests + Success Proof (AC-1..AC-7).
 
 ## Platform Setup Steps
 N/A — pure web, no native/keys.
@@ -76,8 +78,9 @@ N/A — pure web, no native/keys.
 ## Test Plan
 | Test File | Test Cases | Behavior Verified |
 |-----------|-----------|-------------------|
-| `tests/scoring.test.ts` | determinism, banding, evidence, missing-input | AC-1/AC-2/AC-6 |
+| `tests/scoring.test.ts` | determinism, banding, evidence, one-missing, ALL-missing→"Insufficient data" | AC-1/AC-2/AC-6 |
 | `tests/assessment.ui.test.tsx` | disclaimer, no-AI-approval, evidence rendering | AC-3/AC-4 |
+| `tests/appShell.test.tsx` | Explore→Evaluate wiring opens Assessment for selected project | AC-7 |
 
 ## Verification Commands
 ```bash
@@ -139,9 +142,9 @@ git checkout -- src/assessment src/ui/Assessment.tsx src/ui/PriorityBadge.tsx sr
 - TEST-5: Weights-label test asserts the weights config exposes the "illustrative / not official ADPIC methodology" label and the UI surfaces it.
   proves: AC-5
   fails_when: weights are presented without the non-official label.
-- TEST-6: Missing-input test scores a project with a removed indicator and asserts the affected dimension band is "Insufficient data" with a reason and no numeric score, while the overall priority is still a deterministic Low/Med/High (exclude-and-renormalize).
+- TEST-6: Missing-input test scores a project with ONE removed indicator (affected dimension band "Insufficient data" + reason + no numeric score; overall still a deterministic Low/Med/High via exclude-and-renormalize) AND a project with ALL indicators removed (overall = "Insufficient data", overallScore null — no invented score).
   proves: AC-6
-  fails_when: a missing input produces an invented numeric score or a non-deterministic/NaN overall.
+  fails_when: a missing input produces an invented numeric score, the all-missing case yields a numeric band instead of "Insufficient data", or the overall is non-deterministic/NaN.
 - TEST-7: Integration test renders `AppShell` with an injected fake `SceneApi` (no @arcgis/core), selects a project, activates Evaluate, and asserts the Assessment renders for THAT project (its name + a Low/Med/High result + the disclaimer).
   proves: AC-7
   fails_when: selecting a project + Evaluate does not open the Assessment, or the Assessment is not wired into AppShell (Assessment shippable unreachable).
