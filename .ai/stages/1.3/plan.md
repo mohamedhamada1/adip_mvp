@@ -50,10 +50,14 @@ evidence), a clearly-tagged "Explanation" block (deterministic template text, se
 persistent disclaimer, and the non-official-weights note. No AI-as-approver phrasing; tokens only (no hex).
 **Why:** AC-2, AC-3, AC-4, AC-5, INV-ai-explains-not-approves, INV-disclaimer-and-nonofficial-weights.
 
-### Step 5: Wire Explore → Evaluate
-**File:** `src/App.tsx` **Action:** Modify. **What:** add an Evaluate view; selecting a project offers
-"Evaluate", opening Assessment for it; Back returns to Explore (mounted SceneView preserved). No regression
-to Explore. **Why:** AC-1..AC-6 reachable in the UI.
+### Step 5: Extract AppShell + wire Explore → Evaluate (testable)
+**Files:** `src/AppShell.tsx` (create), `src/App.tsx` (modify)
+**Action:** Create/Modify. **What:** move the Explore view/selection state into `AppShell`, which takes
+`sceneApi: SceneApi` as a REQUIRED prop (no `@arcgis/core` import). Add an Evaluate view: selecting a
+project offers "Evaluate", opening `Assessment` for THAT project (`scoreProject(selected, weights)`); Back
+returns to Explore with the mounted SceneView preserved. `App.tsx` becomes a thin wrapper passing the real
+`arcgisSceneApi` into `<AppShell>` — the only module importing `@arcgis/core`, so AppShell renders in jsdom.
+**Why:** AC-7 (wiring is anchored + testable), and keeps AC-1..AC-6 reachable in the UI. No Explore regression.
 
 ### Step 6: Tests
 **Files:** `tests/scoring.test.ts`, `tests/assessment.ui.test.tsx`
@@ -111,8 +115,10 @@ git checkout -- src/assessment src/ui/Assessment.tsx src/ui/PriorityBadge.tsx sr
   satisfies: AC-4
 - T-5: Label the weights config illustrative / not-official-ADPIC-methodology and surface that note near the dimensions.
   satisfies: AC-5
-- T-6: Handle a missing indicator input as an "Insufficient data" dimension with a reason, keeping the overall priority deterministic.
+- T-6: Handle a missing indicator input as an "Insufficient data" dimension with a reason, keeping the overall priority deterministic via exclude-and-renormalize.
   satisfies: AC-6
+- T-7: Extract `AppShell` (injected `SceneApi`) and wire Explore→Evaluate so selecting a project opens the Assessment for that project; `App.tsx` becomes the thin `@arcgis/core` wrapper.
+  satisfies: AC-7
 
 ## Test plan
 
@@ -133,9 +139,12 @@ git checkout -- src/assessment src/ui/Assessment.tsx src/ui/PriorityBadge.tsx sr
 - TEST-5: Weights-label test asserts the weights config exposes the "illustrative / not official ADPIC methodology" label and the UI surfaces it.
   proves: AC-5
   fails_when: weights are presented without the non-official label.
-- TEST-6: Missing-input test scores a project with a removed indicator and asserts the affected dimension band is "Insufficient data" with a reason and no numeric score, while the overall priority is still a deterministic Low/Med/High.
+- TEST-6: Missing-input test scores a project with a removed indicator and asserts the affected dimension band is "Insufficient data" with a reason and no numeric score, while the overall priority is still a deterministic Low/Med/High (exclude-and-renormalize).
   proves: AC-6
   fails_when: a missing input produces an invented numeric score or a non-deterministic/NaN overall.
+- TEST-7: Integration test renders `AppShell` with an injected fake `SceneApi` (no @arcgis/core), selects a project, activates Evaluate, and asserts the Assessment renders for THAT project (its name + a Low/Med/High result + the disclaimer).
+  proves: AC-7
+  fails_when: selecting a project + Evaluate does not open the Assessment, or the Assessment is not wired into AppShell (Assessment shippable unreachable).
 
 ## Notes for Claude (implementor)
 - Engine MUST be pure/deterministic (no random/clock/network in src/assessment). AI explains, never approves.

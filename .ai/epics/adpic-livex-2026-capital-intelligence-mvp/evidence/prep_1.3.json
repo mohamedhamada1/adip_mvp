@@ -1,0 +1,534 @@
+{
+  "readiness_certificate_schema": "stage-readiness-certificate/v1",
+  "certifier": "ai-certify-stage-readiness.sh",
+  "epic": "adpic-livex-2026-capital-intelligence-mvp",
+  "stage": "1.3",
+  "generated_at_utc": "2026-09-04T14:53:18Z",
+  "determinism_key": "9b68b43846d8e562cb0bb0c23a949a558ff9eaac70773e11f36a537b17ac0aeb",
+  "declared_limits": [
+    {
+      "id": "L-SEM-1",
+      "register_row": "CERT-SEM-1",
+      "statement": "Layer 1 checks syntactic FORM, not semantics. `fails_when:` is satisfied by the literal string `n/a`; `verify:` is satisfied by naming any file that resolves; a boundary-coverage tag is satisfied by a task whose entire body is `TODO.`. An artifact set carrying three of the six AC-7 defect classes therefore passes Layer 1 outright \u2014 see fixture `f-g-composed-semantic-bypass`. This is by architecture: semantics are Layer 2's charter. AC-7 is discharged by this disclosure plus Layer 2, NEVER by a claim that Layer 1 rejects the six classes. Do not state that Layer 1 alone gates dispatch."
+    },
+    {
+      "id": "L-SEAL-1",
+      "statement": "`certificate_seal` and `section_seals` are TAMPER-EVIDENT, not tamper-proof. They carry no secret, so an editor who recomputes every seal after editing a section produces a self-consistent forgery. What they close is the defect actually observed: a hand-edited verdict surviving --verify with exit 0."
+    },
+    {
+      "id": "L-ANCHOR-1",
+      "statement": "The reviewer-liveness anchor binds the INPUTS this program exposes, not the program itself. A caller who edits or copies the certifier, or replaces the ai-ask.sh sitting beside it, is modifying the program rather than supplying an input; that is the ENV-1 class and is CI's / 5.2.9's guarantee, not a stage acceptance criterion. `inputs.anchor.certifier_sha256` is recorded so such a certificate is at least identifiable."
+    },
+    {
+      "id": "L-ENVRES-1",
+      "statement": "A `verify:` token that resolves to an executable on PATH is bound BY NAME only. Hashing an interpreter would make determinism_key machine-specific and AC-8 unprovable across clones. Targets that resolve to a file under the artifact root ARE content-bound, and those are the material preconditions."
+    },
+    {
+      "id": "L-REPLAY-1",
+      "statement": "The recorded reviewer-response fixtures (`fixtures/_replay/`) prove the Layer-2 PARSING and AGGREGATION path \u2014 verdict extraction, finding extraction, threshold arithmetic, and the REJECT->final_gate:FAIL edge \u2014 offline and without credentials. They prove NOTHING about a live reviewer's judgement quality, and a live panel remains non-deterministic (see AC-8 scoping)."
+    },
+    {
+      "id": "L-AC8-1",
+      "statement": "`determinism_key` is claimed for LAYER 1 AND the inputs and observations this certificate records \u2014 NOT for the artifact hashes alone. Two sources of non-determinism are disclosed. (1) LAYER 1: `L1-11` reads live filesystem state, so the SAME five artifact hashes can yield PASS and then FAIL when the evidence a `verify:` clause names changes. That is inherent to observing the tree and is NOT a defect; it is made attributable rather than eliminated \u2014 the observation is recorded in `traceability.observed_state`, folded into `determinism_key`, and re-compared by --verify, so the two verdicts carry two different keys. (2) LAYER 2: a live reviewer panel is non-deterministic, so `final_gate` is not a deterministic function of the recorded inputs whenever Layer 2 executes live."
+    },
+    {
+      "id": "L-LEAK-1",
+      "statement": "AC-4's downstream-leakage detector is EXACT-LINE and length-bounded: it searches the reviewer payload for whole stripped lines of the downstream artifacts that are at least 40 characters long and do not start with '#' (`probe_lines`, `[p for p in probes if p in payload]`). CEILING: a payload that re-wraps, truncates, paraphrases or summarises the spec/plan/test/done text leaks the same intent and is NOT detected, and `attestation_valid` would still be true because bytes were captured and probes existed. What is detected is verbatim inclusion, which is the defect actually observed. `probe_lines_checked` and `payload_bytes` are recorded so a reader can see the size of the comparison rather than infer it."
+    },
+    {
+      "id": "L-VERIFY-1",
+      "statement": "--verify RECONCILES every caller-supplied source against the certificate's own sealed record before comparing anything: the artifact root's realpath, the five artifact source paths and sections, which of them were overridden by a --*-file flag, the boundary in force and where it came from, the coverage declaration, and the epic/stage identity. A certificate is therefore verifiable ONLY against the tree it was certified in: pointing --verify at a pristine copy, or substituting a source with --spec-file, is reported as a provenance mismatch and exits 1 \u2014 it is NOT an operator convenience, because `dispatch_allowed` must never depend on an unchecked caller input. CONSEQUENCE, stated rather than discovered: a certificate does not verify from a fresh clone at a different absolute path; re-certify there instead. NOT reconciled, because --verify does not re-run Layer 2 and so cannot be moved by them: the reviewer invoker, the reviewer timeout and `inputs.verdict_affecting.reviewer_environment`."
+    },
+    {
+      "id": "L-L2ENV-1",
+      "statement": "The reviewer invoker is executed with the FULL inherited environment (only HOME is overridden, to keep credential discovery inside the isolated cwd). `inputs.verdict_affecting.reviewer_environment` records every variable the invoker chain was READ to consume \u2014 model selection, token budget, retry and timeout behaviour, and the credential source \u2014 enumerated by inspecting ai-ask.sh / ai-call-gemini.sh / ai-certify-semantic-reviewer.sh / ai-common.sh at the line numbers cited in this certifier's LAYER2_ENV_INPUTS table. API keys are recorded as a truncated sha256 FINGERPRINT, never verbatim, so the auth identity actually used is identifiable (ENV-2) without the certificate carrying a secret. CEILING: the enumeration is a code-inspection snapshot. A future edit to the invoker chain that reads a variable not in that table would move a Layer-2 outcome unrecorded, and PATH / interpreter substitution is outside it entirely \u2014 that is the ENV-1 class, which is CI's / 5.2.9's guarantee and not a stage acceptance criterion."
+    }
+  ],
+  "inputs": {
+    "verdict_affecting": {
+      "stage": "1.3",
+      "boundary": "domain-only",
+      "boundary_source": "default",
+      "coverage_required_decl": "",
+      "artifact_sources": {
+        "roadmap": {
+          "path": "ROADMAP.md",
+          "section": "### Stage 1.3"
+        },
+        "spec": {
+          "path": ".ai/stages/1.3/spec.md",
+          "section": null
+        },
+        "plan": {
+          "path": ".ai/stages/1.3/plan.md",
+          "section": null
+        },
+        "test": {
+          "path": ".ai/stages/1.3/plan.md",
+          "section": "## Test plan"
+        },
+        "done": {
+          "path": ".ai/stages/1.3/spec.md",
+          "section": "## Success Proof"
+        }
+      },
+      "artifact_source_overridden": {
+        "roadmap": false,
+        "spec": false,
+        "plan": false,
+        "test": false,
+        "done": false
+      },
+      "reviewer_invoker_sha256": "79650169fd1fc7a2fc969e114a7b50923c32cb87782e788c9240e824e04b6a8d",
+      "reviewer_invoker_is_default_anchor": true,
+      "reviewer_timeout_seconds": 180,
+      "semantic_invoker_sha256": "3f976f091a10357c4bc4875b6b5d8956d5b0ddb6e82588052c1c928830e3f96e",
+      "semantic_invoker_is_default_anchor": true,
+      "semantic_timeout_seconds": 600,
+      "reviewer_environment": {
+        "GEMINI_REVIEW_MODEL": {
+          "set": false,
+          "mode": "value",
+          "effective_today": true,
+          "consumed_by": "reviewer_a (roadmap-leakage) model \u2014 ai-ask.sh:337 passes it as --model",
+          "value": null
+        },
+        "GEMINI_MODEL": {
+          "set": false,
+          "mode": "value",
+          "effective_today": false,
+          "consumed_by": "ai-call-gemini.sh:39 default; ai-ask.sh:337 passes --model explicitly",
+          "value": null
+        },
+        "REVIEW_MAX_TOKENS": {
+          "set": false,
+          "mode": "value",
+          "effective_today": false,
+          "consumed_by": "ai-call-gemini.sh:40 default; ai-ask.sh:338 passes --max-tokens explicitly",
+          "value": null
+        },
+        "GEMINI_API_KEY": {
+          "set": false,
+          "mode": "fingerprint",
+          "effective_today": true,
+          "consumed_by": "reviewer_a availability and auth identity (ENV-2)",
+          "value": null
+        },
+        "CLAUDE_BIN": {
+          "set": false,
+          "mode": "value",
+          "effective_today": true,
+          "consumed_by": "semantic reviewer judge binary \u2014 ai-certify-semantic-reviewer.sh:24 selects the claude CLI; the review SCRIPT's content is bound separately via verdict_affecting.semantic_invoker_sha256",
+          "value": null
+        },
+        "AI_ENGINE_ROOT": {
+          "set": true,
+          "mode": "content",
+          "effective_today": true,
+          "consumed_by": "the only credential source \u2014 ai-common.sh:51-53 -> $AI_ENGINE_ROOT/.ai/config/api_keys.conf; bound by that file's sha256, never by its absolute path",
+          "value": "021e6a968e261635a2cbd6e677ab53c8ba864d8d8a0c44feec13e3db6d4b6afa",
+          "bound_path_suffix": ".ai/config/api_keys.conf"
+        }
+      }
+    },
+    "provenance": {
+      "root_realpath": "/Users/adres/Documents/GitHub/adip_mvp",
+      "evidence_dir_realpath": "/Users/adres/Documents/GitHub/adip_mvp/.ai/epics/adpic-livex-2026-capital-intelligence-mvp/evidence",
+      "reviewer_invoker_realpath": "/Users/adres/Repos/ai-engineering-workflow/scripts/ai-ask.sh",
+      "anchor": {
+        "script_dir_realpath": "/Users/adres/Repos/ai-engineering-workflow/scripts",
+        "default_invoker_realpath": "/Users/adres/Repos/ai-engineering-workflow/scripts/ai-ask.sh",
+        "certifier_realpath": "/Users/adres/Repos/ai-engineering-workflow/scripts/ai-certify-stage-readiness.sh",
+        "certifier_sha256": "c403d9469f7f53ff358758c9bad6bb002573fa463b3fb304e5b3f8f637102ba3",
+        "caller_settable": false,
+        "note": "the anchor is this certifier's own directory; it is not accepted from argv (--script-dir is rejected) and CERTIFY_ANCHOR_DIR is overwritten by the launcher on every run"
+      }
+    }
+  },
+  "traceability": {
+    "verdict": "PASS",
+    "matrix_path": ".ai/epics/adpic-livex-2026-capital-intelligence-mvp/evidence/traceability_1.3.yaml",
+    "matrix_sha256": "99ef7b1723e8f9314af635718a598f90a2839d290c72941986c3f1cf2b3acadd",
+    "counts": {
+      "roadmap_requirements": 6,
+      "acceptance_criteria": 6,
+      "plan_tasks": 6,
+      "tests": 6,
+      "done_criteria": 6
+    },
+    "checks": [
+      {
+        "id": "L1-1",
+        "description": "roadmap declares at least one requirement (RR-n)",
+        "result": "PASS",
+        "detail": "6 roadmap requirement(s) parsed from ROADMAP.md",
+        "offenders": []
+      },
+      {
+        "id": "L1-2",
+        "description": "spec declares at least one acceptance criterion (AC-n)",
+        "result": "PASS",
+        "detail": "6 acceptance criteria parsed",
+        "offenders": []
+      },
+      {
+        "id": "L1-3",
+        "description": "every roadmap requirement is covered by at least one acceptance criterion",
+        "result": "PASS",
+        "detail": "uncovered roadmap requirements: none",
+        "offenders": []
+      },
+      {
+        "id": "L1-4",
+        "description": "no acceptance criterion expands scope beyond the roadmap (every AC anchors >=1 existing roadmap requirement)",
+        "result": "PASS",
+        "detail": "scope-expanding criteria: none",
+        "offenders": []
+      },
+      {
+        "id": "L1-5",
+        "description": "every acceptance criterion has at least one plan task",
+        "result": "PASS",
+        "detail": "criteria with no plan task: none",
+        "offenders": []
+      },
+      {
+        "id": "L1-6",
+        "description": "no plan task anchors a non-existent acceptance criterion",
+        "result": "PASS",
+        "detail": "dangling plan anchors: none",
+        "offenders": []
+      },
+      {
+        "id": "L1-7",
+        "description": "every acceptance criterion has at least one test",
+        "result": "PASS",
+        "detail": "criteria with no test: none",
+        "offenders": []
+      },
+      {
+        "id": "L1-8",
+        "description": "no test anchors a non-existent acceptance criterion",
+        "result": "PASS",
+        "detail": "dangling test anchors: none",
+        "offenders": []
+      },
+      {
+        "id": "L1-9",
+        "description": "every test declares a negative control (fails_when:) \u2014 a test that cannot go RED does not prove behaviour, it only executes code",
+        "result": "PASS",
+        "detail": "tests with no declared negative control: none",
+        "offenders": []
+      },
+      {
+        "id": "L1-10",
+        "description": "every acceptance criterion has at least one done-criterion",
+        "result": "PASS",
+        "detail": "criteria with no done-criterion: none",
+        "offenders": []
+      },
+      {
+        "id": "L1-11",
+        "description": "every done-criterion is observable \u2014 its verify: clause resolves to a real path or executable",
+        "result": "PASS",
+        "detail": "non-observable done-criteria: none",
+        "offenders": []
+      },
+      {
+        "id": "L1-12",
+        "description": "boundary-demanded coverage present (migration / rollback / integration tasks where the boundary or the roadmap demands them)",
+        "result": "PASS",
+        "detail": "boundary=domain-only required=[-] present=[-] missing=[none]",
+        "offenders": []
+      },
+      {
+        "id": "L1-13",
+        "description": "all five artifact types resolve and hash (roadmap / spec / plan / test / done)",
+        "result": "PASS",
+        "detail": "unresolved artifact types: none",
+        "offenders": []
+      }
+    ],
+    "failed_checks": [],
+    "bindings": {
+      "roadmap": {
+        "path": "ROADMAP.md",
+        "section": "### Stage 1.3",
+        "sha256": "c7bfa62b77e1956a0c6b87e703a953e0ae2d18b527e42fcbeb9fa01e43fdc6cc"
+      },
+      "spec": {
+        "path": ".ai/stages/1.3/spec.md",
+        "section": null,
+        "sha256": "2ad1084f48936e7d57c20e10fdb8af039663e6a3b48426cf95a4de89d7235724"
+      },
+      "plan": {
+        "path": ".ai/stages/1.3/plan.md",
+        "section": null,
+        "sha256": "1c8dca5975554b839a75d791d511e8e98b36cf35014dcbcc052054c256a6d8ce"
+      },
+      "test": {
+        "path": ".ai/stages/1.3/plan.md",
+        "section": "## Test plan",
+        "sha256": "750d4b077c054431472dbb8340c0ae3bc964fc631d19277355502a248d1369a1"
+      },
+      "done": {
+        "path": ".ai/stages/1.3/spec.md",
+        "section": "## Success Proof",
+        "sha256": "ed0870c09f18bd4a3412024a99ad9b62c85fe2192fe94659b274f52503c529c5"
+      }
+    },
+    "observed_state": {
+      "what_this_is": "filesystem state that Layer 1 (L1-11) consults and the five artifact hashes do not cover; recorded so the verdict is a function of the certificate, not of the tree it was run in",
+      "consulted_by": [
+        "L1-11"
+      ],
+      "verify_targets": [
+        {
+          "done_criterion": "DC-1",
+          "clause": "bash .ai/stages/1.3/verify.sh AC-1",
+          "observable": true,
+          "detail": "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f",
+          "head": {
+            "kind": "executable",
+            "target": "bash",
+            "inside_root": false,
+            "is_file": true,
+            "sha256": null,
+            "path_dependent": true
+          },
+          "operand": {
+            "kind": "path",
+            "target": ".ai/stages/1.3/verify.sh",
+            "inside_root": true,
+            "is_file": true,
+            "sha256": "97ad73e5a85fd2d7773369db5d26b0797a3614f8001ebe930a728f95f88848f0",
+            "path_dependent": false
+          }
+        },
+        {
+          "done_criterion": "DC-2",
+          "clause": "bash .ai/stages/1.3/verify.sh AC-2",
+          "observable": true,
+          "detail": "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f",
+          "head": {
+            "kind": "executable",
+            "target": "bash",
+            "inside_root": false,
+            "is_file": true,
+            "sha256": null,
+            "path_dependent": true
+          },
+          "operand": {
+            "kind": "path",
+            "target": ".ai/stages/1.3/verify.sh",
+            "inside_root": true,
+            "is_file": true,
+            "sha256": "97ad73e5a85fd2d7773369db5d26b0797a3614f8001ebe930a728f95f88848f0",
+            "path_dependent": false
+          }
+        },
+        {
+          "done_criterion": "DC-3",
+          "clause": "bash .ai/stages/1.3/verify.sh AC-3",
+          "observable": true,
+          "detail": "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f",
+          "head": {
+            "kind": "executable",
+            "target": "bash",
+            "inside_root": false,
+            "is_file": true,
+            "sha256": null,
+            "path_dependent": true
+          },
+          "operand": {
+            "kind": "path",
+            "target": ".ai/stages/1.3/verify.sh",
+            "inside_root": true,
+            "is_file": true,
+            "sha256": "97ad73e5a85fd2d7773369db5d26b0797a3614f8001ebe930a728f95f88848f0",
+            "path_dependent": false
+          }
+        },
+        {
+          "done_criterion": "DC-4",
+          "clause": "bash .ai/stages/1.3/verify.sh AC-4",
+          "observable": true,
+          "detail": "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f",
+          "head": {
+            "kind": "executable",
+            "target": "bash",
+            "inside_root": false,
+            "is_file": true,
+            "sha256": null,
+            "path_dependent": true
+          },
+          "operand": {
+            "kind": "path",
+            "target": ".ai/stages/1.3/verify.sh",
+            "inside_root": true,
+            "is_file": true,
+            "sha256": "97ad73e5a85fd2d7773369db5d26b0797a3614f8001ebe930a728f95f88848f0",
+            "path_dependent": false
+          }
+        },
+        {
+          "done_criterion": "DC-5",
+          "clause": "bash .ai/stages/1.3/verify.sh AC-5",
+          "observable": true,
+          "detail": "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f",
+          "head": {
+            "kind": "executable",
+            "target": "bash",
+            "inside_root": false,
+            "is_file": true,
+            "sha256": null,
+            "path_dependent": true
+          },
+          "operand": {
+            "kind": "path",
+            "target": ".ai/stages/1.3/verify.sh",
+            "inside_root": true,
+            "is_file": true,
+            "sha256": "97ad73e5a85fd2d7773369db5d26b0797a3614f8001ebe930a728f95f88848f0",
+            "path_dependent": false
+          }
+        },
+        {
+          "done_criterion": "DC-6",
+          "clause": "bash .ai/stages/1.3/verify.sh AC-6",
+          "observable": true,
+          "detail": "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f",
+          "head": {
+            "kind": "executable",
+            "target": "bash",
+            "inside_root": false,
+            "is_file": true,
+            "sha256": null,
+            "path_dependent": true
+          },
+          "operand": {
+            "kind": "path",
+            "target": ".ai/stages/1.3/verify.sh",
+            "inside_root": true,
+            "is_file": true,
+            "sha256": "97ad73e5a85fd2d7773369db5d26b0797a3614f8001ebe930a728f95f88848f0",
+            "path_dependent": false
+          }
+        }
+      ]
+    }
+  },
+  "semantic_readiness": {
+    "invoker": "/Users/adres/Repos/ai-engineering-workflow/scripts/ai-ask.sh",
+    "invoker_realpath": "/Users/adres/Repos/ai-engineering-workflow/scripts/ai-ask.sh",
+    "invoker_sha256": "79650169fd1fc7a2fc969e114a7b50923c32cb87782e788c9240e824e04b6a8d",
+    "default_invoker_realpath": "/Users/adres/Repos/ai-engineering-workflow/scripts/ai-ask.sh",
+    "invoker_is_default_anchor": true,
+    "semantic_invoker": "/Users/adres/Repos/ai-engineering-workflow/scripts/ai-certify-semantic-reviewer.sh",
+    "semantic_invoker_realpath": "/Users/adres/Repos/ai-engineering-workflow/scripts/ai-certify-semantic-reviewer.sh",
+    "semantic_invoker_sha256": "3f976f091a10357c4bc4875b6b5d8956d5b0ddb6e82588052c1c928830e3f96e",
+    "semantic_invoker_is_default_anchor": true,
+    "actor_binary_injected": true,
+    "actor_injection_opt_in": false,
+    "transport": "injected-actor",
+    "independent_roadmap_review": {
+      "reviewer": "reviewer_a",
+      "role_flag": "--gemini-review",
+      "stage": "independent_roadmap_review",
+      "payload_sha256": "60cd8363ddb67e42ee0315f3bec79862229ffb90a9e52f12ecf929b6fad546a0",
+      "payload_bytes": 11780,
+      "probe_lines_checked": 245,
+      "downstream_leakage": false,
+      "leaked_samples": [],
+      "payload_captured": true,
+      "attestation_valid": true,
+      "attestation_detail": "245 probe lines searched in 11780 captured payload bytes",
+      "status": "COMPLETED",
+      "verdict": "PASS",
+      "response_sha256": "8348ffb7de6efb3820a4ff08024912c6712dc6bdf7643549dc4de89a34b96266",
+      "advisory": true
+    },
+    "reviewers": [
+      {
+        "reviewer": "semantic_reviewer",
+        "role_flag": "repo-grounded-claude-two-lens",
+        "stage": "semantic_readiness",
+        "response_sha256": "c46d8727619e7c0d4636d0175d489a5e858ed6506eb4cce80b75404cefe68b9f",
+        "response_bytes": 7369,
+        "status": "COMPLETED",
+        "verdict": "CONCERN",
+        "lens_a_verdict": "CONCERN",
+        "lens_b_verdict": "CONCERN",
+        "lens_b_advisory": true,
+        "overall_verdict": "CONCERN",
+        "findings": [
+          "Intent is well preserved: roadmap RR-1..6 map cleanly and completely to AC-1..6 (traceability_1.3.yaml), each AC has an anchored plan task (T-n), test (TEST-n with a `fails_when:` negative control) and done-criterion (DC-n). No lost intent and no unintended scope expansion \u2014 Simulator/Ask-AI/live-LLM are explicitly out of scope (spec.md:78-81) and echoed in the roadmap \"Must not expand into\" (roadmap_section_1.3.md:72).",
+          "Grounding is solid against Stage 1.2: `ProjectRecord` carries the fields indicators can be derived from (budgetAed, populationServed, progress, status, strategicTheme, liveabilityTheme, sector \u2014 src/data/types.ts:25-45); the frozen dataset is deterministic (mulberry32, fixed seeds \u2014 src/data/portfolio.demo.ts:80-83); design tokens `--good/--warn/--accent` exist (src/theme/tokens.css:12-16); the WORK-BR-15 disclaimer in AC-3 matches the WORK doc verbatim (WORK_...FINAL.md:147-151); App.tsx already holds project-selection state to hang the Evaluate transition on (src/App.tsx:19,86).",
+          "GREEN-while-ABSENT scenario (concrete): the \"Explore \u2192 Evaluate\" transition \u2014 a core part of the roadmap Success Proof (\"selecting a planned project yields a reproducible Low/Medium/High\u2026\", roadmap_section_1.3.md:37,41) and spec Screen Inventory (spec.md:23) \u2014 has NO anchored plan task, test, or verify.sh check. It lives only in plan Step 5 (plan.md:53-56) and the manual UX Verification checklist. A builder could ship `src/assessment/*` + `Assessment.tsx` completely unwired into `App.tsx`, and all six AC tests plus `verify.sh` would still pass. The user-facing entry flow is not test-protected.",
+          "Ambiguity a builder must invent around: when a dimension is \"Insufficient data\", the spec says the overall is still computed \"deterministically from present dimensions\" (spec.md:305-306) but never fixes whether the missing weight is redistributed or excluded. TEST-6 only asserts *some* deterministic Low/Med/High, so any builder choice passes \u2014 mild, since any fixed rule satisfies determinism.",
+          "Done-criteria would demonstrate success post-implementation for AC-1/3/4/5 (mechanical checks) and AC-2/6 (via tests), but DC-6's \"Insufficient data\" path is NOT observable in the running exhibition: every `ProjectRecord` is fully populated by `buildAoi` (portfolio.demo.ts:56-74), so that outcome only ever appears from synthetic test input, never from the frozen dataset. Consistent with the spec's \"derived edge-case, proven by tests\" framing, but worth noting."
+        ],
+        "lens_a_findings": [
+          "Intent is well preserved: roadmap RR-1..6 map cleanly and completely to AC-1..6 (traceability_1.3.yaml), each AC has an anchored plan task (T-n), test (TEST-n with a `fails_when:` negative control) and done-criterion (DC-n). No lost intent and no unintended scope expansion \u2014 Simulator/Ask-AI/live-LLM are explicitly out of scope (spec.md:78-81) and echoed in the roadmap \"Must not expand into\" (roadmap_section_1.3.md:72).",
+          "Grounding is solid against Stage 1.2: `ProjectRecord` carries the fields indicators can be derived from (budgetAed, populationServed, progress, status, strategicTheme, liveabilityTheme, sector \u2014 src/data/types.ts:25-45); the frozen dataset is deterministic (mulberry32, fixed seeds \u2014 src/data/portfolio.demo.ts:80-83); design tokens `--good/--warn/--accent` exist (src/theme/tokens.css:12-16); the WORK-BR-15 disclaimer in AC-3 matches the WORK doc verbatim (WORK_...FINAL.md:147-151); App.tsx already holds project-selection state to hang the Evaluate transition on (src/App.tsx:19,86).",
+          "GREEN-while-ABSENT scenario (concrete): the \"Explore \u2192 Evaluate\" transition \u2014 a core part of the roadmap Success Proof (\"selecting a planned project yields a reproducible Low/Medium/High\u2026\", roadmap_section_1.3.md:37,41) and spec Screen Inventory (spec.md:23) \u2014 has NO anchored plan task, test, or verify.sh check. It lives only in plan Step 5 (plan.md:53-56) and the manual UX Verification checklist. A builder could ship `src/assessment/*` + `Assessment.tsx` completely unwired into `App.tsx`, and all six AC tests plus `verify.sh` would still pass. The user-facing entry flow is not test-protected.",
+          "Ambiguity a builder must invent around: when a dimension is \"Insufficient data\", the spec says the overall is still computed \"deterministically from present dimensions\" (spec.md:305-306) but never fixes whether the missing weight is redistributed or excluded. TEST-6 only asserts *some* deterministic Low/Med/High, so any builder choice passes \u2014 mild, since any fixed rule satisfies determinism.",
+          "Done-criteria would demonstrate success post-implementation for AC-1/3/4/5 (mechanical checks) and AC-2/6 (via tests), but DC-6's \"Insufficient data\" path is NOT observable in the running exhibition: every `ProjectRecord` is fully populated by `buildAoi` (portfolio.demo.ts:56-74), so that outcome only ever appears from synthetic test input, never from the frozen dataset. Consistent with the spec's \"derived edge-case, proven by tests\" framing, but worth noting."
+        ],
+        "lens_b_findings": [
+          "verify.sh `all` masks failures (verify.sh:59-64): the `all` branch chains `check_build; check_engine; check_disclaimer; check_authority; check_weights_label; run_tests \"TESTS\"` with semicolons, and the script sets only `-uo pipefail` (no `set -e`), so `rc=$?` at line 62 reflects **only** `run_tests`. Failing path: a builder deletes/alters the disclaimer \u2192 `check_disclaimer` fails inside `all` \u2192 if the test suite passes, the script prints `verify(all): PASS` and exits 0. The plan's own gate (`bash .ai/stages/1.3/verify.sh all`, plan.md:83, and the P0/P1 table expecting \"PASS\") relies on this broken aggregate. The per-AC invocations used by DC-1..6 are `&&`-chained and are fine \u2014 scope the fix to the `all` path.",
+          "AC-3 mechanical gate is partial (verify.sh:12,28): `check_disclaimer` greps only the first clause (\"Illustrative decision-support assessment for demonstration purposes\"), so a builder could alter the second clause (\"not an official project approval or investment decision\") and AC-3 still passes mechanically \u2014 exact-wording enforcement is delegated entirely to builder-authored TEST-3.",
+          "AC-4's \"explanation visibly distinguished from calculated evidence\" (spec.md:58, INV-ai-explains-not-approves) is not mechanically checked at all; verify.sh AC-4 only checks for absence of AI-approver phrasing, presence of an attribution marker, absence of an LLM client/forbidden import, and absence of raw hex (verify.sh:31-45). The visual separation invariant rests solely on TEST-4, which the builder writes.",
+          "No spurious-failure grounding issues: existing Stage 1.2 `.tsx` files contain no raw hex and no `openai|anthropic|llm|chat-completion`/`simulat`/`ask-ai` tokens (confirmed by grep), so the whole-tree AC-4 greps won't fail through no fault of the 1.3 builder. Engine purity is enforceable \u2014 the only PRNG (`mulberry32`) lives in `src/data`, outside the `src/assessment` purity scan (verify.sh:20).",
+          "No authorization/tenancy/money/settlement/concurrency/replay surface applies: exhibition-only, no backend, no external contract (`.ai/contracts/` legitimately absent for a single-repo domain-only stage), pure synthetic in-memory data. Determinism is genuinely achievable and gated."
+        ]
+      }
+    ],
+    "roadmap_lint": {
+      "ok": true,
+      "detail": "roadmap entry has no TODO-stub / truncated-projection scaffolding",
+      "offending": []
+    },
+    "lens_b_advisory": {
+      "verdict": "CONCERN",
+      "findings": [
+        "verify.sh `all` masks failures (verify.sh:59-64): the `all` branch chains `check_build; check_engine; check_disclaimer; check_authority; check_weights_label; run_tests \"TESTS\"` with semicolons, and the script sets only `-uo pipefail` (no `set -e`), so `rc=$?` at line 62 reflects **only** `run_tests`. Failing path: a builder deletes/alters the disclaimer \u2192 `check_disclaimer` fails inside `all` \u2192 if the test suite passes, the script prints `verify(all): PASS` and exits 0. The plan's own gate (`bash .ai/stages/1.3/verify.sh all`, plan.md:83, and the P0/P1 table expecting \"PASS\") relies on this broken aggregate. The per-AC invocations used by DC-1..6 are `&&`-chained and are fine \u2014 scope the fix to the `all` path.",
+        "AC-3 mechanical gate is partial (verify.sh:12,28): `check_disclaimer` greps only the first clause (\"Illustrative decision-support assessment for demonstration purposes\"), so a builder could alter the second clause (\"not an official project approval or investment decision\") and AC-3 still passes mechanically \u2014 exact-wording enforcement is delegated entirely to builder-authored TEST-3.",
+        "AC-4's \"explanation visibly distinguished from calculated evidence\" (spec.md:58, INV-ai-explains-not-approves) is not mechanically checked at all; verify.sh AC-4 only checks for absence of AI-approver phrasing, presence of an attribution marker, absence of an LLM client/forbidden import, and absence of raw hex (verify.sh:31-45). The visual separation invariant rests solely on TEST-4, which the builder writes.",
+        "No spurious-failure grounding issues: existing Stage 1.2 `.tsx` files contain no raw hex and no `openai|anthropic|llm|chat-completion`/`simulat`/`ask-ai` tokens (confirmed by grep), so the whole-tree AC-4 greps won't fail through no fault of the 1.3 builder. Engine purity is enforceable \u2014 the only PRNG (`mulberry32`) lives in `src/data`, outside the `src/assessment` purity scan (verify.sh:20).",
+        "No authorization/tenancy/money/settlement/concurrency/replay surface applies: exhibition-only, no backend, no external contract (`.ai/contracts/` legitimately absent for a single-repo domain-only stage), pure synthetic in-memory data. Determinism is genuinely achievable and gated."
+      ],
+      "note": "ADVISORY (phase-1): recorded + surfaced; does NOT block dispatch. Promote to blocking = add Lens B to the final_gate threshold (one line)."
+    },
+    "unavailable": [],
+    "reviewer_threshold_met": false,
+    "reviewer_threshold_detail": "Lens A (Builder Readiness) CONCERN (blocking threshold is Lens A PASS)",
+    "questions": {
+      "independent_advisory": "INDEPENDENT ROADMAP REVIEW. You are shown ONE artifact: a roadmap stage entry. You are deliberately NOT shown the spec, plan, tests or done-criteria. State, as a numbered list, exactly what this stage must deliver, and what would constitute lost intent if a downstream spec omitted it. End with '## Verdict: PASS' if the roadmap entry is itself intelligible and actionable, 'CONCERN' if ambiguous, 'REJECT' if it cannot be acted on.",
+      "combined_two_lens": "TWO-LENS SEMANTIC REVIEW (pre-implementation). Produce TWO independent, separately-verdicted lenses over the SAME grounded inspection of THIS repo. Do NOT let one overall narrative substitute for the two lens results. Complete Lens A fully, THEN RESET posture for Lens B \u2014 Lens B is an adversary, not a continuation of Lens A. Apply each check only when relevant to this stage; do not force domain-specific checks that do not apply.\n\n## Lens A \u2014 Builder Readiness\nJudge ONLY whether a Builder with no human in the loop could DELIVER this stage from these artifacts (no implementation exists yet). Answer, citing the artifact: (1) does the Spec preserve roadmap intent \u2014 any LOST intent or UNINTENDED SCOPE EXPANSION? (2) does each Plan task genuinely satisfy the criterion it claims? (3) do the Tests PROVE behaviour or merely execute code? (4) name a concrete scenario where the tests stay GREEN while the required behaviour is ABSENT (or say you cannot construct one); (5) would the Done-Criteria demonstrate success post-implementation? A traceability matrix is supplied \u2014 judge it, do not reconstruct it; (6) any ambiguity that would force the Builder to INVENT? Emit EXACTLY:\n## Lens A Verdict: PASS|CONCERN|REJECT\n#### Lens A Findings\n(one '- ' bullet each; '- none' if empty)\n\n## Lens B \u2014 Hostile Implementation Audit\nRESET your posture: assume that following this package LITERALLY could still produce a WRONG system, and it is your job to prove it against the ACTUAL repository. Hunt, citing file:line: GROUNDING (do every named symbol / DTO field / method / enum value / route / config key EXIST with the claimed semantics?); contract/schema mismatch; authorization / IDOR / cross-tenant / cross-branch access; money, discount, commission, refund, rounding, settlement integrity where applicable; invalid or incomplete state transitions; CONCURRENCY, REPLAY and IDEMPOTENCY problems (races, double-apply, non-atomic read-modify-write); uniqueness / collision assumptions; read-only vs write boundary violations; determinism; stale-data / race behaviour; failure/retry semantics; any path where tests stay GREEN while required behaviour is absent; any implementation that technically satisfies the written package while violating its intended behaviour. For each, exhibit the concrete failing path (inputs -> wrong result, file:line) or state you could not construct one. Emit EXACTLY:\n## Lens B Verdict: PASS|CONCERN|REJECT\n#### Lens B Findings\n(one '- ' bullet each; '- none' if empty)\n\n## Overall\nThen emit the single final overall verdict = the WORSE of Lens A and Lens B (PASS only if BOTH are PASS)."
+    }
+  },
+  "final_gate": {
+    "verdict": "LOW_CONFIDENCE",
+    "dispatch_allowed": false,
+    "reason": "reviewer_threshold_not_met",
+    "detail": "Lens A (Builder Readiness) CONCERN (blocking threshold is Lens A PASS)",
+    "layer2_consulted": true,
+    "routes_to_human_owner": true,
+    "ref_consistency": {
+      "state": true,
+      "detail": "authored artifacts committed on 'main' and byte-match the working tree"
+    }
+  },
+  "section_seals": {
+    "certifier": "e2c09ac91c419ad08a53d1eb645c524e9a0dcab4b8d7fb52cee77522723db47e",
+    "generated_at_utc": "a757cdd91c825f9511de1a3ca64ae2e2c9be7ed6b0f6faf5cd72460472d4291a",
+    "declared_limits": "a1cd0994e032074fe0ccea58c3480371e9abd98ca0bc8fb01c5508bfac7bd448",
+    "inputs": "56717e285dd0838d6cd446d2435585ba03b0aae8a2a0f462e165046360166051",
+    "traceability": "02e9aba16012c7fb35823ccf530cc0cb67909ef677eb776d9e31f200aa0e8f31",
+    "semantic_readiness": "23020e1f2178cd30774d9de310514a7550a9bf0161deabfedfa8cef4164a5abb",
+    "final_gate": "0c74c4958995c0f48b7c8af6fa603a984e52c702912672395846a9cfc09405e9",
+    "contract_binding": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
+  },
+  "certificate_seal": "33c34ced09d25c398d8e36e8b02b64d529a24788eea6c04ffa0a034e90506979"
+}

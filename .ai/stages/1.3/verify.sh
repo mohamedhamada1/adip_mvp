@@ -49,6 +49,13 @@ check_weights_label(){ grep -rqiE 'illustrative' src/assessment/weights.config.t
   && say "AC-5: weights labeled illustrative / not official ADPIC methodology" \
   || { say "AC-5: weights.config.ts missing the illustrative / not-official label"; return 1; }; }
 
+# AC-7: the Assessment is actually WIRED into the app flow (not shippable unreachable). Structural check
+# that AppShell imports Assessment and has an Evaluate/select handler; behaviour proven by the integration test.
+check_wiring(){ [ -f src/AppShell.tsx ] || { say "AC-7: src/AppShell.tsx missing"; return 1; }
+  grep -qE "import[^\n]*Assessment" src/AppShell.tsx 2>/dev/null || { say "AC-7: AppShell does not import Assessment (unwired)"; return 1; }
+  grep -qiE 'evaluate|scoreProject|selected' src/AppShell.tsx 2>/dev/null || { say "AC-7: AppShell has no Evaluate/select wiring"; return 1; }
+  say "AC-7: Assessment wired into AppShell (Explore→Evaluate)"; }
+
 case "$AC" in
   AC-1) check_build && check_engine && run_tests "AC-1" ;;
   AC-2) run_tests "AC-2" ;;
@@ -56,7 +63,8 @@ case "$AC" in
   AC-4) check_authority ;;
   AC-5) check_weights_label ;;
   AC-6) run_tests "AC-6" ;;
-  all)  check_build; check_engine; check_disclaimer; check_authority; check_weights_label; run_tests "TESTS" ;;
+  AC-7) check_wiring && run_tests "AC-7" ;;
+  all)  check_build; check_engine; check_disclaimer; check_authority; check_weights_label; check_wiring; run_tests "TESTS" ;;
   *) say "unknown AC '$AC'"; exit 2 ;;
 esac
 rc=$?

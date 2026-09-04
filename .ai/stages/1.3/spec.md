@@ -64,6 +64,9 @@ covers: RR-5
 #### AC-6 — A missing indicator input yields a defined, evidence-visible outcome (the dimension is marked "Insufficient data" with the reason) rather than an invented score, and the overall priority remains deterministic (WORK-NFR-11 traceability; derived edge-case requirement).
 covers: RR-6
 
+#### AC-7 — The assessment is REACHABLE from Explore: selecting a project and choosing Evaluate opens the Assessment for THAT project and renders its deterministic result — the engine and screen are actually WIRED into the app flow, not shipped unreachable (roadmap Success Proof "selecting a planned project yields a reproducible Low/Medium/High"; WORK-UX-5, WORK-REQ-9).
+covers: RR-1
+
 ---
 
 ## In Scope
@@ -92,12 +95,13 @@ covers: RR-6
 | `src/assessment/disclaimer.ts` | The exact approved WORK-BR-15 disclaimer string constant |
 | `src/ui/Assessment.tsx` | Assessment screen (overall + dimension table + evidence + disclaimer + explanation) |
 | `src/ui/PriorityBadge.tsx` | Low/Med/High badge (attributed to rules) |
-| `tests/scoring.test.ts`, `tests/assessment.ui.test.tsx` | Behavioural tests |
+| `src/AppShell.tsx` | Explore+Evaluate shell holding view/selection state; takes `sceneApi: SceneApi` as a REQUIRED prop (no @arcgis import) so the Explore→Evaluate wiring is testable in jsdom (AC-7) |
+| `tests/scoring.test.ts`, `tests/assessment.ui.test.tsx`, `tests/appShell.test.tsx` | Behavioural tests incl. the Explore→Evaluate transition |
 
 ## Files to Modify
 | File Path | Change Description |
 |-----------|-------------------|
-| `src/App.tsx` | Add Evaluate view + wire "select project → open Assessment" transition |
+| `src/App.tsx` | Becomes a thin wrapper that passes the real `arcgisSceneApi` into `<AppShell>` (the Explore state moves into AppShell); this is the ONLY module importing `@arcgis/core`, keeping AppShell testable |
 
 ## Protected Files
 - `WORK_ADPIC_LIVEX_2026_..._FINAL.md`; `.ai/epics/**`; `.ai/stages/1.3/spec.md`/`plan.md`.
@@ -308,7 +312,11 @@ None new (reuses Stage 1.2 stack). No secrets/keys. No live LLM.
 
 ### Resolution Rules
 - Same inputs + same config → same result (pure function). If a dimension input is absent → "Insufficient
-  data" with reason (never a guessed number). Weights conflicts: config is the single source; labeled non-official.
+  data" with reason (never a guessed number). **Missing-dimension rule (defined, deterministic):** an
+  Insufficient-data dimension is EXCLUDED from the weighted overall and the remaining dimensions' weights are
+  RENORMALIZED to sum to their original total (so the overall is still a defined Low/Med/High). If ALL
+  dimensions are missing, the overall is "Insufficient data" (no invented score). Weights conflicts: config
+  is the single source; labeled non-official.
 - Explanation text is deterministic template text derived from the computed evidence — it never invents facts
   or numbers absent from the result (WORK-AC-10/11), and never states an approval.
 
@@ -356,6 +364,9 @@ None new (reuses Stage 1.2 stack). No secrets/keys. No live LLM.
 - DC-5: The weights config carries the illustrative / not-official-methodology label.
   demonstrates: AC-5
   verify: bash .ai/stages/1.3/verify.sh AC-5
-- DC-6: A missing indicator input yields a defined "Insufficient data" outcome (with reason) and a still-deterministic overall priority (proven by tests).
+- DC-6: A missing indicator input yields a defined "Insufficient data" outcome (with reason) and a still-deterministic overall priority via the exclude-and-renormalize rule (proven by tests).
   demonstrates: AC-6
   verify: bash .ai/stages/1.3/verify.sh AC-6
+- DC-7: `AppShell.tsx` wires the Assessment into the app flow (imports Assessment + a select→Evaluate handler); an integration test renders AppShell with an injected fake SceneApi, selects a project, opens Evaluate, and asserts the Assessment shows that project's deterministic result.
+  demonstrates: AC-7
+  verify: bash .ai/stages/1.3/verify.sh AC-7

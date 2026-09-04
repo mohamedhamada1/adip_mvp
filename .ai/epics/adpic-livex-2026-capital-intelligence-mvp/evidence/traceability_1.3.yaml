@@ -1,0 +1,197 @@
+# Traceability matrix — emitted by ai-certify-stage-readiness.sh
+# Reviewers judge THIS matrix; they do not reconstruct it each run (AC-1).
+schema: "stage-traceability-matrix/v1"
+stage: "1.3"
+epic: "adpic-livex-2026-capital-intelligence-mvp"
+content_determinism: "derived from artifact content only; no timestamp, no environment"
+certifier: "ai-certify-stage-readiness.sh"
+boundary: "domain-only"
+artifacts:
+  roadmap:
+    path: "ROADMAP.md"
+    section: "### Stage 1.3"
+    sha256: "c7bfa62b77e1956a0c6b87e703a953e0ae2d18b527e42fcbeb9fa01e43fdc6cc"
+  spec:
+    path: ".ai/stages/1.3/spec.md"
+    section: null
+    sha256: "2ad1084f48936e7d57c20e10fdb8af039663e6a3b48426cf95a4de89d7235724"
+  plan:
+    path: ".ai/stages/1.3/plan.md"
+    section: null
+    sha256: "1c8dca5975554b839a75d791d511e8e98b36cf35014dcbcc052054c256a6d8ce"
+  test:
+    path: ".ai/stages/1.3/plan.md"
+    section: "## Test plan"
+    sha256: "750d4b077c054431472dbb8340c0ae3bc964fc631d19277355502a248d1369a1"
+  done:
+    path: ".ai/stages/1.3/spec.md"
+    section: "## Success Proof"
+    sha256: "ed0870c09f18bd4a3412024a99ad9b62c85fe2192fe94659b274f52503c529c5"
+requirements:
+  - id: "RR-1"
+    text: "A pure-TypeScript, config-driven engine produces Low/Medium/High deterministically from approved inputs and configured rules — source: WORK-REQ-11, WORK-BR-3, WORK-CON-9."
+    covered_by: ["AC-1"]
+  - id: "RR-2"
+    text: "Each result exposes the contributing indicators/evidence, not only the category — source: WORK-REQ-10, WORK-AC-6."
+    covered_by: ["AC-2"]
+  - id: "RR-3"
+    text: "The approved WORK-BR-15 disclaimer wording is persistently visible on the assessment screen — source: WORK-BR-15, WORK-AC-7."
+    covered_by: ["AC-3"]
+  - id: "RR-4"
+    text: "The result is attributed to GIS/rules and no screen presents AI as the approver/decider — source: WORK-BR-1/2, WORK-SEC-7."
+    covered_by: ["AC-4"]
+  - id: "RR-5"
+    text: "Configurable weights are not presented as official ADPIC methodology unless separately validated — source: WORK-BR-9/10."
+    covered_by: ["AC-5"]
+  - id: "RR-6"
+    text: "Negative/edge cases (missing indicator inputs) yield a defined, evidence-visible outcome rather than an invented score — source: DERIVED — WORK-NFR-11 traceability implies every displayed result must be backed by present inputs."
+    covered_by: ["AC-6"]
+acceptance_criteria:
+  - id: "AC-1"
+    text: "A pure-TypeScript, config-driven scoring engine deterministically produces a Low/Medium/High overall priority from configured indicator inputs and business rules; the SAME inputs always yield the SAME result (reproducible) (WORK-REQ-11, WORK-BR-3, WORK-CON-9)."
+    covers: ["RR-1"]
+    plan_tasks: ["T-1"]
+    tests: ["TEST-1"]
+    done_criteria: ["DC-1"]
+  - id: "AC-2"
+    text: "Each assessment result exposes the contributing per-dimension indicators/evidence (Strategic Alignment, Community Need, Spatial Service Gap, Duplication, Accessibility Benefit, Infrastructure Dependency, Delivery Complexity), not only the overall category (WORK-REQ-10, WORK-AC-6)."
+    covers: ["RR-2"]
+    plan_tasks: ["T-2"]
+    tests: ["TEST-2"]
+    done_criteria: ["DC-2"]
+  - id: "AC-3"
+    text: "The approved WORK-BR-15 disclaimer wording (\"Illustrative decision-support assessment for demonstration purposes; not an official project approval or investment decision.\") is persistently visible on the assessment screen (WORK-BR-15, WORK-AC-7)."
+    covers: ["RR-3"]
+    plan_tasks: ["T-3"]
+    tests: ["TEST-3"]
+    done_criteria: ["DC-3"]
+  - id: "AC-4"
+    text: "The overall result is attributed to deterministic GIS indicators + business rules; the UI visibly distinguishes calculated evidence from explanatory template text, and no screen presents AI as the approver/decider (WORK-BR-1, WORK-BR-2, WORK-SEC-7)."
+    covers: ["RR-4"]
+    plan_tasks: ["T-4"]
+    tests: ["TEST-4"]
+    done_criteria: ["DC-4"]
+  - id: "AC-5"
+    text: "The configurable scoring weights are labeled exhibition-only / illustrative and NOT presented as an official ADPIC methodology unless separately validated (WORK-BR-9, WORK-BR-10)."
+    covers: ["RR-5"]
+    plan_tasks: ["T-5"]
+    tests: ["TEST-5"]
+    done_criteria: ["DC-5"]
+  - id: "AC-6"
+    text: "A missing indicator input yields a defined, evidence-visible outcome (the dimension is marked \"Insufficient data\" with the reason) rather than an invented score, and the overall priority remains deterministic (WORK-NFR-11 traceability; derived edge-case requirement)."
+    covers: ["RR-6"]
+    plan_tasks: ["T-6"]
+    tests: ["TEST-6"]
+    done_criteria: ["DC-6"]
+plan_tasks:
+  - id: "T-1"
+    text: "Build the pure, config-driven `scoringEngine.ts` + `weights.config.ts` + `indicators.ts` producing deterministic Low/Med/High from inputs+rules (no random/clock/network)."
+    satisfies: ["AC-1"]
+    tags: []
+  - id: "T-2"
+    text: "Emit per-dimension evidence in every result and render the dimension table with evidence on the Assessment screen."
+    satisfies: ["AC-2"]
+    tags: []
+  - id: "T-3"
+    text: "Add the exact WORK-BR-15 disclaimer constant and render it persistently on the Assessment screen."
+    satisfies: ["AC-3"]
+    tags: []
+  - id: "T-4"
+    text: "Attribute the overall result to GIS/rules, separate explanation from evidence, and ensure no AI-as-approver phrasing (tokens only, no live LLM)."
+    satisfies: ["AC-4"]
+    tags: []
+  - id: "T-5"
+    text: "Label the weights config illustrative / not-official-ADPIC-methodology and surface that note near the dimensions."
+    satisfies: ["AC-5"]
+    tags: []
+  - id: "T-6"
+    text: "Handle a missing indicator input as an \"Insufficient data\" dimension with a reason, keeping the overall priority deterministic."
+    satisfies: ["AC-6"]
+    tags: []
+tests:
+  - id: "TEST-1"
+    text: "Determinism/banding test calls `scoreProject` twice on the same input and asserts deeply-equal results, and asserts a high-profile input bands High while a low-profile input bands Low."
+    proves: ["AC-1"]
+    fails_when: "two runs on identical input differ, or the engine references Math.random/Date/fetch (purity), or banding is inverted."
+  - id: "TEST-2"
+    text: "Evidence test asserts every present-input dimension result has a non-empty `evidence` array and the Assessment renders those evidence items."
+    proves: ["AC-2"]
+    fails_when: "a dimension returns a score with empty evidence, or the UI shows only the category with no evidence."
+  - id: "TEST-3"
+    text: "Disclaimer test asserts the Assessment renders the EXACT WORK-BR-15 string."
+    proves: ["AC-3"]
+    fails_when: "the disclaimer text is absent or altered."
+  - id: "TEST-4"
+    text: "Authority test asserts the result exposes `attributedTo` = GIS/rules, the UI renders a rules-attribution label, explanation is tagged separately from evidence, and there is no \"AI approves/recommends approval/decision\" phrasing."
+    proves: ["AC-4"]
+    fails_when: "the UI presents AI as approving/deciding, or explanation is indistinguishable from calculated evidence."
+  - id: "TEST-5"
+    text: "Weights-label test asserts the weights config exposes the \"illustrative / not official ADPIC methodology\" label and the UI surfaces it."
+    proves: ["AC-5"]
+    fails_when: "weights are presented without the non-official label."
+  - id: "TEST-6"
+    text: "Missing-input test scores a project with a removed indicator and asserts the affected dimension band is \"Insufficient data\" with a reason and no numeric score, while the overall priority is still a deterministic Low/Med/High."
+    proves: ["AC-6"]
+    fails_when: "a missing input produces an invented numeric score or a non-deterministic/NaN overall."
+done_criteria:
+  - id: "DC-1"
+    text: "`scoringEngine.ts` + `weights.config.ts` exist, engine is pure (no random/clock/network in src/assessment), and determinism tests pass."
+    demonstrates: ["AC-1"]
+    verify: "bash .ai/stages/1.3/verify.sh AC-1"
+    observable: true
+    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f"
+  - id: "DC-2"
+    text: "Each dimension result carries per-dimension evidence; the Assessment screen renders the dimension table with evidence."
+    demonstrates: ["AC-2"]
+    verify: "bash .ai/stages/1.3/verify.sh AC-2"
+    observable: true
+    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f"
+  - id: "DC-3"
+    text: "The exact WORK-BR-15 disclaimer string is present and rendered on the Assessment screen."
+    demonstrates: ["AC-3"]
+    verify: "bash .ai/stages/1.3/verify.sh AC-3"
+    observable: true
+    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f"
+  - id: "DC-4"
+    text: "The result is attributed to GIS/rules, explanation is separated from evidence, and no AI-as-approver phrasing appears; no raw hex / no live-LLM / no forbidden module."
+    demonstrates: ["AC-4"]
+    verify: "bash .ai/stages/1.3/verify.sh AC-4"
+    observable: true
+    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f"
+  - id: "DC-5"
+    text: "The weights config carries the illustrative / not-official-methodology label."
+    demonstrates: ["AC-5"]
+    verify: "bash .ai/stages/1.3/verify.sh AC-5"
+    observable: true
+    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f"
+  - id: "DC-6"
+    text: "A missing indicator input yields a defined \"Insufficient data\" outcome (with reason) and a still-deterministic overall priority (proven by tests)."
+    demonstrates: ["AC-6"]
+    verify: "bash .ai/stages/1.3/verify.sh AC-6"
+    observable: true
+    observable_detail: "runner bash on path .ai/stages/1.3/verify.sh@97ad73e5a85f"
+edges:
+  - {from: "RR-1", to: "AC-1", type: roadmap_to_ac}
+  - {from: "RR-2", to: "AC-2", type: roadmap_to_ac}
+  - {from: "RR-3", to: "AC-3", type: roadmap_to_ac}
+  - {from: "RR-4", to: "AC-4", type: roadmap_to_ac}
+  - {from: "RR-5", to: "AC-5", type: roadmap_to_ac}
+  - {from: "RR-6", to: "AC-6", type: roadmap_to_ac}
+  - {from: "AC-1", to: "T-1", type: ac_to_plan_task}
+  - {from: "AC-1", to: "TEST-1", type: ac_to_test}
+  - {from: "AC-1", to: "DC-1", type: ac_to_done_criterion}
+  - {from: "AC-2", to: "T-2", type: ac_to_plan_task}
+  - {from: "AC-2", to: "TEST-2", type: ac_to_test}
+  - {from: "AC-2", to: "DC-2", type: ac_to_done_criterion}
+  - {from: "AC-3", to: "T-3", type: ac_to_plan_task}
+  - {from: "AC-3", to: "TEST-3", type: ac_to_test}
+  - {from: "AC-3", to: "DC-3", type: ac_to_done_criterion}
+  - {from: "AC-4", to: "T-4", type: ac_to_plan_task}
+  - {from: "AC-4", to: "TEST-4", type: ac_to_test}
+  - {from: "AC-4", to: "DC-4", type: ac_to_done_criterion}
+  - {from: "AC-5", to: "T-5", type: ac_to_plan_task}
+  - {from: "AC-5", to: "TEST-5", type: ac_to_test}
+  - {from: "AC-5", to: "DC-5", type: ac_to_done_criterion}
+  - {from: "AC-6", to: "T-6", type: ac_to_plan_task}
+  - {from: "AC-6", to: "TEST-6", type: ac_to_test}
+  - {from: "AC-6", to: "DC-6", type: ac_to_done_criterion}
