@@ -63,8 +63,9 @@ function BigMap({ result, phase }: { result: SimulationResult; phase: Phase }) {
         <g stroke="var(--stroke)" strokeWidth={0.28} fill="none" opacity={0.85}>{roadPaths.map((d, i) => <polyline key={i} points={d} />)}</g>
         {/* existing catchments */}
         {schools.map((s) => <circle key={`c-${s.id}`} cx={gx2sx(s.x)} cy={gy2sy(s.y)} r={rSvg} fill="url(#catch)" />)}
-        {/* proposed catchment — animates in */}
-        <circle cx={gx2sx(result.proposed.x)} cy={gy2sy(result.proposed.y)} r={proposed ? rSvg : 0} fill="url(#catchNew)" stroke="var(--good)" strokeWidth={0.5} strokeOpacity={proposed ? 0.8 : 0} style={{ transition: "r 0.8s ease, stroke-opacity 0.8s" }} />
+        {/* proposed catchment — one controlled reveal; dashed ring reads clearly as "the new catchment" */}
+        <circle cx={gx2sx(result.proposed.x)} cy={gy2sy(result.proposed.y)} r={proposed ? rSvg : 0} fill="url(#catchNew)" style={{ transition: "r 0.8s ease" }} />
+        <circle cx={gx2sx(result.proposed.x)} cy={gy2sy(result.proposed.y)} r={proposed ? rSvg : 0} fill="none" stroke="var(--good)" strokeWidth={0.6} strokeDasharray="2.4 1.6" strokeOpacity={proposed ? 0.9 : 0} style={{ transition: "r 0.8s ease, stroke-opacity 0.8s" }} />
         {/* communities */}
         {POPULATION_ZONES.map((z: Zone) => {
           const isNew = proposed && newly.has(z.id);
@@ -78,10 +79,16 @@ function BigMap({ result, phase }: { result: SimulationResult; phase: Phase }) {
         })}
         {/* existing schools */}
         {schools.map((s) => <rect key={s.id} x={gx2sx(s.x) - 1.6} y={gy2sy(s.y) - 1.6} width={3.2} height={3.2} rx={0.6} fill="var(--text-0)" stroke="var(--bg-0)" strokeWidth={0.5} />)}
-        {/* proposed school — glows in */}
+        {/* proposed school marker — glows in (clipped to the district like the rest of the map) */}
         <g style={{ transition: "opacity 0.6s", opacity: proposed ? 1 : 0 }} filter="url(#glow)">
           <rect x={gx2sx(result.proposed.x) - 2.6} y={gy2sy(result.proposed.y) - 2.6} width={5.2} height={5.2} rx={0.9} fill="var(--accent-2)" stroke="var(--text-0)" strokeWidth={0.6} />
         </g>
+      </g>
+      {/* proposed-school label — OUTSIDE the district clip so the callout is never cut off */}
+      <g style={{ transition: "opacity 0.6s", opacity: proposed ? 1 : 0 }} transform={`translate(${gx2sx(result.proposed.x) + 4}, ${gy2sy(result.proposed.y) - 3.2})`}>
+        <rect x={0} y={0} width={44} height={6.8} rx={1.2} fill="rgba(7,12,22,0.92)" stroke="var(--accent-2)" strokeWidth={0.4} />
+        <rect x={1.8} y={2.3} width={2.2} height={2.2} rx={0.4} fill="var(--accent-2)" />
+        <text x={5.6} y={4.7} fill="var(--text-0)" fontSize={3.4} fontWeight={700}>Proposed School</text>
       </g>
       <text x={5} y={9} fill="var(--text-1)" fontSize={4}>Khalifa City · Abu Dhabi</text>
       <text x={W - 8} y={10} fill="var(--text-2)" fontSize={5}>N↑</text>
@@ -114,6 +121,8 @@ export function Simulator({ onBack }: { onBack: () => void }) {
   const popDelta = result.after.populationInServiceArea - result.before.populationInServiceArea;
   const covDelta = Math.round((result.after.coveragePct - result.before.coveragePct) * 10) / 10;
   const underDelta = result.before.underservedPopulation - result.after.underservedPopulation;
+  // real access-distance reduction from the deterministic model (not invented)
+  const accessDelta = Math.round((result.before.averageAccessDistance - result.after.averageAccessDistance) * 10) / 10;
 
   return (
     <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", background: "var(--bg-0)", padding: "var(--space-3) var(--space-4)", overflow: "hidden" }}>
@@ -139,10 +148,10 @@ export function Simulator({ onBack }: { onBack: () => void }) {
         <BigMap result={result} phase={phase} />
         {/* legend overlay */}
         <div style={{ position: "absolute", left: "var(--space-2)", bottom: "var(--space-2)", display: "flex", gap: "var(--space-3)", flexWrap: "wrap", color: "var(--text-1)", fontSize: "12px", background: "rgba(7,12,22,0.6)", padding: "8px 12px", borderRadius: "var(--radius-1)" }}>
-          <span><span style={{ color: "var(--good)" }}>●</span> Covered</span>
-          <span><span style={{ color: "var(--warn)" }}>●</span> Underserved</span>
+          <span><span style={{ color: "var(--good)" }}>●</span> Covered community</span>
+          <span><span style={{ color: "var(--warn)" }}>●</span> Underserved community</span>
           <span><span style={{ color: "var(--accent-2)" }}>◼</span> Proposed school</span>
-          <span style={{ color: "var(--text-2)" }}>service catchment = derived walkable area (approx.)</span>
+          <span><span style={{ color: "var(--good)" }}>◌</span> Proposed catchment (translucent walkable area)</span>
         </div>
         <button type="button" onClick={() => setPhase(proposed ? "current" : "proposed")}
           style={{ position: "absolute", right: "var(--space-2)", bottom: "var(--space-2)", padding: "12px 24px", borderRadius: "999px", border: "none", background: proposed ? "var(--bg-2)" : "var(--good)", color: proposed ? "var(--text-1)" : "var(--bg-0)", fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 24px var(--shadow)" }}>
@@ -155,7 +164,7 @@ export function Simulator({ onBack }: { onBack: () => void }) {
         <BigKpi label="Population within service area" value={formatPeople(Math.round(pop))} delta={proposed ? `+${formatPeople(popDelta)}` : undefined} />
         <BigKpi label="Coverage" value={`${Math.round(cov)}%`} delta={proposed ? `+${covDelta}%` : undefined} />
         <BigKpi label="Underserved population" value={formatPeople(Math.round(under))} delta={proposed ? `−${formatPeople(underDelta)}` : undefined} />
-        <BigKpi label="Avg access distance" value={`${(Math.round(access * 10) / 10).toFixed(1)}`} delta={proposed ? "improved" : undefined} />
+        <BigKpi label="Avg access distance" value={`${(Math.round(access * 10) / 10).toFixed(1)}`} delta={proposed && accessDelta > 0 ? `−${accessDelta.toFixed(1)}` : undefined} />
         <BigKpi label="Liveability Impact Score" value={proposed ? `+${result.liveabilityImpactScore}` : "—"} />
       </div>
       <div data-testid="newly-covered" style={{ marginTop: "8px", color: "var(--text-1)", fontSize: "13px" }}>

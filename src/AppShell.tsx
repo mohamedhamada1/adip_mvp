@@ -8,7 +8,7 @@ import { Assessment } from "./ui/Assessment";
 import { Simulator } from "./ui/Simulator";
 import { AskAdpicAi } from "./ui/AskAdpicAi";
 import { FallbackDemo } from "./ui/FallbackDemo";
-import { ProjectCard } from "./ui/ProjectCard";
+import { ProjectDetails } from "./ui/ProjectDetails";
 import { Dashboard } from "./ui/Dashboard";
 import { Closing } from "./ui/Closing";
 import { AoiSelect } from "./ui/AoiSelect";
@@ -33,7 +33,7 @@ import type { AoiId, ProjectRecord, Sector } from "./data/types";
  */
 export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
   const [started, setStarted] = useState(false);
-  const [view, setView] = useState<"explore" | "evaluate" | "simulate" | "fallback" | "dashboard" | "aoi" | "closing">("explore");
+  const [view, setView] = useState<"explore" | "details" | "evaluate" | "simulate" | "fallback" | "dashboard" | "aoi" | "closing">("explore");
   const [activeAoi, setActiveAoi] = useState<AoiId>(SPINE_AOI);
   const [activeSectors, setActiveSectors] = useState<Set<Sector>>(new Set());
   const [selected, setSelected] = useState<ProjectRecord | null>(null);
@@ -73,6 +73,8 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
   function selectProject(p: ProjectRecord) {
     setSelected(p);
     controllerRef.current?.focusProject(p);
+    // selection opens the first-class Project Details bridge (Explore → Details → Evaluate → Simulate)
+    setView("details");
   }
 
   const visible = useMemo(() => filterProjects(projectsForAoi(activeAoi), activeSectors), [activeAoi, activeSectors]);
@@ -94,6 +96,7 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
   // Full-bleed states have no rail (Hero handled separately); the rest carry the unifying nav rail.
   const fullBleed = view === "fallback" || view === "closing" || view === "aoi";
   const railKey: NavKey = view === "dashboard" ? "dashboard" : view === "evaluate" ? "evaluate" : view === "simulate" ? "simulate" : "explore";
+  const showDetails = () => { if (selected) setView("details"); };
   function onNav(k: NavKey) {
     if (k === "ask") { setAskOpen((v) => !v); return; }
     if (k === "evaluate") { setView(selected ? "evaluate" : "explore"); return; }
@@ -124,9 +127,9 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
         <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", pointerEvents: "none" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "var(--space-2) var(--space-3)", pointerEvents: "auto" }}>
             <div style={{ display: "flex", gap: "var(--space-2)", alignItems: "baseline" }}>
-              <strong style={{ color: "var(--text-0)" }}>ADPIC</strong>
-              <span style={{ color: "var(--text-1)", fontSize: "13px" }}>Capital Intelligence</span>
-              <span style={{ color: "var(--text-2)", fontSize: "11px", letterSpacing: "0.08em" }}>People · Places · Possibilities</span>
+              <strong style={{ color: "var(--text-0)", fontSize: "20px", letterSpacing: "0.06em" }}>ADPIC</strong>
+              <span style={{ color: "var(--accent-2)", fontSize: "15px", fontWeight: 600 }}>Capital Intelligence</span>
+              <span style={{ color: "var(--text-2)", fontSize: "11px", letterSpacing: "0.12em", textTransform: "uppercase" }}>People · Places · Possibilities</span>
             </div>
             <div style={{ display: "flex", gap: "var(--space-2)", alignItems: "center" }}>
               <button type="button" onClick={() => setView("aoi")} style={{ padding: "8px 12px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--text-2)", cursor: "pointer", fontSize: "13px" }}>Areas</button>
@@ -162,7 +165,12 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
             <div style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-end", flexWrap: "wrap" }}>
               <ProjectPanel projects={visible} selected={selected} onSelect={selectProject} />
               {selected && (
-                <ProjectCard project={selected} onEvaluate={() => setView("evaluate")} onSimulate={activeAoi === "khalifa" ? () => setView("simulate") : undefined} />
+                <button type="button" onClick={showDetails}
+                  style={{ display: "flex", flexDirection: "column", gap: "2px", textAlign: "left", background: "var(--bg-1)", border: "1px solid var(--accent)", borderRadius: "var(--radius-2)", padding: "var(--space-2) var(--space-3)", color: "var(--text-0)", cursor: "pointer", boxShadow: "0 10px 40px var(--shadow)" }}>
+                  <span style={{ color: "var(--accent-2)", fontSize: "11px", letterSpacing: "0.06em" }}>SELECTED · VIEW DETAILS →</span>
+                  <span style={{ fontSize: "15px", fontWeight: 700 }}>{selected.nameEn}</span>
+                  <span style={{ color: "var(--text-2)", fontSize: "12px" }}>{selected.sector} · {selected.status}</span>
+                </button>
               )}
             </div>
           </div>
@@ -173,8 +181,19 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
         </div>
       )}
 
+      {view === "details" && selected && (
+        <ProjectDetails
+          project={selected}
+          assessment={assessment}
+          onBack={() => setView("explore")}
+          onEvaluate={() => setView("evaluate")}
+          onSimulate={activeAoi === "khalifa" ? () => setView("simulate") : undefined}
+          showMap={false}
+        />
+      )}
+
       {view === "evaluate" && assessment && (
-        <Assessment result={assessment} onBack={() => setView("explore")} />
+        <Assessment result={assessment} onBack={() => setView("details")} onSimulate={activeAoi === "khalifa" ? () => setView("simulate") : undefined} />
       )}
 
       {view === "simulate" && <Simulator onBack={() => setView("explore")} />}
