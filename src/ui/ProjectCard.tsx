@@ -17,13 +17,20 @@ export function ProjectCard({ project, onEvaluate, onSimulate }: { project: Proj
     { label: "Population served", value: formatPeople(project.populationServed) },
     { label: "Progress", value: `${project.progress}%` },
   ];
+  const statusColor = project.status === "Under Delivery" ? "var(--good)" : project.status === "Planned" ? "var(--accent-2)" : project.status === "Completed" ? "var(--text-1)" : "var(--warn)";
   return (
-    <div data-testid="project-card" style={{ width: "min(360px, 92vw)", background: "var(--bg-1)", border: "1px solid var(--stroke)", borderRadius: "var(--radius-2)", padding: "var(--space-3)", boxShadow: "0 10px 40px var(--shadow)" }}>
+    <div data-testid="project-card" style={{ width: "min(360px, 92vw)", background: "var(--bg-1)", border: "1px solid var(--stroke)", borderRadius: "var(--radius-2)", overflow: "hidden", boxShadow: "0 10px 40px var(--shadow)" }}>
+      {/* image band (photography: owner-supplied asset — stylized placeholder, flagged) */}
+      <div style={{ height: "96px", background: "linear-gradient(135deg, var(--bg-2), var(--accent-soft))", position: "relative", display: "flex", alignItems: "flex-end", padding: "var(--space-2)" }}>
+        <span style={{ fontSize: "11px", fontWeight: 700, color: "var(--bg-0)", background: statusColor, borderRadius: "999px", padding: "3px 10px" }}>{project.status}</span>
+        <span style={{ position: "absolute", top: "6px", right: "8px", fontSize: "9px", color: "var(--text-2)" }}>photo: owner-supplied [REF]</span>
+      </div>
+      <div style={{ padding: "var(--space-3)" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "var(--space-2)" }}>
         <div>
           <div style={{ color: "var(--accent-2)", fontSize: "12px", letterSpacing: "0.06em" }}>SELECTED PROJECT</div>
           <div style={{ color: "var(--text-0)", fontSize: "18px", fontWeight: 700, marginTop: "2px" }}>{project.nameEn}</div>
-          <div style={{ color: "var(--text-2)", fontSize: "12px" }}>{project.aoi === "khalifa" ? "Khalifa City" : "Al Reem Island"}, Abu Dhabi</div>
+          <div style={{ color: "var(--text-2)", fontSize: "12px" }}>{project.sector} · {project.aoi === "khalifa" ? "Khalifa City" : "Al Reem Island"}, Abu Dhabi</div>
         </div>
         <span style={{ fontSize: "10px", color: "var(--warn)", border: "1px solid var(--warn)", borderRadius: "999px", padding: "2px 8px", whiteSpace: "nowrap" }}>
           {PROVENANCE_LABEL[project.provenance]}
@@ -47,6 +54,7 @@ export function ProjectCard({ project, onEvaluate, onSimulate }: { project: Proj
           </button>
         )}
       </div>
+      </div>{/* end padding wrapper */}
     </div>
   );
 }

@@ -9,6 +9,10 @@ import { Simulator } from "./ui/Simulator";
 import { AskAdpicAi } from "./ui/AskAdpicAi";
 import { FallbackDemo } from "./ui/FallbackDemo";
 import { ProjectCard } from "./ui/ProjectCard";
+import { Dashboard } from "./ui/Dashboard";
+import { Closing } from "./ui/Closing";
+import { AoiSelect } from "./ui/AoiSelect";
+import { NavRail, type NavKey } from "./ui/NavRail";
 import { SceneController } from "./scene/sceneController";
 import type { SceneApi } from "./scene/sceneApi";
 import { SPINE_AOI } from "./scene/aoi";
@@ -29,7 +33,7 @@ import type { AoiId, ProjectRecord, Sector } from "./data/types";
  */
 export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
   const [started, setStarted] = useState(false);
-  const [view, setView] = useState<"explore" | "evaluate" | "simulate" | "fallback">("explore");
+  const [view, setView] = useState<"explore" | "evaluate" | "simulate" | "fallback" | "dashboard" | "aoi" | "closing">("explore");
   const [activeAoi, setActiveAoi] = useState<AoiId>(SPINE_AOI);
   const [activeSectors, setActiveSectors] = useState<Set<Sector>>(new Set());
   const [selected, setSelected] = useState<ProjectRecord | null>(null);
@@ -87,13 +91,25 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
   }
   function toggleSafe() { const n = !safe; setSafe(n); setSafeMode(n); }
 
+  // Full-bleed states have no rail (Hero handled separately); the rest carry the unifying nav rail.
+  const fullBleed = view === "fallback" || view === "closing" || view === "aoi";
+  const railKey: NavKey = view === "dashboard" ? "dashboard" : view === "evaluate" ? "evaluate" : view === "simulate" ? "simulate" : "explore";
+  function onNav(k: NavKey) {
+    if (k === "ask") { setAskOpen((v) => !v); return; }
+    if (k === "evaluate") { setView(selected ? "evaluate" : "explore"); return; }
+    setView(k as typeof view);
+  }
+
   if (!started) return <Hero onStart={() => setStarted(true)} />;
 
-  const panelOpen = askOpen && view !== "fallback";
+  const panelOpen = askOpen && !fullBleed;
+  const railShown = !fullBleed;
   return (
     <div style={{ position: "absolute", inset: 0 }}>
-      {/* Content reflows LEFT of the Ask-AI right rail so the panel never obscures the evidence it explains */}
-      <div style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: panelOpen ? "min(400px, 92vw)" : 0, transition: "right 0.18s ease" }}>
+      {/* Unifying left nav rail (nav skin over view state; references 02/04/05/06/08) */}
+      {railShown && <NavRail active={railKey} askActive={panelOpen} onNav={onNav} />}
+      {/* Content sits right of the rail and reflows left of the Ask-AI panel so it never obscures evidence */}
+      <div style={{ position: "absolute", top: 0, bottom: 0, left: railShown ? 84 : 0, right: panelOpen ? "min(400px, 92vw)" : 0, transition: "right 0.18s ease" }}>
       {/* 3D scene surface — mounted ONCE and preserved beneath overlays */}
       <div ref={sceneDivRef} style={{ position: "absolute", inset: 0, background: "var(--bg-0)" }} />
       {/* Ask-AI toggle — cross-cutting, stays within the (reflowing) content, left of the panel */}
@@ -107,11 +123,18 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
       {view === "explore" && (
         <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", pointerEvents: "none" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "var(--space-2) var(--space-3)", pointerEvents: "auto" }}>
-            <div style={{ display: "flex", gap: "var(--space-2)", alignItems: "center" }}>
+            <div style={{ display: "flex", gap: "var(--space-2)", alignItems: "baseline" }}>
               <strong style={{ color: "var(--text-0)" }}>ADPIC</strong>
-              <span style={{ color: "var(--text-2)", fontSize: "13px" }}>Capital Intelligence</span>
+              <span style={{ color: "var(--text-1)", fontSize: "13px" }}>Capital Intelligence</span>
+              <span style={{ color: "var(--text-2)", fontSize: "11px", letterSpacing: "0.08em" }}>People · Places · Possibilities</span>
             </div>
             <div style={{ display: "flex", gap: "var(--space-2)", alignItems: "center" }}>
+              <button type="button" onClick={() => setView("aoi")} style={{ padding: "8px 12px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--text-2)", cursor: "pointer", fontSize: "13px" }}>Areas</button>
+              <button type="button" onClick={() => setView("closing")} style={{ padding: "8px 12px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--text-2)", cursor: "pointer", fontSize: "13px" }}>Closing</button>
+              <span title="English UI · Arabic-ready architecture (content English for MVP)" style={{ border: "1px solid var(--stroke)", borderRadius: "var(--radius-1)", overflow: "hidden", fontSize: "12px" }}>
+                <span style={{ padding: "6px 8px", background: "var(--accent-soft)", color: "var(--text-0)" }}>EN</span>
+                <span style={{ padding: "6px 8px", color: "var(--text-2)" }}>عربي</span>
+              </span>
               {activeAoi === "khalifa" && (
                 <button type="button" onClick={() => setView("simulate")} style={{ padding: "8px 16px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--accent-2)", cursor: "pointer", fontSize: "14px", fontWeight: 600 }}>
                   Simulate liveability impact →
@@ -157,6 +180,9 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
       {view === "simulate" && <Simulator onBack={() => setView("explore")} />}
 
       {view === "fallback" && <FallbackDemo onBack={() => setView("explore")} />}
+      {view === "dashboard" && <Dashboard aoi={activeAoi} onBack={() => setView("explore")} />}
+      {view === "aoi" && <AoiSelect onSelect={(a) => { switchAoi(a); setView("explore"); }} />}
+      {view === "closing" && <Closing onBack={() => setView("explore")} />}
       </div>{/* end reflow content container */}
 
       {/* Ask ADPIC AI — cross-cutting right-docked panel (content reflows beside it; never overlaps evidence) */}
