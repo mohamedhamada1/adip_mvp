@@ -4,3 +4,4 @@ dist/
 *.log
 tsconfig.tsbuildinfo
 .ai/sessions/
+capture.mjs
