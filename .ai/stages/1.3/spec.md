@@ -371,6 +371,6 @@ None new (reuses Stage 1.2 stack). No secrets/keys. No live LLM.
 - DC-6: A missing indicator input yields a defined "Insufficient data" outcome (with reason) and a still-deterministic overall priority via the exclude-and-renormalize rule (proven by tests).
   demonstrates: AC-6
   verify: bash .ai/stages/1.3/verify.sh AC-6
-- DC-7: `AppShell.tsx` wires the Assessment into the app flow (imports Assessment + a select→Evaluate handler); an integration test renders AppShell with an injected fake SceneApi, selects a project, opens Evaluate, and asserts the Assessment shows that project's deterministic result.
+- DC-7: `AppShell.tsx` wires the Assessment into the app flow (imports Assessment + a select→Evaluate handler); an integration test renders AppShell with an injected fake SceneApi, selects a project, opens Evaluate (Assessment shows that project's deterministic result), then goes Back and asserts the mounted view is preserved (createView called exactly once across Explore→Evaluate→Back; destroy not called on Back).
   demonstrates: AC-7
   verify: bash .ai/stages/1.3/verify.sh AC-7

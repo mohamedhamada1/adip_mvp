@@ -3,8 +3,8 @@
   "certifier": "ai-certify-stage-readiness.sh",
   "epic": "adpic-livex-2026-capital-intelligence-mvp",
   "stage": "1.3",
-  "generated_at_utc": "2026-09-04T15:00:05Z",
-  "determinism_key": "a5d4fa9f23a5c5982af21d9422ceb343f5dd67061c855bad803aa90ba6220dda",
+  "generated_at_utc": "2026-09-04T15:09:09Z",
+  "determinism_key": "cbe2f426c3e09a8eee28500a929dc785b92721eed7fdc7dd2fb4543ec6e97ba9",
   "declared_limits": [
     {
       "id": "L-SEM-1",
@@ -148,7 +148,7 @@
   "traceability": {
     "verdict": "PASS",
     "matrix_path": ".ai/epics/adpic-livex-2026-capital-intelligence-mvp/evidence/traceability_1.3.yaml",
-    "matrix_sha256": "f83743c3267855a2a1a13d708085f998fd2c3c462099026bc3b1c296b72fd8d9",
+    "matrix_sha256": "853cfae1dd690687ace525dee2da5e06cf14ef78a35bea5d1f3ca9094c3d6677",
     "counts": {
       "roadmap_requirements": 6,
       "acceptance_criteria": 7,
@@ -259,17 +259,17 @@
       "spec": {
         "path": ".ai/stages/1.3/spec.md",
         "section": null,
-        "sha256": "a9f975b425f6e71e1acfa29215bbd3faa290a063e394a3c0fcfd9a8de61c2240"
+        "sha256": "e0d191f61d4de296c7386f2abadc6fd0e290f3e29c97c08c8554ed746af57865"
       },
       "plan": {
         "path": ".ai/stages/1.3/plan.md",
         "section": null,
-        "sha256": "d720a897d92050df8ee6c3e6eab990f9ccda5c004689cc7837654af782664c52"
+        "sha256": "79a1b11da9ae268a6a45e91dee08eb9b0898b84a65b81c2c0e70103e4429464a"
       },
       "test": {
         "path": ".ai/stages/1.3/plan.md",
         "section": "## Test plan",
-        "sha256": "215057bef34ff0fb459be00564ebc851bfb12143032570027c2df4265233d499"
+        "sha256": "e54e2103a61eaced77bf96e77d4ab2e30c448d7a2516a70ae45ff6d8590ac89a"
       },
       "done": {
         "path": ".ai/stages/1.3/spec.md",
@@ -457,17 +457,17 @@
       "reviewer": "reviewer_a",
       "role_flag": "--gemini-review",
       "stage": "independent_roadmap_review",
-      "payload_sha256": "5eab6186bdf6d3131558a9910ec99189d21291fa6798a862652372059c59e001",
+      "payload_sha256": "d816bec90883a2e984f5701299d018927d7166ecf5e7589683f55ba8fee7a1d0",
       "payload_bytes": 11780,
-      "probe_lines_checked": 263,
+      "probe_lines_checked": 270,
       "downstream_leakage": false,
       "leaked_samples": [],
       "payload_captured": true,
       "attestation_valid": true,
-      "attestation_detail": "263 probe lines searched in 11780 captured payload bytes",
+      "attestation_detail": "270 probe lines searched in 11780 captured payload bytes",
       "status": "COMPLETED",
       "verdict": "PASS",
-      "response_sha256": "449f8d0a8e590611f29e45dd4e82bd0000bfcec9022b0d08bf2a025ad54cfac1",
+      "response_sha256": "e0bdd20c7fa39aa958aa5b771fd6e394f1db141ada4b6ec978db551b621d66f2",
       "advisory": true
     },
     "reviewers": [
@@ -475,8 +475,8 @@
         "reviewer": "semantic_reviewer",
         "role_flag": "repo-grounded-claude-two-lens",
         "stage": "semantic_readiness",
-        "response_sha256": "46b00ec5f4264616d38010fca3c0f7fb0c30555d14c2b8dcedee1d5657283be7",
-        "response_bytes": 4678,
+        "response_sha256": "20f8d348de5be6ad49cbea35c347964e15dab1365948c836b8fb4b5fd1654567",
+        "response_bytes": 7120,
         "status": "COMPLETED",
         "verdict": "CONCERN",
         "lens_a_verdict": "CONCERN",
@@ -484,22 +484,19 @@
         "lens_b_advisory": true,
         "overall_verdict": "CONCERN",
         "findings": [
-          "Data-model inconsistency forces invention: `spec.md:252` types `AssessmentResult.overall` as `\"Low\"|\"Medium\"|\"High\"`, but Resolution Rules (`spec.md:316-318`) mandate an \"Insufficient data\" overall when ALL dimensions are missing. A Builder implementing the data model literally cannot represent that outcome; TEST-6 (`plan.md:142`) removes only one indicator, so the all-missing branch is untested and stays green whichever way it is invented.",
-          "Orphaned integration-test file: spec Files-to-Create (`spec.md:99`) lists `tests/appShell.test.tsx`, but plan Step 6 (`plan.md:63-65`), the plan Test-Plan table (`plan.md:77-80`), and the spec Tests checklist (`spec.md:285`) all omit it. A Builder following Step 6 literally writes only two test files and may never author TEST-7 (AC-7 wiring); `check_wiring` (`verify.sh:54-57`) is grep-only and `run_tests` passes on any green suite, so DC-7 can pass with the Explore\u2192Evaluate behaviour unproven.",
-          "Roadmap intent is otherwise preserved (RR-1..6 \u2192 AC-1..7, AC-7 added for reachability), scope is not expanded (Simulator/Ask-AI explicitly deferred), and the disclaimer wording is grounded exactly against `WORK...FINAL.md:147-151`.",
-          "Inherent-to-demo (advisory, WORK-OQ-3 open): TEST-1 banding is near-self-fulfilling (Builder picks both the profile inputs and the weights/thresholds); AC-2 evidence non-emptiness is hardcodable; verify.sh AC-2/AC-6 are coarse whole-suite `run_tests`."
+          "Green-while-absent scenario (q4): spec.md:183 and plan.md:59/76 require the mounted SceneView to be preserved on Evaluate\u2192Back (\"no regression to Explore\"), but TEST-7 asserts only that the Assessment renders for the selected project. A Builder that unmounts/destroys and recreates the view on Back satisfies every test in the package while violating the stated behaviour; `fakeSceneApi` already records `createView`/`destroy`, so a one-line assertion would close it.",
+          "Low/Med/High threshold boundaries are nowhere specified; the Builder must choose them. Acceptable because weights/thresholds are explicitly illustrative/non-official and the Ambiguity Rule covers derivation \u2014 noted, not blocking.",
+          "AC-6 (\"Insufficient data\") is only ever reachable via synthetic test fixtures: every `ProjectRecord` in the frozen dataset is fully populated by `buildAoi` (portfolio.demo.ts:56-74), so no dimension is ever missing in the real app flow. The behaviour is defensive and test-proven, which is fine, but it is not observable in the shipped UI."
         ],
         "lens_a_findings": [
-          "Data-model inconsistency forces invention: `spec.md:252` types `AssessmentResult.overall` as `\"Low\"|\"Medium\"|\"High\"`, but Resolution Rules (`spec.md:316-318`) mandate an \"Insufficient data\" overall when ALL dimensions are missing. A Builder implementing the data model literally cannot represent that outcome; TEST-6 (`plan.md:142`) removes only one indicator, so the all-missing branch is untested and stays green whichever way it is invented.",
-          "Orphaned integration-test file: spec Files-to-Create (`spec.md:99`) lists `tests/appShell.test.tsx`, but plan Step 6 (`plan.md:63-65`), the plan Test-Plan table (`plan.md:77-80`), and the spec Tests checklist (`spec.md:285`) all omit it. A Builder following Step 6 literally writes only two test files and may never author TEST-7 (AC-7 wiring); `check_wiring` (`verify.sh:54-57`) is grep-only and `run_tests` passes on any green suite, so DC-7 can pass with the Explore\u2192Evaluate behaviour unproven.",
-          "Roadmap intent is otherwise preserved (RR-1..6 \u2192 AC-1..7, AC-7 added for reachability), scope is not expanded (Simulator/Ask-AI explicitly deferred), and the disclaimer wording is grounded exactly against `WORK...FINAL.md:147-151`.",
-          "Inherent-to-demo (advisory, WORK-OQ-3 open): TEST-1 banding is near-self-fulfilling (Builder picks both the profile inputs and the weights/thresholds); AC-2 evidence non-emptiness is hardcodable; verify.sh AC-2/AC-6 are coarse whole-suite `run_tests`."
+          "Green-while-absent scenario (q4): spec.md:183 and plan.md:59/76 require the mounted SceneView to be preserved on Evaluate\u2192Back (\"no regression to Explore\"), but TEST-7 asserts only that the Assessment renders for the selected project. A Builder that unmounts/destroys and recreates the view on Back satisfies every test in the package while violating the stated behaviour; `fakeSceneApi` already records `createView`/`destroy`, so a one-line assertion would close it.",
+          "Low/Med/High threshold boundaries are nowhere specified; the Builder must choose them. Acceptable because weights/thresholds are explicitly illustrative/non-official and the Ambiguity Rule covers derivation \u2014 noted, not blocking.",
+          "AC-6 (\"Insufficient data\") is only ever reachable via synthetic test fixtures: every `ProjectRecord` in the frozen dataset is fully populated by `buildAoi` (portfolio.demo.ts:56-74), so no dimension is ever missing in the real app flow. The behaviour is defensive and test-proven, which is fine, but it is not observable in the shipped UI."
         ],
         "lens_b_findings": [
-          "Grounding falsehood: `spec.md:104` and `plan.md:59` claim `App.tsx` is \"the ONLY module importing @arcgis/core.\" False \u2014 `src/main.tsx:4` and `src/scene/arcgisSceneApi.ts:1-7` import it, and both remain importers post-implementation. The engineering intent (AppShell takes an injected `SceneApi`, jsdom-testable) is sound and already scaffolded (`src/scene/sceneApi.ts:21`, `tests/fakeSceneApi.ts`), but the stated invariant is inaccurate.",
-          "Green-while-absent via verify tooling: `verify.sh:67` `all` mode chains checks with `;`, so `rc=$?` (`verify.sh:70`) captures only the final `run_tests`. A missing disclaimer, unwired AppShell, or failed weights-label check prints a failure line yet still exits 0 / prints PASS if `npm test` passes \u2014 and `plan.md:87` recommends `verify.sh all` to the Builder. (Per-AC branches use `&&` and are strict; DCs invoke per-AC, so the certificate path itself is sound.)",
-          "Advisory: purity grep `[^a-zA-Z]fetch\\(` (`verify.sh:20`) misses a line-initial `fetch(`.",
-          "No money/settlement, tenancy/IDOR, concurrency/replay, or state-transition hazards apply \u2014 pure deterministic front-end demo, no backend. Named symbols/fields are grounded: `ProjectRecord` (`src/data/types.ts:25-45`), `DERIVED` provenance (`src/data/provenance.ts:3`), band tokens (`src/theme/tokens.css:12-16`), deterministic frozen dataset with Planned records (`src/data/portfolio.demo.ts`)."
+          "verify.sh:67 \u2014 the `all` branch runs `check_build; check_engine; check_disclaimer; check_authority; check_weights_label; check_wiring; run_tests \"TESTS\"` as `;`-separated statements with no `set -e` (script uses `set -uo pipefail` only) and no `&&` chaining; `rc=$?` (line 70) captures only `run_tests`'s status. A tree with a missing/altered disclaimer, missing weights label, and an unwired AppShell prints its failure lines but still exits 0 \u2192 `verify(all): PASS`. plan.md:90 and the P0/P1 table (plan.md:99) direct the Builder to gate on `verify.sh all` expecting PASS \u2014 a literal green-while-broken path. (Per-AC invocations used by the DCs are correctly `&&`-chained, so the certification path itself is sound; fix: chain with `&&` or accumulate rc.)",
+          "verify.sh:28 `check_disclaimer` greps only the substring `\"Illustrative decision-support assessment for demonstration purposes\"`, not the full approved wording (missing `\"; not an official project approval or investment decision.\"`). A truncated disclaimer passes the mechanical AC-3 guard; only TEST-3 (Builder-authored) enforces the exact string. Weak guard \u2014 the exact string is available verbatim in AC-3, so it is a tooling weakness rather than an invention risk.",
+          "verify.sh:56 AC-7 wiring guard greps `evaluate|scoreProject|selected` in AppShell.tsx; `selected` alone can match trivially, so the structural check is near-vacuous. The real proof is TEST-7, which (per Lens A) under-asserts the view-preservation half of the behaviour."
         ]
       }
     ],
@@ -511,10 +508,9 @@
     "lens_b_advisory": {
       "verdict": "CONCERN",
       "findings": [
-        "Grounding falsehood: `spec.md:104` and `plan.md:59` claim `App.tsx` is \"the ONLY module importing @arcgis/core.\" False \u2014 `src/main.tsx:4` and `src/scene/arcgisSceneApi.ts:1-7` import it, and both remain importers post-implementation. The engineering intent (AppShell takes an injected `SceneApi`, jsdom-testable) is sound and already scaffolded (`src/scene/sceneApi.ts:21`, `tests/fakeSceneApi.ts`), but the stated invariant is inaccurate.",
-        "Green-while-absent via verify tooling: `verify.sh:67` `all` mode chains checks with `;`, so `rc=$?` (`verify.sh:70`) captures only the final `run_tests`. A missing disclaimer, unwired AppShell, or failed weights-label check prints a failure line yet still exits 0 / prints PASS if `npm test` passes \u2014 and `plan.md:87` recommends `verify.sh all` to the Builder. (Per-AC branches use `&&` and are strict; DCs invoke per-AC, so the certificate path itself is sound.)",
-        "Advisory: purity grep `[^a-zA-Z]fetch\\(` (`verify.sh:20`) misses a line-initial `fetch(`.",
-        "No money/settlement, tenancy/IDOR, concurrency/replay, or state-transition hazards apply \u2014 pure deterministic front-end demo, no backend. Named symbols/fields are grounded: `ProjectRecord` (`src/data/types.ts:25-45`), `DERIVED` provenance (`src/data/provenance.ts:3`), band tokens (`src/theme/tokens.css:12-16`), deterministic frozen dataset with Planned records (`src/data/portfolio.demo.ts`)."
+        "verify.sh:67 \u2014 the `all` branch runs `check_build; check_engine; check_disclaimer; check_authority; check_weights_label; check_wiring; run_tests \"TESTS\"` as `;`-separated statements with no `set -e` (script uses `set -uo pipefail` only) and no `&&` chaining; `rc=$?` (line 70) captures only `run_tests`'s status. A tree with a missing/altered disclaimer, missing weights label, and an unwired AppShell prints its failure lines but still exits 0 \u2192 `verify(all): PASS`. plan.md:90 and the P0/P1 table (plan.md:99) direct the Builder to gate on `verify.sh all` expecting PASS \u2014 a literal green-while-broken path. (Per-AC invocations used by the DCs are correctly `&&`-chained, so the certification path itself is sound; fix: chain with `&&` or accumulate rc.)",
+        "verify.sh:28 `check_disclaimer` greps only the substring `\"Illustrative decision-support assessment for demonstration purposes\"`, not the full approved wording (missing `\"; not an official project approval or investment decision.\"`). A truncated disclaimer passes the mechanical AC-3 guard; only TEST-3 (Builder-authored) enforces the exact string. Weak guard \u2014 the exact string is available verbatim in AC-3, so it is a tooling weakness rather than an invention risk.",
+        "verify.sh:56 AC-7 wiring guard greps `evaluate|scoreProject|selected` in AppShell.tsx; `selected` alone can match trivially, so the structural check is near-vacuous. The real proof is TEST-7, which (per Lens A) under-asserts the view-preservation half of the behaviour."
       ],
       "note": "ADVISORY (phase-1): recorded + surfaced; does NOT block dispatch. Promote to blocking = add Lens B to the final_gate threshold (one line)."
     },
@@ -540,13 +536,13 @@
   },
   "section_seals": {
     "certifier": "e2c09ac91c419ad08a53d1eb645c524e9a0dcab4b8d7fb52cee77522723db47e",
-    "generated_at_utc": "e5882f14bcd015ee6b1ca3cd32639b835b1010a795a0c7ac48a5c0fd964a953b",
+    "generated_at_utc": "873620f7bac8c4fa4d7fc6248859eb81f59ec59ff20d7b6830b7e1471ad292f8",
     "declared_limits": "a1cd0994e032074fe0ccea58c3480371e9abd98ca0bc8fb01c5508bfac7bd448",
     "inputs": "56717e285dd0838d6cd446d2435585ba03b0aae8a2a0f462e165046360166051",
-    "traceability": "d09abb346891c0b68f3def47494e3998c2cc451dccd7e04b51a2e5a2304eb88f",
-    "semantic_readiness": "e29c3bfd23a54428d51288933a829b0e69688c899076b6bffd701b19c4457e32",
+    "traceability": "dcb249ce1300df1b878dbd0c56e2f5fb673547ee3cc67faf7df08e8476670024",
+    "semantic_readiness": "e935fc40bbbe51e6fd5b1ea0d54df6381e85a2a5389197689833d5f8afab88c6",
     "final_gate": "0c74c4958995c0f48b7c8af6fa603a984e52c702912672395846a9cfc09405e9",
     "contract_binding": "74234e98afe7498fb5daf1f36ac2d78acc339464f950703b8c019892f982b90b"
   },
-  "certificate_seal": "0be2c21b925f19cf91ae13b35bf759f8a65c5c894e3ca6829a54eaec41c0c144"
+  "certificate_seal": "a4462f45be0d540edf3a4b5e70d3b280b3c943012def8dee4fef03228133a09b"
 }

@@ -145,9 +145,9 @@ git checkout -- src/assessment src/ui/Assessment.tsx src/ui/PriorityBadge.tsx sr
 - TEST-6: Missing-input test scores a project with ONE removed indicator (affected dimension band "Insufficient data" + reason + no numeric score; overall still a deterministic Low/Med/High via exclude-and-renormalize) AND a project with ALL indicators removed (overall = "Insufficient data", overallScore null — no invented score).
   proves: AC-6
   fails_when: a missing input produces an invented numeric score, the all-missing case yields a numeric band instead of "Insufficient data", or the overall is non-deterministic/NaN.
-- TEST-7: Integration test renders `AppShell` with an injected fake `SceneApi` (no @arcgis/core), selects a project, activates Evaluate, and asserts the Assessment renders for THAT project (its name + a Low/Med/High result + the disclaimer).
+- TEST-7: Integration test renders `AppShell` with an injected fake `SceneApi` (no @arcgis/core), selects a project, activates Evaluate, and asserts the Assessment renders for THAT project (its name + a Low/Med/High result + the disclaimer); then goes Back to Explore and asserts the mounted view is PRESERVED — `fakeSceneApi.createView` was called exactly once across the whole Explore→Evaluate→Back cycle and `view.destroy` was not called.
   proves: AC-7
-  fails_when: selecting a project + Evaluate does not open the Assessment, or the Assessment is not wired into AppShell (Assessment shippable unreachable).
+  fails_when: selecting a project + Evaluate does not open the Assessment, the Assessment is not wired into AppShell (shippable unreachable), OR Evaluate/Back destroys and recreates the SceneView (createView called more than once, or destroy called on Back).
 
 ## Notes for Claude (implementor)
 - Engine MUST be pure/deterministic (no random/clock/network in src/assessment). AI explains, never approves.
