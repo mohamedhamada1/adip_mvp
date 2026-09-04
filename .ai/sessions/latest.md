@@ -1,11 +1,13 @@
 ## Last Session Summary
-- Timestamp: 2026-09-04T16:04:09Z
+- Timestamp: 2026-09-04T16:06:13Z
 - Stage: 1.4
-- Branch: feat/stage-1.4
+- Branch: main
 - Uncommitted files: 0
 
 Recent commits:
-10d7df2 Build Stage 1.4 — Liveability Impact Simulator (direct-build override)
+dbc8466 Stage 1.4 lifecycle -> done (audited exception; owner-accepted)
+4df0db7 Merge Stage 1.4 (Liveability Impact Simulator) — owner accepted
+7645f1a Record Stage 1.4 acceptance (owner)
 
 Working tree:
 

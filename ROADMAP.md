@@ -360,3 +360,94 @@ the simulator shows Current → Simulate → proposed intervention → changed c
 - **Customer Value** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.4 → Customer Value (referenced, not duplicated)
 - **Go-Live Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.4 → Go-Live Impact (referenced, not duplicated)
 
+
+### Stage 1.5 — Ask ADPIC AI Templates + Hardening / Fallback
+
+**Status:** Planned
+**Source:** epic (.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md)
+**Date:** 2026-09-04
+**Artifact Type:** explanation layer + exhibition hardening
+**Execution Model:** hybrid
+**Depends on:** 1.2, 1.3, 1.4
+
+#### Core Invariant
+- The full journey runs offline with no live LLM, and every transition has a deterministic fallback.
+
+#### Ownership
+- Owns: a constrained cross-cutting Ask-AI (suggested questions + allowlisted actions, template-first), a one-way demo state machine, a preload/cache layer, connectivity-interruption tests, hardware profiling, a deterministic fallback, and a backup video.
+
+#### Inputs → Outputs
+- **Inputs:** all prior stages, screenshots 06/09, and the presenter script.
+- **Outputs:** a constrained cross-cutting Ask-AI (suggested questions + allowlisted actions, template-first), a one-way demo state machine, a preload/cache layer, connectivity-interruption tests, hardware profiling, a deterministic fallback, and a backup video.
+
+#### Transformation Order
+1. all prior stages, screenshots 06/09, and the presenter script. → VALIDATE: The full journey runs offline with no live LLM, and every transition has a deterministic fallback.
+2. a constrained cross-cutting Ask-AI (suggested questions + allowlisted actions, template-first), a one-way demo state machine, a preload/cache layer, connectivity-interruption tests, hardware profiling, a deterministic fallback, and a backup video. → VALIDATE: the entire scripted journey runs with the network physically disconnected and no live LLM, and every transition has a working deterministic fallback.
+
+#### Breaking Rules
+- A breaking change is any violation of § Must Not: the guaranteed template path as the non-LLM explanation source.
+
+#### Must Preserve
+- the authority boundary, the deterministic offline core, and validated-data-only display.
+
+#### Must Not
+- the guaranteed template path as the non-LLM explanation source.
+
+#### Validation & Determinism
+- The full journey runs offline with no live LLM, and every transition has a deterministic fallback.
+
+#### Success Proof
+- the entire scripted journey runs with the network physically disconnected and no live LLM, and every transition has a working deterministic fallback.
+
+#### Example
+```
+the entire scripted journey runs with the network physically disconnected and no live LLM, and every transition has a working deterministic fallback.
+```
+
+
+#### Stage Contract Propagation (stage-propagation-matrix/v1)
+
+- **Source of truth:** `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.5 — this projection never overrides it.
+
+- **Stage ID:** 1.5
+- **Title:** Ask ADPIC AI Templates + Hardening / Fallback
+- **Artifact Type:** explanation layer + exhibition hardening
+- **Execution Model:** hybrid
+- **Affected Repos:** single-repo (web frontend)
+- **Estimated Effort:** L — the constrained explanation layer plus the full exhibition-hardening package.
+- **Depends On:** 1.2, 1.3, 1.4
+- **Core Invariant:** The full journey runs offline with no live LLM, and every transition has a deterministic fallback.
+- **Outputs:** a constrained cross-cutting Ask-AI (suggested questions + allowlisted actions, template-first), a one-way demo state machine, a preload/cache layer, connectivity-interruption tests, hardware profiling, a deterministic fallback, and a backup video.
+
+##### Requirements
+
+- RR-1: Ask ADPIC AI is a cross-cutting explanation layer, not a fourth module, favoring suggested questions and allowlisted map actions over open autonomous chat — source: WORK-REQ-16/18, WORK-CON-1.
+- RR-2: Explanation context is assembled by the app from selected project, map context, approved attributes, calculated GIS indicators, and configured strategy — source: WORK-REQ-17.
+- RR-3: Deterministic pre-authored templates execute the entire scripted demo when a live LLM is unavailable or unapproved — source: WORK-REQ-20, WORK-AC-12, WORK-DEC-8.
+- RR-4: When requested information is absent from the approved context, the output states it is not in the demo dataset rather than inventing it — source: WORK-AC-10/11, WORK-EX-2, WORK-SEC-3.
+- RR-5: The full scripted journey tolerates connectivity interruption and completes within 60–90s on validated hardware, with preload/cache where appropriate — source: WORK-NFR-1/5/7/8, WORK-ROLL-6.
+- RR-6: A fixed deterministic fallback demonstration and a backup video are prepared and verified before go-live — source: WORK-AC-16, WORK-REQ-23.
+- RR-7: Any live LLM adapter receives only approved sanitized structured context and returns an explanation plus an allowlisted action — source: WORK-INT-8, WORK-SEC-4.
+
+##### Not Doing
+
+- **Out of scope:** unrestricted autonomous chat; a live LLM as a core dependency; production AI approval (WORK-OOS-3).
+- **Intentionally deferred:** a secured live LLM integration (gated on WORK-OQ-7/8 approvals).
+- **Must not expand into:** an Ask-AI that decides or approves.
+
+##### Roadmap Position
+
+- **Milestone:** Explanation & Exhibition Hardening.
+- **Dependencies:** Stages 1.2–1.4; WORK-OQ-9/10/11 (spike/hardware ownership and specs) before exhibition-build commitment.
+- **Unblocked after this stage:** exhibition-build commitment (subject to closing the build-commit blockers).
+- **Future stages that depend on it:** none — this is the final MVP stage.
+
+##### Governance References (canonical in the epic — referenced, not duplicated)
+
+- **Business Context** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.5 → Business Context (referenced, not duplicated)
+- **Revenue Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.5 → Revenue Impact (referenced, not duplicated)
+- **Readiness Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.5 → Readiness Impact (referenced, not duplicated)
+- **Multi-Vertical Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.5 → Multi-Vertical Impact (referenced, not duplicated)
+- **Customer Value** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.5 → Customer Value (referenced, not duplicated)
+- **Go-Live Impact** — canonical in `.ai/epics/adpic-livex-2026-capital-intelligence-mvp/architecture.md` § Stage 1.5 → Go-Live Impact (referenced, not duplicated)
+
