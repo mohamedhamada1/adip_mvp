@@ -6,18 +6,36 @@ import { buildExplanation } from "../assessment/explanation";
 const BAND_COLOR: Record<Band, string> = { High: "var(--good)", Medium: "var(--warn)", Low: "var(--text-2)", "Insufficient data": "var(--warn)" };
 const fmt = (n: number | null) => (n == null ? "—" : String(Math.round(n))); // present integers; never float artifacts
 
-/** Premium evidence card (replaces the admin table row). Score bar + band chip + calculated evidence. */
+/**
+ * ROLE-AWARE colour semantics (presentation only; the deterministic score is unchanged). A high CONTRIBUTION
+ * (driver) is positive → green; a high PENALTY (constraint) is negative/risk → red. So Infrastructure
+ * Dependency 96 never looks like a "good" result.
+ */
+function dimColor(d: DimensionResult): string {
+  if (!d.inputsPresent) return "var(--warn)";
+  if (d.role === "contribution") return BAND_COLOR[d.band];
+  return d.band === "High" ? "var(--danger)" : d.band === "Medium" ? "var(--warn)" : "var(--good)";
+}
+function dimResult(d: DimensionResult): string {
+  if (!d.inputsPresent) return d.band;
+  if (d.role === "contribution") return `${fmt(d.score)} · ${d.band}`;
+  const risk = d.band === "High" ? "High risk" : d.band === "Medium" ? "Moderate risk" : "Low risk";
+  return `${fmt(d.score)} · ${risk}`;
+}
+
+/** Premium evidence card (replaces the admin table row). Score bar + role-aware result chip + evidence. */
 function EvidenceCard({ d }: { d: DimensionResult }) {
-  const color = BAND_COLOR[d.band];
+  const color = dimColor(d);
+  const isConstraint = d.role === "penalty";
   return (
-    <div data-testid="dimension-row" style={{ background: "var(--bg-1)", border: "1px solid var(--stroke)", borderRadius: "var(--radius-2)", padding: "14px 16px", display: "flex", flexDirection: "column", gap: "8px" }}>
+    <div data-testid="dimension-row" style={{ background: "var(--bg-1)", border: "1px solid var(--stroke)", borderLeft: `3px solid ${isConstraint ? "var(--danger)" : "var(--good)"}`, borderRadius: "var(--radius-2)", padding: "14px 16px", display: "flex", flexDirection: "column", gap: "8px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "8px" }}>
         <span style={{ color: "var(--text-0)", fontSize: "14px", fontWeight: 600 }}>
           {d.label}
-          <span style={{ color: "var(--text-2)", fontSize: "11px", marginLeft: "6px" }}>{d.role === "penalty" ? "constraint" : "driver"}</span>
+          <span style={{ color: isConstraint ? "var(--danger)" : "var(--good)", fontSize: "10px", marginLeft: "8px", textTransform: "uppercase", letterSpacing: "0.05em" }}>{isConstraint ? "↓ constraint" : "↑ driver"}</span>
         </span>
         <span style={{ color, fontSize: "13px", fontWeight: 700, whiteSpace: "nowrap" }}>
-          {d.inputsPresent ? <>{fmt(d.score)} · {d.band}</> : d.band}
+          {dimResult(d)}
         </span>
       </div>
       <div style={{ height: "10px", background: "var(--bg-2)", borderRadius: "999px", overflow: "hidden" }}>
@@ -80,12 +98,16 @@ export function Assessment({ result, onBack, onSimulate }: { result: AssessmentR
                 <span>{d.label}</span><span style={{ color: "var(--good)", fontWeight: 700 }}>{fmt(d.score)}</span>
               </div>
             )) : <div style={{ color: "var(--text-2)", fontSize: "12px" }}>—</div>}
-            <div style={{ color: "var(--warn)", fontSize: "11px", letterSpacing: "0.06em", margin: "10px 0 4px" }}>PRINCIPAL CONSTRAINTS</div>
+            <div style={{ color: "var(--danger)", fontSize: "11px", letterSpacing: "0.06em", margin: "10px 0 4px" }}>PRINCIPAL CONSTRAINTS <span style={{ color: "var(--text-2)", letterSpacing: 0 }}>· higher = greater risk</span></div>
             {constraints.length ? constraints.map((d) => (
               <div key={d.key} style={{ display: "flex", justifyContent: "space-between", color: "var(--text-1)", fontSize: "13px", padding: "3px 0" }}>
-                <span>{d.label}</span><span style={{ color: "var(--warn)", fontWeight: 700 }}>{fmt(d.score)}</span>
+                <span>{d.label}</span><span style={{ color: dimColor(d), fontWeight: 700 }}>{fmt(d.score)} {d.band === "High" ? "· high risk" : d.band === "Medium" ? "· moderate" : "· low"}</span>
               </div>
             )) : <div style={{ color: "var(--text-2)", fontSize: "12px" }}>None material</div>}
+            <div style={{ marginTop: "10px", paddingTop: "8px", borderTop: "1px solid var(--stroke)", display: "flex", gap: "14px", color: "var(--text-2)", fontSize: "10.5px" }}>
+              <span><span style={{ color: "var(--good)" }}>↑</span> driver raises priority</span>
+              <span><span style={{ color: "var(--danger)" }}>↓</span> constraint (risk) lowers it</span>
+            </div>
           </div>
 
           {/* EXPLANATION (AI/template — separated from computed evidence, never an approval) */}

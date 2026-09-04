@@ -90,3 +90,48 @@ unchanged. Screens saved under `evidence/screens/`:
   regression** — in an interactive browser the scene flies into Al Reem / Khalifa with buildings (verified
   Stage 1.1 spike; `focusProject`/`goToAoi` drive the live camera). The surrounding Explore chrome captures
   correctly. All non-scene screens are captured natively at 1920×1080.
+
+---
+
+# Round 3 — blocking fixes (geographic surface + selection + constraint semantics)
+
+**Date:** 2026-09-04. Screens re-captured 1920×1080 (`evidence/screens/01–07`). 47/47 tests, `verify.sh all`
+PASS, engine numbers unchanged.
+
+### 1. Project Details geographic surface was BLANK → RESOLVED
+- **Root cause:** in-app Project Details rendered a transparent left pane expecting the live ArcGIS
+  `SceneView` to paint behind it; the tokenless 3D WebGL basemap does not reliably paint the focused city in
+  the preview/exhibition-capture path, leaving the area dark.
+- **Fix (owner-sanctioned deterministic map state, not decorative):** a new shared **`GeoContextMap`** renders
+  the REAL AD-SDI Khalifa/Reem district + road network with the selected project **framed (camera window)**
+  and highlighted (glow + crosshair + label) at its **frozen validated lon/lat**, peers subdued. Project
+  Details left ~62% is now this surface — **map + marker are visible in `02_project_details.png`** (live app).
+  The live `SceneView` remains the swap target and still drives Explore's flyTo/emphasize.
+- No coordinates invented; dataset has points only, so no footprint polygons are fabricated.
+
+### 2. Explore selected-project marker → RESOLVED
+- Selecting a project no longer jumps straight to Details; it **stays in Explore** and shows a deterministic
+  **Selected Location locator** (`GeoContextMap` compact) with a prominent marker + short label
+  (e.g. *Community School 1*) + subdued peers + **View Details →** (preserves the same `selectedProject`).
+  Visible in `01_explore.png`. Live 3D also flyTo/emphasizes on the exhibition machine.
+
+### 3. Shared selection ↔ everything (no stale geographic selection)
+- One `selectedProject` in `AppShell` drives, together: live scene camera (`focusProject`) → locator/Details
+  marker & label (`GeoContextMap`) → Investment Brief → Assessment (`scoreProject` via `useMemo` on selected)
+  → Ask-AI (`assembleContext` via `useMemo` on selected). Switching projects updates all of them.
+
+### 4. Assessment constraint semantics → RESOLVED (presentation only; scores unchanged)
+- Role-aware colour: a high **contribution/driver** is positive (green); a high **penalty/constraint** is
+  **risk (red `--danger`)**. So *Infrastructure Dependency 86* now reads **"86 · High risk"** in red with a
+  red accent, never a green "good" result; *Existing Duplication 36* reads **"Low risk"** (green). Cards are
+  tagged **↑ driver / ↓ constraint**; "Why this result?" separates green drivers from red constraints with a
+  *"higher = greater risk"* note and a direction legend. Deterministic scores byte-identical.
+
+### 5. Ask ADPIC AI
+- Suggested questions are context-aware (change with `selectedProject`). The contractor question is **not** in
+  the frozen dataset → the answer returns the explicit absent-info message (`ABSENT_INFO_MESSAGE`,
+  `sourced:false`, warn-coloured) — never invented. Panel now docks over the real map surface (`06`).
+
+### 6. Simulate CTA gating
+- `Simulate liveability impact →` is enabled only where the scenario applies (Khalifa liveability scenario);
+  hidden for Al Reem where no simulation scenario exists.

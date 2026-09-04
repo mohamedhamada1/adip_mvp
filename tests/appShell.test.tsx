@@ -14,9 +14,11 @@ describe("AppShell — AC-7 Explore→Evaluate wiring + view preservation", () =
     fireEvent.click(screen.getByRole("button", { name: /Start Experience/i }));
     expect(f.createView).toHaveBeenCalledTimes(1); // view built once on entering Explore
 
-    // select the first Khalifa project → Project Details bridge, then Evaluate
+    // select the first Khalifa project (stays in Explore, shows the locator), then View Details → Evaluate
     const firstProject = projectsForAoi("khalifa")[0];
     fireEvent.click(screen.getByRole("button", { name: new RegExp(firstProject.nameEn.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")) }));
+    expect(screen.queryByTestId("project-details")).not.toBeInTheDocument(); // selection stays in Explore
+    fireEvent.click(screen.getByRole("button", { name: /View Details/i }));
     expect(screen.getByTestId("project-details")).toBeInTheDocument();
     fireEvent.click(screen.getByRole("button", { name: /Evaluate this investment/i }));
 

@@ -9,6 +9,7 @@ import { Simulator } from "./ui/Simulator";
 import { AskAdpicAi } from "./ui/AskAdpicAi";
 import { FallbackDemo } from "./ui/FallbackDemo";
 import { ProjectDetails } from "./ui/ProjectDetails";
+import { GeoContextMap, shortProjectName } from "./ui/GeoContextMap";
 import { Dashboard } from "./ui/Dashboard";
 import { Closing } from "./ui/Closing";
 import { AoiSelect } from "./ui/AoiSelect";
@@ -72,9 +73,9 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
   }
   function selectProject(p: ProjectRecord) {
     setSelected(p);
+    // fly the live 3D scene to the validated location + emphasize the marker (exhibition machine);
+    // the deterministic locator below makes the position obvious everywhere. Stays in Explore until "View Details".
     controllerRef.current?.focusProject(p);
-    // selection opens the first-class Project Details bridge (Explore → Details → Evaluate → Simulate)
-    setView("details");
   }
 
   const visible = useMemo(() => filterProjects(projectsForAoi(activeAoi), activeSectors), [activeAoi, activeSectors]);
@@ -164,14 +165,7 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
           <div style={{ padding: "var(--space-3)", pointerEvents: "auto" }}>
             <div style={{ display: "flex", gap: "var(--space-3)", alignItems: "flex-end", flexWrap: "wrap" }}>
               <ProjectPanel projects={visible} selected={selected} onSelect={selectProject} />
-              {selected && (
-                <button type="button" onClick={showDetails}
-                  style={{ display: "flex", flexDirection: "column", gap: "2px", textAlign: "left", background: "var(--bg-1)", border: "1px solid var(--accent)", borderRadius: "var(--radius-2)", padding: "var(--space-2) var(--space-3)", color: "var(--text-0)", cursor: "pointer", boxShadow: "0 10px 40px var(--shadow)" }}>
-                  <span style={{ color: "var(--accent-2)", fontSize: "11px", letterSpacing: "0.06em" }}>SELECTED · VIEW DETAILS →</span>
-                  <span style={{ fontSize: "15px", fontWeight: 700 }}>{selected.nameEn}</span>
-                  <span style={{ color: "var(--text-2)", fontSize: "12px" }}>{selected.sector} · {selected.status}</span>
-                </button>
-              )}
+              {selected && <SelectedLocator project={selected} onViewDetails={showDetails} />}
             </div>
           </div>
           <div style={{ pointerEvents: "auto" }}>
@@ -188,7 +182,6 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
           onBack={() => setView("explore")}
           onEvaluate={() => setView("evaluate")}
           onSimulate={activeAoi === "khalifa" ? () => setView("simulate") : undefined}
-          showMap={false}
         />
       )}
 
@@ -208,6 +201,27 @@ export function AppShell({ sceneApi }: { sceneApi: SceneApi }) {
       {panelOpen && (
         <AskAdpicAi ctx={aiContext} onAction={onAiAction} onClose={() => setAskOpen(false)} />
       )}
+    </div>
+  );
+}
+
+/** Explore selection locator — a deterministic real-geography mini-map that makes the selected project's
+ *  position instantly obvious (marker + short label + subdued peers), plus the selected fields and the
+ *  View Details CTA. Renders reliably (no WebGL) alongside the live 3D scene. */
+function SelectedLocator({ project, onViewDetails }: { project: ProjectRecord; onViewDetails: () => void }) {
+  return (
+    <div style={{ width: "min(360px, 92vw)", background: "var(--bg-1)", border: "1px solid var(--accent)", borderRadius: "var(--radius-2)", overflow: "hidden", boxShadow: "0 12px 44px var(--shadow)" }}>
+      <div style={{ height: "184px", position: "relative", borderBottom: "1px solid var(--stroke)" }}>
+        <GeoContextMap project={project} frame={0.9} compact />
+        <span style={{ position: "absolute", left: "8px", top: "8px", color: "var(--accent-2)", fontSize: "10px", letterSpacing: "0.1em", background: "rgba(7,12,22,0.6)", padding: "2px 8px", borderRadius: "999px" }}>SELECTED LOCATION</span>
+      </div>
+      <div style={{ padding: "var(--space-2) var(--space-3)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "var(--space-2)" }}>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ color: "var(--text-0)", fontSize: "15px", fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{shortProjectName(project)}</div>
+          <div style={{ color: "var(--text-2)", fontSize: "12px" }}>{project.sector} · {project.status}</div>
+        </div>
+        <button type="button" onClick={onViewDetails} style={{ whiteSpace: "nowrap", padding: "10px 14px", borderRadius: "var(--radius-1)", border: "none", background: "var(--accent)", color: "var(--text-0)", fontWeight: 700, fontSize: "13px", cursor: "pointer" }}>View Details →</button>
+      </div>
     </div>
   );
 }

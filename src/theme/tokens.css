@@ -14,6 +14,7 @@
   --accent-2: #7cc0ff;
   --good: #7cfc9b;
   --warn: #ffd479;
+  --danger: #ff8f8f;         /* risk / high-constraint (penalty) signal */
   --shadow: rgba(3, 8, 18, 0.6);
 
   --space-1: 6px;
