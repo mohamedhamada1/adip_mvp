@@ -1,6 +1,6 @@
 # Current Stage
 
-Stage: 1.1
+Stage: 1.2
 
 Status: Planned
 
