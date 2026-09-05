@@ -1,5 +1,6 @@
 import { AOI_BOUNDARIES } from "../data/aoiBoundaries";
 import { KHALIFA_GEOGRAPHY } from "../data/khalifaBoundaryRoads";
+import { useLang } from "../i18n/LangContext";
 
 /**
  * Data attribution — visible from the first Explore render (condition C3). Names the open-data
@@ -7,10 +8,13 @@ import { KHALIFA_GEOGRAPHY } from "../data/khalifaBoundaryRoads";
  * needed); boundaries are AD-SDI (attribution required).
  */
 export function Attribution() {
+  const { lang } = useLang();
   const sources = [
     KHALIFA_GEOGRAPHY.attribution ?? AOI_BOUNDARIES.khalifa.attribution ?? "",
     "3D buildings © Esri, TomTom, Vantor, Esri Community Maps, Overture Maps Foundation",
-    "Projects shown are synthetic demonstration data (not official ADPIC records)",
+    lang === "ar"
+      ? "المشاريع المعروضة بيانات عرض تجريبية (ليست سجلات رسمية لدائرة التخطيط)"
+      : "Projects shown are synthetic demonstration data (not official ADPIC records)",
   ].filter(Boolean);
   return (
     <div

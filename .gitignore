@@ -5,3 +5,5 @@ dist/
 tsconfig.tsbuildinfo
 .ai/sessions/
 capture.mjs
+demo/
+record.mjs

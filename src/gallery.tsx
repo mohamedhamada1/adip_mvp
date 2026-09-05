@@ -15,9 +15,13 @@ import { Closing } from "./ui/Closing";
 import { projectsForAoi } from "./data/portfolio.demo";
 import { scoreProject } from "./assessment/scoringEngine";
 import { assembleContext } from "./ai/context";
+import { LangProvider } from "./i18n/LangContext";
+import { projectName, type Lang } from "./i18n/strings";
 
+const params = new URLSearchParams(typeof location !== "undefined" ? location.search : "");
+const lang: Lang = params.get("lang") === "ar" ? "ar" : "en";
 const project = projectsForAoi("khalifa")[0];
-const result = scoreProject(project);
+const result = scoreProject(project, { lang });
 const ctx = assembleContext("khalifa", project, result);
 
 function Frame({ children }: { children: React.ReactNode }) {
@@ -31,7 +35,7 @@ function Gallery() {
     case "card":
       return <Frame><div style={{ padding: "var(--space-4)" }}><ProjectCard project={project} onEvaluate={noop} onSimulate={noop} /></div></Frame>;
     case "projectdetails": return <Frame><ProjectDetails project={project} assessment={result} onBack={noop} onEvaluate={noop} onSimulate={noop} /></Frame>;
-    case "assessment": return <Frame><Assessment result={result} onBack={noop} onSimulate={noop} /></Frame>;
+    case "assessment": return <Frame><Assessment result={result} displayName={projectName(project, lang)} onBack={noop} onSimulate={noop} /></Frame>;
     case "simulator": return <Frame><Simulator onBack={noop} /></Frame>;
     case "askai": return <Frame><ProjectDetails project={project} assessment={result} onBack={noop} onEvaluate={noop} onSimulate={noop} /><AskAdpicAi ctx={ctx} onAction={noop} onClose={noop} /></Frame>;
     case "dashboard": return <Frame><Dashboard aoi="khalifa" onBack={noop} /></Frame>;
@@ -42,4 +46,6 @@ function Gallery() {
   }
 }
 
-createRoot(document.getElementById("root")!).render(<Gallery />);
+createRoot(document.getElementById("root")!).render(
+  <LangProvider initial={lang}><Gallery /></LangProvider>
+);

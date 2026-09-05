@@ -1,5 +1,7 @@
 import type { AoiId } from "../data/types";
 import { availableAois } from "../scene/aoi";
+import { useLang } from "../i18n/LangContext";
+import { aoiName } from "../i18n/strings";
 
 /**
  * AOI switcher. Selecting an AOI calls onSwitch, which updates the mounted SceneView (no reload).
@@ -7,6 +9,7 @@ import { availableAois } from "../scene/aoi";
  * and Khalifa remains the spine, keeping the app coherent (AC-4 / WORK-EX-4).
  */
 export function AoiSwitcher({ active, onSwitch }: { active: AoiId; onSwitch: (a: AoiId) => void }) {
+  const { lang } = useLang();
   const aois = availableAois();
   return (
     <div role="tablist" aria-label="Area of Interest" style={{ display: "flex", gap: "var(--space-1)" }}>
@@ -30,7 +33,7 @@ export function AoiSwitcher({ active, onSwitch }: { active: AoiId; onSwitch: (a:
               fontWeight: 600,
             }}
           >
-            {a.nameEn}
+            {aoiName(a.id, lang)}
           </button>
         );
       })}

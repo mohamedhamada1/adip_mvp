@@ -1,5 +1,7 @@
 import type { Sector } from "../data/types";
 import { SECTORS } from "../data/types";
+import { useLang } from "../i18n/LangContext";
+import { sectorLabel } from "../i18n/strings";
 
 /** Sector filter chips. Toggling a chip changes the visible marker set (AC-2, via App state). */
 export function Filters({
@@ -9,6 +11,7 @@ export function Filters({
   active: Set<Sector>;
   onToggle: (s: Sector) => void;
 }) {
+  const { lang } = useLang();
   return (
     <div style={{ display: "flex", gap: "var(--space-1)", flexWrap: "wrap" }}>
       {SECTORS.map((s) => {
@@ -29,7 +32,7 @@ export function Filters({
               fontSize: "13px",
             }}
           >
-            {s}
+            {sectorLabel(s, lang)}
           </button>
         );
       })}

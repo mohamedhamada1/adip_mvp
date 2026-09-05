@@ -2,6 +2,7 @@ import type { ProjectRecord } from "../data/types";
 import { projectsForAoi } from "../data/portfolio.demo";
 import { formatAed } from "../data/kpis";
 import type { DimensionKey } from "./dimensions";
+import { type Lang, fmtAedL, sectorLabel, strategicLabel, numL } from "../i18n/strings";
 
 export interface Indicator {
   /** 0–100 indicator value. */
@@ -27,10 +28,13 @@ const HIGH_ACCESS_SECTORS = new Set(["Mobility", "Public Realm", "Education"]);
  * the same project always yields the same indicators. Values are DERIVED proxies from the frozen dataset
  * (real GIS indicators are the swap target) — each carries calculated evidence.
  */
-export function deriveIndicators(project: ProjectRecord): Record<DimensionKey, Indicator> {
+export function deriveIndicators(project: ProjectRecord, lang: Lang = "en"): Record<DimensionKey, Indicator> {
   const pop = project.populationServed;
   const budget = project.budgetAed;
   const sameSectorInAoi = projectsForAoi(project.aoi).filter((p) => p.sector === project.sector).length;
+  const ar = lang === "ar";
+  const sec = sectorLabel(project.sector, lang);
+  const capex = ar ? fmtAedL(budget, "ar") : formatAed(budget);
 
   const communityNeed = clamp((pop / 25000) * 100);
   const strategicAlignment = STRATEGIC_SCORE[project.strategicTheme] ?? 70;
@@ -41,6 +45,17 @@ export function deriveIndicators(project: ProjectRecord): Record<DimensionKey, I
   const infrastructureDependency = clamp((budget / 500_000_000) * 100);
   const deliveryComplexity = clamp((budget / 500_000_000) * 60 + (100 - project.progress) * 0.4);
 
+  if (ar) {
+    return {
+      communityNeed: { value: communityNeed, evidence: [`عدد المستفيدين ≈ ${numL(pop)}`] },
+      strategicAlignment: { value: strategicAlignment, evidence: [`المحور الاستراتيجي: ${strategicLabel(project.strategicTheme, "ar")}`] },
+      spatialServiceGap: { value: spatialServiceGap, evidence: [`القطاع: ${sec}`, `مؤشر الطلب غير المُلبّى من السكان ≈ ${numL(pop)}`] },
+      accessibilityBenefit: { value: accessibilityBenefit, evidence: [`القطاع: ${sec}`, `نسبة الإنجاز ${project.progress}%`] },
+      duplication: { value: duplication, evidence: [`${sameSectorInAoi} مشروع في قطاع ${sec} ضمن المنطقة`] },
+      infrastructureDependency: { value: infrastructureDependency, evidence: [`التكلفة الرأسمالية التقديرية ${capex}`] },
+      deliveryComplexity: { value: deliveryComplexity, evidence: [`التكلفة الرأسمالية التقديرية ${capex}`, `نسبة الإنجاز ${project.progress}%`] },
+    };
+  }
   return {
     communityNeed: { value: communityNeed, evidence: [`Population served ≈ ${pop.toLocaleString("en")}`] },
     strategicAlignment: { value: strategicAlignment, evidence: [`Strategic theme: ${project.strategicTheme}`] },

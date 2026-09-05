@@ -1,42 +1,36 @@
 import type { AssessmentResult, DimensionResult, Band } from "../assessment/scoringEngine";
-import { ASSESSMENT_DISCLAIMER, ATTRIBUTION_LABEL } from "../assessment/disclaimer";
-import { WEIGHTS_LABEL } from "../assessment/weights.config";
 import { buildExplanation } from "../assessment/explanation";
+import { useLang } from "../i18n/LangContext";
+import { dimLabel, bandLabel, aoiName, type Lang } from "../i18n/strings";
 
 const BAND_COLOR: Record<Band, string> = { High: "var(--good)", Medium: "var(--warn)", Low: "var(--text-2)", "Insufficient data": "var(--warn)" };
-const fmt = (n: number | null) => (n == null ? "—" : String(Math.round(n))); // present integers; never float artifacts
+const fmt = (n: number | null) => (n == null ? "—" : String(Math.round(n))); // integers; never float artifacts
 
-/**
- * ROLE-AWARE colour semantics (presentation only; the deterministic score is unchanged). A high CONTRIBUTION
- * (driver) is positive → green; a high PENALTY (constraint) is negative/risk → red. So Infrastructure
- * Dependency 96 never looks like a "good" result.
- */
 function dimColor(d: DimensionResult): string {
   if (!d.inputsPresent) return "var(--warn)";
   if (d.role === "contribution") return BAND_COLOR[d.band];
   return d.band === "High" ? "var(--danger)" : d.band === "Medium" ? "var(--warn)" : "var(--good)";
 }
-function dimResult(d: DimensionResult): string {
-  if (!d.inputsPresent) return d.band;
-  if (d.role === "contribution") return `${fmt(d.score)} · ${d.band}`;
-  const risk = d.band === "High" ? "High risk" : d.band === "Medium" ? "Moderate risk" : "Low risk";
-  return `${fmt(d.score)} · ${risk}`;
+function riskWord(d: DimensionResult, t: ReturnType<typeof useLang>["t"]): string {
+  return d.band === "High" ? t.assess.highRisk : d.band === "Medium" ? t.assess.moderateRisk : t.assess.lowRisk;
+}
+function dimResult(d: DimensionResult, lang: Lang, t: ReturnType<typeof useLang>["t"]): string {
+  if (!d.inputsPresent) return bandLabel(d.band, lang);
+  if (d.role === "contribution") return `${fmt(d.score)} · ${bandLabel(d.band, lang)}`;
+  return `${fmt(d.score)} · ${riskWord(d, t)}`;
 }
 
-/** Premium evidence card (replaces the admin table row). Score bar + role-aware result chip + evidence. */
-function EvidenceCard({ d }: { d: DimensionResult }) {
+function EvidenceCard({ d, lang, t }: { d: DimensionResult; lang: Lang; t: ReturnType<typeof useLang>["t"] }) {
   const color = dimColor(d);
   const isConstraint = d.role === "penalty";
   return (
-    <div data-testid="dimension-row" style={{ background: "var(--bg-1)", border: "1px solid var(--stroke)", borderLeft: `3px solid ${isConstraint ? "var(--danger)" : "var(--good)"}`, borderRadius: "var(--radius-2)", padding: "14px 16px", display: "flex", flexDirection: "column", gap: "8px" }}>
+    <div data-testid="dimension-row" style={{ background: "var(--bg-1)", border: "1px solid var(--stroke)", borderInlineStart: `3px solid ${isConstraint ? "var(--danger)" : "var(--good)"}`, borderRadius: "var(--radius-2)", padding: "14px 16px", display: "flex", flexDirection: "column", gap: "8px" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: "8px" }}>
         <span style={{ color: "var(--text-0)", fontSize: "14px", fontWeight: 600 }}>
-          {d.label}
-          <span style={{ color: isConstraint ? "var(--danger)" : "var(--good)", fontSize: "10px", marginLeft: "8px", textTransform: "uppercase", letterSpacing: "0.05em" }}>{isConstraint ? "↓ constraint" : "↑ driver"}</span>
+          {dimLabel(d.key, lang)}
+          <span style={{ color: isConstraint ? "var(--danger)" : "var(--good)", fontSize: "10px", marginInlineStart: "8px", textTransform: "uppercase", letterSpacing: "0.05em" }}>{isConstraint ? `↓ ${t.assess.constraint}` : `↑ ${t.assess.driver}`}</span>
         </span>
-        <span style={{ color, fontSize: "13px", fontWeight: 700, whiteSpace: "nowrap" }}>
-          {dimResult(d)}
-        </span>
+        <span style={{ color, fontSize: "13px", fontWeight: 700, whiteSpace: "nowrap" }}>{dimResult(d, lang, t)}</span>
       </div>
       <div style={{ height: "10px", background: "var(--bg-2)", borderRadius: "999px", overflow: "hidden" }}>
         {d.inputsPresent && <div style={{ width: `${Math.round(d.score as number)}%`, height: "100%", background: color, boxShadow: `0 0 12px ${color}` }} />}
@@ -47,13 +41,12 @@ function EvidenceCard({ d }: { d: DimensionResult }) {
 }
 
 /**
- * AI-Assisted Investment Assessment — executive decision-support (owner concept 04). The overall
- * Low/Medium/High priority is the visual hero; a "Why this result?" summary surfaces the strongest
- * positive drivers and principal constraints; every dimension is a premium evidence card (GIS/business-rule
- * computation) with its calculated evidence; the explanation (AI/template) is clearly separated and never an
- * approval; the WORK-BR-15 disclaimer stays visible. AI explains, never approves.
+ * AI-Assisted Investment Assessment — executive decision-support (owner concept 04). Priority hero,
+ * "Why this result?" (drivers vs. risk constraints), premium evidence cards, GIS/business-rule computation
+ * separated from the template narrative, persistent WORK-BR-15 disclaimer. AI explains, never approves.
  */
-export function Assessment({ result, onBack, onSimulate }: { result: AssessmentResult; onBack: () => void; onSimulate?: () => void }) {
+export function Assessment({ result, onBack, onSimulate, displayName }: { result: AssessmentResult; onBack: () => void; onSimulate?: () => void; displayName?: string }) {
+  const { t, lang } = useLang();
   const color = BAND_COLOR[result.overall];
   const present = result.dimensions.filter((d) => d.inputsPresent && d.score != null);
   const drivers = present.filter((d) => d.role === "contribution").sort((a, b) => (b.score as number) - (a.score as number)).slice(0, 2);
@@ -61,80 +54,72 @@ export function Assessment({ result, onBack, onSimulate }: { result: AssessmentR
 
   return (
     <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", background: "var(--bg-0)", padding: "var(--space-3) var(--space-4)", overflow: "hidden" }}>
-      {/* header + navigation */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
-          <div style={{ color: "var(--accent-2)", fontSize: "12px", letterSpacing: "0.08em" }}>AI-ASSISTED INVESTMENT ASSESSMENT</div>
-          <h1 style={{ margin: "4px 0", color: "var(--text-0)", fontSize: "clamp(22px, 2.4vw, 34px)", fontWeight: 800 }}>Should this project be prioritised?</h1>
-          <div style={{ color: "var(--text-1)", fontSize: "15px" }}>{result.projectName}</div>
+          <div style={{ color: "var(--accent-2)", fontSize: "12px", letterSpacing: "0.08em" }}>{t.assess.eyebrow}</div>
+          <h1 style={{ margin: "4px 0", color: "var(--text-0)", fontSize: "clamp(22px, 2.4vw, 34px)", fontWeight: 800 }}>{t.assess.question}</h1>
+          <div style={{ color: "var(--text-1)", fontSize: "15px" }}>{displayName ?? result.projectName}</div>
         </div>
         <div style={{ display: "flex", gap: "var(--space-2)" }}>
-          <button type="button" onClick={onBack} style={{ padding: "10px 16px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--text-1)", cursor: "pointer" }}>← Back to project</button>
-          {onSimulate && <button type="button" onClick={onSimulate} style={{ padding: "10px 16px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--accent-2)", cursor: "pointer", fontWeight: 600 }}>Simulate impact →</button>}
+          <button type="button" onClick={onBack} style={{ padding: "10px 16px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--text-1)", cursor: "pointer" }}>{t.assess.back}</button>
+          {onSimulate && <button type="button" onClick={onSimulate} style={{ padding: "10px 16px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--accent-2)", cursor: "pointer", fontWeight: 600 }}>{t.assess.simulate}</button>}
         </div>
       </div>
 
-      {/* main grid: hero priority + why (left) · evidence cards (right) — fills the canvas */}
       <div style={{ flex: 1, minHeight: 0, display: "grid", gridTemplateColumns: "minmax(300px, 1fr) 1.7fr", gap: "var(--space-3)", marginTop: "var(--space-3)" }}>
-        {/* LEFT column: hero + why + explanation */}
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)", minHeight: 0 }}>
-          {/* HERO priority */}
           <div style={{ background: "linear-gradient(160deg, var(--bg-2), var(--bg-1))", border: `2px solid ${color}`, borderRadius: "var(--radius-2)", padding: "var(--space-3) var(--space-4)", textAlign: "center", boxShadow: `0 0 48px ${color}22` }}>
-            <div style={{ color: "var(--text-2)", fontSize: "12px", letterSpacing: "0.1em" }}>OVERALL PRIORITY</div>
-            <div role="status" aria-label={`Overall priority: ${result.overall}`} style={{ color, fontSize: "clamp(44px, 6vw, 84px)", fontWeight: 800, lineHeight: 1.05, letterSpacing: "0.02em" }}>{result.overall}</div>
+            <div style={{ color: "var(--text-2)", fontSize: "12px", letterSpacing: "0.1em" }}>{t.assess.overall}</div>
+            <div role="status" aria-label={`Overall priority: ${result.overall}`} style={{ color, fontSize: "clamp(40px, 5.5vw, 76px)", fontWeight: 800, lineHeight: 1.05, letterSpacing: "0.02em" }}>{bandLabel(result.overall, lang)}</div>
             {result.overallScore != null && (
-              <div style={{ color: "var(--text-0)", fontSize: "20px", fontWeight: 700 }}>{result.overallScore}<span style={{ color: "var(--text-2)", fontSize: "13px" }}> / 100 priority score</span></div>
+              <div style={{ color: "var(--text-0)", fontSize: "20px", fontWeight: 700 }}>{result.overallScore}<span style={{ color: "var(--text-2)", fontSize: "13px" }}> {t.assess.scoreOf}</span></div>
             )}
-            <div data-testid="attribution" style={{ color: "var(--text-2)", fontSize: "11px", marginTop: "10px" }}>{ATTRIBUTION_LABEL}.</div>
-            <div style={{ color: "var(--text-2)", fontSize: "10.5px", marginTop: "4px" }}>{WEIGHTS_LABEL}</div>
+            <div data-testid="attribution" style={{ color: "var(--text-2)", fontSize: "11px", marginTop: "10px" }}>{t.assess.computed}</div>
+            <div style={{ color: "var(--text-2)", fontSize: "10.5px", marginTop: "4px" }}>{t.weightsLabel}</div>
           </div>
 
-          {/* WHY THIS RESULT */}
           <div style={{ background: "var(--bg-1)", border: "1px solid var(--stroke)", borderRadius: "var(--radius-2)", padding: "var(--space-3)" }}>
-            <div style={{ color: "var(--text-0)", fontSize: "14px", fontWeight: 700, marginBottom: "10px" }}>Why this result?</div>
-            <div style={{ color: "var(--good)", fontSize: "11px", letterSpacing: "0.06em", marginBottom: "4px" }}>STRONGEST DRIVERS</div>
+            <div style={{ color: "var(--text-0)", fontSize: "14px", fontWeight: 700, marginBottom: "10px" }}>{t.assess.why}</div>
+            <div style={{ color: "var(--good)", fontSize: "11px", letterSpacing: "0.06em", marginBottom: "4px" }}>{t.assess.drivers}</div>
             {drivers.length ? drivers.map((d) => (
               <div key={d.key} style={{ display: "flex", justifyContent: "space-between", color: "var(--text-1)", fontSize: "13px", padding: "3px 0" }}>
-                <span>{d.label}</span><span style={{ color: "var(--good)", fontWeight: 700 }}>{fmt(d.score)}</span>
+                <span>{dimLabel(d.key, lang)}</span><span style={{ color: "var(--good)", fontWeight: 700 }}>{fmt(d.score)}</span>
               </div>
             )) : <div style={{ color: "var(--text-2)", fontSize: "12px" }}>—</div>}
-            <div style={{ color: "var(--danger)", fontSize: "11px", letterSpacing: "0.06em", margin: "10px 0 4px" }}>PRINCIPAL CONSTRAINTS <span style={{ color: "var(--text-2)", letterSpacing: 0 }}>· higher = greater risk</span></div>
+            <div style={{ color: "var(--danger)", fontSize: "11px", letterSpacing: "0.06em", margin: "10px 0 4px" }}>{t.assess.constraints} <span style={{ color: "var(--text-2)", letterSpacing: 0 }}>{t.assess.higherRisk}</span></div>
             {constraints.length ? constraints.map((d) => (
               <div key={d.key} style={{ display: "flex", justifyContent: "space-between", color: "var(--text-1)", fontSize: "13px", padding: "3px 0" }}>
-                <span>{d.label}</span><span style={{ color: dimColor(d), fontWeight: 700 }}>{fmt(d.score)} {d.band === "High" ? "· high risk" : d.band === "Medium" ? "· moderate" : "· low"}</span>
+                <span>{dimLabel(d.key, lang)}</span><span style={{ color: dimColor(d), fontWeight: 700 }}>{fmt(d.score)} · {riskWord(d, t)}</span>
               </div>
-            )) : <div style={{ color: "var(--text-2)", fontSize: "12px" }}>None material</div>}
+            )) : <div style={{ color: "var(--text-2)", fontSize: "12px" }}>{t.assess.none}</div>}
             <div style={{ marginTop: "10px", paddingTop: "8px", borderTop: "1px solid var(--stroke)", display: "flex", gap: "14px", color: "var(--text-2)", fontSize: "10.5px" }}>
-              <span><span style={{ color: "var(--good)" }}>↑</span> driver raises priority</span>
-              <span><span style={{ color: "var(--danger)" }}>↓</span> constraint (risk) lowers it</span>
+              <span><span style={{ color: "var(--good)" }}>↑</span> {t.assess.driverRaises}</span>
+              <span><span style={{ color: "var(--danger)" }}>↓</span> {t.assess.constraintLowers}</span>
             </div>
           </div>
 
-          {/* EXPLANATION (AI/template — separated from computed evidence, never an approval) */}
           <div data-testid="explanation" style={{ background: "var(--bg-1)", border: "1px dashed var(--stroke)", borderRadius: "var(--radius-2)", padding: "var(--space-3)", flex: 1, minHeight: 0, overflow: "auto", display: "flex", flexDirection: "column" }}>
-            <div style={{ color: "var(--accent-2)", fontSize: "11px", marginBottom: "6px", letterSpacing: "0.04em" }}>NARRATIVE EXPLANATION · generated from the evidence (template, not an approval)</div>
-            <p style={{ color: "var(--text-1)", margin: 0, lineHeight: 1.55, fontSize: "13.5px" }}>{buildExplanation(result)}</p>
+            <div style={{ color: "var(--accent-2)", fontSize: "11px", marginBottom: "6px", letterSpacing: "0.04em" }}>{t.assess.narrative}</div>
+            <p style={{ color: "var(--text-1)", margin: 0, lineHeight: 1.55, fontSize: "13.5px" }}>{buildExplanation(result, lang)}</p>
             <div style={{ marginTop: "auto", paddingTop: "var(--space-3)", display: "flex", gap: "8px", alignItems: "center", color: "var(--text-2)", fontSize: "11px", borderTop: "1px solid var(--stroke)" }}>
               <span aria-hidden style={{ color: "var(--accent-2)" }}>◎</span>
-              Assessed in geographic context · Khalifa City, Abu Dhabi · location from the validated dataset
+              {t.assess.geoContext(aoiName("khalifa", lang))}
             </div>
           </div>
         </div>
 
-        {/* RIGHT column: evidence cards */}
         <div style={{ display: "flex", flexDirection: "column", minHeight: 0 }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginBottom: "10px" }}>
-            <div style={{ color: "var(--text-0)", fontSize: "14px", fontWeight: 700 }}>Assessment evidence</div>
-            <div style={{ color: "var(--text-2)", fontSize: "11px" }}>Computed · GIS indicators + business rules</div>
+            <div style={{ color: "var(--text-0)", fontSize: "14px", fontWeight: 700 }}>{t.assess.evidence}</div>
+            <div style={{ color: "var(--text-2)", fontSize: "11px" }}>{t.assess.computedTag}</div>
           </div>
           <div data-testid="dimension-table" style={{ flex: 1, minHeight: 0, display: "grid", gridTemplateColumns: "1fr 1fr", gridAutoRows: "minmax(0, 1fr)", gap: "var(--space-2)", overflow: "auto" }}>
-            {result.dimensions.map((d) => <EvidenceCard key={d.key} d={d} />)}
+            {result.dimensions.map((d) => <EvidenceCard key={d.key} d={d} lang={lang} t={t} />)}
           </div>
         </div>
       </div>
 
-      {/* persistent disclaimer */}
-      <div data-testid="disclaimer" style={{ marginTop: "var(--space-2)", color: "var(--text-2)", fontSize: "12px", fontStyle: "italic" }}>{ASSESSMENT_DISCLAIMER}</div>
+      <div data-testid="disclaimer" style={{ marginTop: "var(--space-2)", color: "var(--text-2)", fontSize: "12px", fontStyle: "italic" }}>{t.assess.disclaimer}</div>
     </div>
   );
 }

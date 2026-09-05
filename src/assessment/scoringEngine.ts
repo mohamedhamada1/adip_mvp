@@ -2,6 +2,7 @@ import type { ProjectRecord } from "../data/types";
 import { DIMENSIONS, type DimensionKey } from "./dimensions";
 import { WEIGHTS, THRESHOLDS } from "./weights.config";
 import { deriveIndicators } from "./indicators";
+import { type Lang, dimLabel } from "../i18n/strings";
 
 export type Band = "Low" | "Medium" | "High" | "Insufficient data";
 
@@ -36,6 +37,8 @@ function bandForScore(score: number): Exclude<Band, "Insufficient data"> {
 export interface ScoreOptions {
   /** Dimensions whose GIS input is unavailable — used to exercise the "Insufficient data" path. */
   missingDimensions?: Set<DimensionKey>;
+  /** Language for the DISPLAY evidence strings only (default "en"). Scores/bands are unchanged. */
+  lang?: Lang;
 }
 
 /**
@@ -46,7 +49,8 @@ export interface ScoreOptions {
  */
 export function scoreProject(project: ProjectRecord, options: ScoreOptions = {}): AssessmentResult {
   const missing = options.missingDimensions ?? new Set<DimensionKey>();
-  const indicators = deriveIndicators(project);
+  const lang = options.lang ?? "en";
+  const indicators = deriveIndicators(project, lang);
 
   const dimensions: DimensionResult[] = DIMENSIONS.map((d) => {
     if (missing.has(d.key)) {
@@ -56,7 +60,9 @@ export function scoreProject(project: ProjectRecord, options: ScoreOptions = {})
         role: d.role,
         score: null,
         band: "Insufficient data",
-        evidence: [`Input for ${d.label} is not available in the demo dataset`],
+        evidence: [lang === "ar"
+          ? `مُدخل ${dimLabel(d.key, "ar")} غير متوفر في مجموعة البيانات التجريبية`
+          : `Input for ${d.label} is not available in the demo dataset`],
         inputsPresent: false,
       };
     }

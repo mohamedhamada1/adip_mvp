@@ -1,5 +1,6 @@
 import type { Kpis } from "../data/kpis";
-import { formatAed, formatPeople } from "../data/kpis";
+import { useLang } from "../i18n/LangContext";
+import { fmtAedL, fmtPeopleL } from "../i18n/strings";
 
 /**
  * KPI strip. Every value is COMPUTED from the frozen dataset (passed in) and rendered as a JS
@@ -7,12 +8,13 @@ import { formatAed, formatPeople } from "../data/kpis";
  * the value falls back to "—".
  */
 export function KpiStrip({ kpis }: { kpis: Kpis }) {
+  const { t, lang } = useLang();
   const cells: { label: string; value: string }[] = [
-    { label: "Total Projects", value: kpis.totalProjects ? String(kpis.totalProjects) : "—" },
-    { label: "Total Investment", value: kpis.totalProjects ? formatAed(kpis.totalInvestmentAed) : "—" },
-    { label: "Under Delivery", value: kpis.totalProjects ? String(kpis.underDelivery) : "—" },
-    { label: "Planned", value: kpis.totalProjects ? String(kpis.planned) : "—" },
-    { label: "Population Served", value: kpis.totalProjects ? formatPeople(kpis.populationServed) : "—" },
+    { label: t.kpi.totalProjects, value: kpis.totalProjects ? String(kpis.totalProjects) : "—" },
+    { label: t.kpi.totalInvestment, value: kpis.totalProjects ? fmtAedL(kpis.totalInvestmentAed, lang) : "—" },
+    { label: t.kpi.underDelivery, value: kpis.totalProjects ? String(kpis.underDelivery) : "—" },
+    { label: t.kpi.planned, value: kpis.totalProjects ? String(kpis.planned) : "—" },
+    { label: t.kpi.populationServed, value: kpis.totalProjects ? fmtPeopleL(kpis.populationServed, lang) : "—" },
   ];
   return (
     <div

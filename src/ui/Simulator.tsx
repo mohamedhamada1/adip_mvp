@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { simulateSchool, type SimulationResult, type SimMetrics } from "../simulation/simulationEngine";
 import { POPULATION_ZONES, type Zone } from "../simulation/populationZones";
-import { EXISTING_SCHOOLS, HYPOTHETICAL_SCHOOL_LABEL, type School } from "../simulation/scenario";
+import { EXISTING_SCHOOLS, type School } from "../simulation/scenario";
 import { KHALIFA_GEOGRAPHY } from "../data/khalifaBoundaryRoads";
-import { formatPeople } from "../data/kpis";
+import { useLang } from "../i18n/LangContext";
+import { fmtPeopleL } from "../i18n/strings";
 
 type Phase = "current" | "proposed";
 
@@ -38,6 +39,7 @@ function useCountUp(target: number, ms = 700) {
 }
 
 function BigMap({ result, phase }: { result: SimulationResult; phase: Phase }) {
+  const { t, lang } = useLang();
   const proposed = phase === "proposed";
   const covered = new Set((proposed ? result.after : result.before).coveredZoneIds);
   const newly = new Set(result.newlyCovered.map((z) => z.id));
@@ -88,10 +90,10 @@ function BigMap({ result, phase }: { result: SimulationResult; phase: Phase }) {
       <g style={{ transition: "opacity 0.6s", opacity: proposed ? 1 : 0 }} transform={`translate(${gx2sx(result.proposed.x) + 4}, ${gy2sy(result.proposed.y) - 3.2})`}>
         <rect x={0} y={0} width={44} height={6.8} rx={1.2} fill="rgba(7,12,22,0.92)" stroke="var(--accent-2)" strokeWidth={0.4} />
         <rect x={1.8} y={2.3} width={2.2} height={2.2} rx={0.4} fill="var(--accent-2)" />
-        <text x={5.6} y={4.7} fill="var(--text-0)" fontSize={3.4} fontWeight={700}>Proposed School</text>
+        <text x={5.6} y={4.7} fill="var(--text-0)" fontSize={3.4} fontWeight={700}>{t.sim.proposedSchool}</text>
       </g>
-      <text x={5} y={9} fill="var(--text-1)" fontSize={4}>Khalifa City · Abu Dhabi</text>
-      <text x={W - 8} y={10} fill="var(--text-2)" fontSize={5}>N↑</text>
+      <text x={lang === "ar" ? W - 6 : 5} y={9} textAnchor="start" direction={lang === "ar" ? "rtl" : "ltr"} fill="var(--text-1)" fontSize={4}>{t.sim.placeLabel}</text>
+      <text x={lang === "ar" ? 4 : W - 8} y={10} fill="var(--text-2)" fontSize={5}>N↑</text>
     </svg>
   );
 }
@@ -109,9 +111,11 @@ function BigKpi({ label, value, delta }: { label: string; value: string; delta?:
 }
 
 export function Simulator({ onBack }: { onBack: () => void }) {
+  const { t, lang } = useLang();
   const [phase, setPhase] = useState<Phase>("current");
   const result = useMemo(() => simulateSchool(), []);
   const proposed = phase === "proposed";
+  const zoneName = (n: string) => (lang === "ar" ? n.replace("Sector", "قطاع") : n);
   const m: SimMetrics = proposed ? result.after : result.before;
   // animated headline metrics
   const pop = useCountUp(m.populationInServiceArea);
@@ -129,17 +133,17 @@ export function Simulator({ onBack }: { onBack: () => void }) {
       {/* header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
-          <div style={{ color: "var(--accent-2)", fontSize: "13px", letterSpacing: "0.08em" }}>LIVEABILITY IMPACT SIMULATION · KHALIFA CITY</div>
-          <h1 style={{ margin: "4px 0", color: "var(--text-0)", fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 800 }}>What changes if we build the school here?</h1>
-          <div data-testid="hypothetical-label" style={{ color: "var(--warn)", fontSize: "13px" }}>{HYPOTHETICAL_SCHOOL_LABEL}</div>
+          <div style={{ color: "var(--accent-2)", fontSize: "13px", letterSpacing: "0.08em" }}>{t.sim.eyebrow}</div>
+          <h1 style={{ margin: "4px 0", color: "var(--text-0)", fontSize: "clamp(24px, 3vw, 40px)", fontWeight: 800 }}>{t.sim.question}</h1>
+          <div data-testid="hypothetical-label" style={{ color: "var(--warn)", fontSize: "13px" }}>{t.sim.hypo}</div>
         </div>
         <div style={{ display: "flex", gap: "var(--space-2)", alignItems: "center" }}>
           {/* segmented Current ⟷ Proposed toggle (the controlled reveal) */}
           <div role="tablist" aria-label="Scenario" style={{ display: "flex", border: "1px solid var(--stroke)", borderRadius: "999px", overflow: "hidden" }}>
-            <button role="tab" aria-selected={!proposed} onClick={() => setPhase("current")} style={{ padding: "10px 18px", border: "none", background: !proposed ? "var(--accent)" : "transparent", color: !proposed ? "var(--text-0)" : "var(--text-2)", cursor: "pointer", fontWeight: 700 }}>Current</button>
-            <button role="tab" aria-selected={proposed} onClick={() => setPhase("proposed")} style={{ padding: "10px 18px", border: "none", background: proposed ? "var(--good)" : "transparent", color: proposed ? "var(--bg-0)" : "var(--text-2)", cursor: "pointer", fontWeight: 700 }}>With Proposed School</button>
+            <button role="tab" aria-selected={!proposed} onClick={() => setPhase("current")} style={{ padding: "10px 18px", border: "none", background: !proposed ? "var(--accent)" : "transparent", color: !proposed ? "var(--text-0)" : "var(--text-2)", cursor: "pointer", fontWeight: 700 }}>{t.sim.current}</button>
+            <button role="tab" aria-selected={proposed} onClick={() => setPhase("proposed")} style={{ padding: "10px 18px", border: "none", background: proposed ? "var(--good)" : "transparent", color: proposed ? "var(--bg-0)" : "var(--text-2)", cursor: "pointer", fontWeight: 700 }}>{t.sim.withProposed}</button>
           </div>
-          <button type="button" onClick={onBack} style={{ padding: "10px 16px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--text-1)", cursor: "pointer" }}>← Back</button>
+          <button type="button" onClick={onBack} style={{ padding: "10px 16px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--text-1)", cursor: "pointer" }}>{t.sim.back}</button>
         </div>
       </div>
 
@@ -147,31 +151,31 @@ export function Simulator({ onBack }: { onBack: () => void }) {
       <div style={{ flex: 1, minHeight: 0, marginTop: "var(--space-2)", position: "relative" }}>
         <BigMap result={result} phase={phase} />
         {/* legend overlay */}
-        <div style={{ position: "absolute", left: "var(--space-2)", bottom: "var(--space-2)", display: "flex", gap: "var(--space-3)", flexWrap: "wrap", color: "var(--text-1)", fontSize: "12px", background: "rgba(7,12,22,0.6)", padding: "8px 12px", borderRadius: "var(--radius-1)" }}>
-          <span><span style={{ color: "var(--good)" }}>●</span> Covered community</span>
-          <span><span style={{ color: "var(--warn)" }}>●</span> Underserved community</span>
-          <span><span style={{ color: "var(--accent-2)" }}>◼</span> Proposed school</span>
-          <span><span style={{ color: "var(--good)" }}>◌</span> Proposed catchment (translucent walkable area)</span>
+        <div style={{ position: "absolute", insetInlineStart: "var(--space-2)", bottom: "var(--space-2)", display: "flex", gap: "var(--space-3)", flexWrap: "wrap", color: "var(--text-1)", fontSize: "12px", background: "rgba(7,12,22,0.6)", padding: "8px 12px", borderRadius: "var(--radius-1)" }}>
+          <span><span style={{ color: "var(--good)" }}>●</span> {t.sim.covered}</span>
+          <span><span style={{ color: "var(--warn)" }}>●</span> {t.sim.underserved}</span>
+          <span><span style={{ color: "var(--accent-2)" }}>◼</span> {t.sim.proposedLbl}</span>
+          <span><span style={{ color: "var(--good)" }}>◌</span> {t.sim.catchment}</span>
         </div>
         <button type="button" onClick={() => setPhase(proposed ? "current" : "proposed")}
-          style={{ position: "absolute", right: "var(--space-2)", bottom: "var(--space-2)", padding: "12px 24px", borderRadius: "999px", border: "none", background: proposed ? "var(--bg-2)" : "var(--good)", color: proposed ? "var(--text-1)" : "var(--bg-0)", fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 24px var(--shadow)" }}>
-          {proposed ? "↺ Reset" : "Simulate the proposed school →"}
+          style={{ position: "absolute", insetInlineEnd: "var(--space-2)", bottom: "var(--space-2)", padding: "12px 24px", borderRadius: "999px", border: "none", background: proposed ? "var(--bg-2)" : "var(--good)", color: proposed ? "var(--text-1)" : "var(--bg-0)", fontWeight: 800, cursor: "pointer", boxShadow: "0 6px 24px var(--shadow)" }}>
+          {proposed ? t.sim.reset : t.sim.cta}
         </button>
       </div>
 
       {/* impact KPI band */}
       <div data-testid="kpi-deltas" style={{ display: "flex", gap: "clamp(16px, 3vw, 48px)", alignItems: "flex-end", marginTop: "var(--space-3)", flexWrap: "wrap" }}>
-        <BigKpi label="Population within service area" value={formatPeople(Math.round(pop))} delta={proposed ? `+${formatPeople(popDelta)}` : undefined} />
-        <BigKpi label="Coverage" value={`${Math.round(cov)}%`} delta={proposed ? `+${covDelta}%` : undefined} />
-        <BigKpi label="Underserved population" value={formatPeople(Math.round(under))} delta={proposed ? `−${formatPeople(underDelta)}` : undefined} />
-        <BigKpi label="Avg access distance" value={`${(Math.round(access * 10) / 10).toFixed(1)}`} delta={proposed && accessDelta > 0 ? `−${accessDelta.toFixed(1)}` : undefined} />
-        <BigKpi label="Liveability Impact Score" value={proposed ? `+${result.liveabilityImpactScore}` : "—"} />
+        <BigKpi label={t.sim.kpiPop} value={fmtPeopleL(Math.round(pop), lang)} delta={proposed ? `+${fmtPeopleL(popDelta, lang)}` : undefined} />
+        <BigKpi label={t.sim.kpiCoverage} value={`${Math.round(cov)}%`} delta={proposed ? `+${covDelta}%` : undefined} />
+        <BigKpi label={t.sim.kpiUnderserved} value={fmtPeopleL(Math.round(under), lang)} delta={proposed ? `−${fmtPeopleL(underDelta, lang)}` : undefined} />
+        <BigKpi label={t.sim.kpiAccess} value={`${(Math.round(access * 10) / 10).toFixed(1)}`} delta={proposed && accessDelta > 0 ? `−${accessDelta.toFixed(1)}` : undefined} />
+        <BigKpi label={t.sim.kpiImpact} value={proposed ? `+${result.liveabilityImpactScore}` : "—"} />
       </div>
       <div data-testid="newly-covered" style={{ marginTop: "8px", color: "var(--text-1)", fontSize: "13px" }}>
-        {proposed ? <>Newly covered communities: {result.newlyCovered.map((z) => z.name).join(", ") || "—"}</> : <>Amber communities are outside walkable catchment of an existing school.</>}
+        {proposed ? <>{t.sim.newlyCovered}{result.newlyCovered.map((z) => zoneName(z.name)).join(lang === "ar" ? "، " : ", ") || "—"}</> : <>{t.sim.amberNote}</>}
       </div>
       <div data-testid="sim-explanation" style={{ marginTop: "6px", color: "var(--text-2)", fontSize: "12px" }}>
-        Figures computed from the deterministic simulation model on the real Khalifa City road network — approved real context; the school is hypothetical, not an approved project.
+        {t.sim.figures}
       </div>
     </div>
   );

@@ -2,6 +2,8 @@ import type { ProjectRecord } from "../data/types";
 import { AOI_BOUNDARIES } from "../data/aoiBoundaries";
 import { KHALIFA_GEOGRAPHY } from "../data/khalifaBoundaryRoads";
 import { projectsForAoi } from "../data/portfolio.demo";
+import { useLang } from "../i18n/LangContext";
+import { shortName } from "../i18n/strings";
 
 /**
  * Shared DETERMINISTIC geographic surface for the selection experience. Renders the REAL AD-SDI district
@@ -11,15 +13,11 @@ import { projectsForAoi } from "../data/portfolio.demo";
  * SceneView cannot be relied upon to paint (tokenless WebGL basemap); the SceneView remains the swap target.
  */
 
-export function shortProjectName(p: ProjectRecord): string {
-  const aoiName = p.aoi === "khalifa" ? "Khalifa City " : "Al Reem Island ";
-  return p.nameEn.startsWith(aoiName) ? p.nameEn.slice(aoiName.length) : p.nameEn;
-}
-
 const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n));
 const MW = 200, MH = 150, MPAD = 8;
 
 export function GeoContextMap({ project, frame = 1, compact = false }: { project: ProjectRecord; frame?: number; compact?: boolean }) {
+  const { lang } = useLang();
   const b = AOI_BOUNDARIES[project.aoi];
   const lon0 = Math.min(...b.ring.map((p) => p[0])), lon1 = Math.max(...b.ring.map((p) => p[0]));
   const lat0 = Math.min(...b.ring.map((p) => p[1])), lat1 = Math.max(...b.ring.map((p) => p[1]));
@@ -36,7 +34,7 @@ export function GeoContextMap({ project, frame = 1, compact = false }: { project
   const vw = MW * frame, vh = MH * frame;
   const vx = clamp(px - vw / 2, 0, MW - vw), vy = clamp(py - vh / 2, 0, MH - vh);
   const k = frame; // marker/label scale so prominence is consistent at any zoom
-  const label = shortProjectName(project);
+  const label = shortName(project, lang);
   // place the label above the marker, nudged inside the framed window
   const labelW = Math.min(52 * k, label.length * 2.1 * k + 8 * k);
   const lx = clamp(px, vx + labelW / 2 + 2, vx + vw - labelW / 2 - 2);

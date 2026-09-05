@@ -1,9 +1,11 @@
 import { useMemo } from "react";
 import { projectsForAoi } from "../data/portfolio.demo";
-import { computeKpis, formatAed, formatPeople } from "../data/kpis";
+import { computeKpis } from "../data/kpis";
 import { SECTORS, type AoiId, type ProjectStatus, type Sector } from "../data/types";
 import { AOI_BOUNDARIES } from "../data/aoiBoundaries";
 import { KHALIFA_GEOGRAPHY } from "../data/khalifaBoundaryRoads";
+import { useLang } from "../i18n/LangContext";
+import { aoiName, sectorLabel, statusLabel, fmtAedL, fmtPeopleL } from "../i18n/strings";
 
 const STATUSES: ProjectStatus[] = ["Completed", "Under Delivery", "Planned", "Concept"];
 const SECTOR_COLOR: Record<Sector, string> = {
@@ -15,6 +17,7 @@ const SECTOR_COLOR: Record<Sector, string> = {
 const GW = 200, GH = 150, GPAD = 8;
 
 function PortfolioMap({ aoi }: { aoi: AoiId }) {
+  const { lang } = useLang();
   const b = AOI_BOUNDARIES[aoi];
   const lon0 = Math.min(...b.ring.map((p) => p[0])), lon1 = Math.max(...b.ring.map((p) => p[0]));
   const lat0 = Math.min(...b.ring.map((p) => p[1])), lat1 = Math.max(...b.ring.map((p) => p[1]));
@@ -31,7 +34,7 @@ function PortfolioMap({ aoi }: { aoi: AoiId }) {
         <g stroke="var(--stroke)" strokeWidth={0.3} fill="none" opacity={0.8}>{roads.map((d, i) => <polyline key={i} points={d} />)}</g>
         {projects.map((p) => <circle key={p.id} cx={sx(p.lon)} cy={sy(p.lat)} r={2} fill={SECTOR_COLOR[p.sector]} opacity={0.9} />)}
       </g>
-      <text x={5} y={9} fill="var(--text-1)" fontSize={4.2}>{b.nameEn} · Abu Dhabi</text>
+      <text x={lang === "ar" ? GW - 5 : 5} y={9} textAnchor="start" direction={lang === "ar" ? "rtl" : "ltr"} fill="var(--text-1)" fontSize={4.2}>{aoiName(aoi, lang)}</text>
     </svg>
   );
 }
@@ -39,13 +42,14 @@ function PortfolioMap({ aoi }: { aoi: AoiId }) {
 /** Executive Portfolio Overview for an AOI — headline KPIs + geographic context + supporting charts.
  *  All figures COMPUTED from the frozen synthetic portfolio (deterministic; no mockup numbers). */
 export function Dashboard({ aoi, onBack }: { aoi: AoiId; onBack: () => void }) {
+  const { t, lang } = useLang();
   const projects = useMemo(() => projectsForAoi(aoi), [aoi]);
   const kpis = useMemo(() => computeKpis(projects), [projects]);
   const bySector = useMemo(() => SECTORS.map((s) => ({ s, n: projects.filter((p) => p.sector === s).length })).filter((x) => x.n > 0), [projects]);
   const byStatus = useMemo(() => STATUSES.map((s) => ({ s, n: projects.filter((p) => p.status === s).length })), [projects]);
   const total = projects.length || 1;
   const maxStatus = Math.max(1, ...byStatus.map((x) => x.n));
-  const aoiName = aoi === "khalifa" ? "Khalifa City" : "Al Reem Island";
+  const city = aoiName(aoi, lang);
 
   let acc = 0;
   const arcs = bySector.map((d) => {
@@ -57,22 +61,22 @@ export function Dashboard({ aoi, onBack }: { aoi: AoiId; onBack: () => void }) {
   });
 
   // headline KPIs — investment is the hero
-  const hero = { label: "Total Investment", value: formatAed(kpis.totalInvestmentAed) };
+  const hero = { label: t.kpi.totalInvestment, value: fmtAedL(kpis.totalInvestmentAed, lang) };
   const kpiCells = [
-    { label: "Total Projects", value: String(kpis.totalProjects) },
-    { label: "Population Served", value: formatPeople(kpis.populationServed) },
-    { label: "Under Delivery", value: String(kpis.underDelivery) },
-    { label: "Planned", value: String(kpis.planned) },
+    { label: t.kpi.totalProjects, value: String(kpis.totalProjects) },
+    { label: t.kpi.populationServed, value: fmtPeopleL(kpis.populationServed, lang) },
+    { label: t.kpi.underDelivery, value: String(kpis.underDelivery) },
+    { label: t.kpi.planned, value: String(kpis.planned) },
   ];
 
   return (
     <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", background: "var(--bg-0)", padding: "var(--space-3) var(--space-4)", overflow: "hidden" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
         <div>
-          <div style={{ color: "var(--accent-2)", fontSize: "12px", letterSpacing: "0.08em" }}>PORTFOLIO OVERVIEW</div>
-          <h1 style={{ color: "var(--text-0)", margin: "4px 0", fontSize: "clamp(22px, 2.4vw, 34px)", fontWeight: 800 }}>{aoiName} — Capital Portfolio</h1>
+          <div style={{ color: "var(--accent-2)", fontSize: "12px", letterSpacing: "0.08em" }}>{t.dash.eyebrow}</div>
+          <h1 style={{ color: "var(--text-0)", margin: "4px 0", fontSize: "clamp(22px, 2.4vw, 34px)", fontWeight: 800 }}>{t.dash.title(city)}</h1>
         </div>
-        <button type="button" onClick={onBack} style={{ padding: "10px 16px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--text-1)", cursor: "pointer" }}>← Back</button>
+        <button type="button" onClick={onBack} style={{ padding: "10px 16px", borderRadius: "var(--radius-1)", border: "1px solid var(--stroke)", background: "var(--bg-2)", color: "var(--text-1)", cursor: "pointer" }}>{t.dash.back}</button>
       </div>
 
       {/* headline KPI band */}
@@ -96,33 +100,33 @@ export function Dashboard({ aoi, onBack }: { aoi: AoiId; onBack: () => void }) {
           <div style={{ position: "absolute", left: "var(--space-3)", bottom: "var(--space-3)", display: "flex", gap: "10px", flexWrap: "wrap", background: "rgba(7,12,22,0.6)", padding: "6px 10px", borderRadius: "var(--radius-1)" }}>
             {bySector.map((d) => (
               <span key={d.s} style={{ display: "flex", alignItems: "center", gap: "5px", color: "var(--text-1)", fontSize: "11px" }}>
-                <span style={{ width: "9px", height: "9px", background: SECTOR_COLOR[d.s], borderRadius: "2px" }} />{d.s}
+                <span style={{ width: "9px", height: "9px", background: SECTOR_COLOR[d.s], borderRadius: "2px" }} />{sectorLabel(d.s, lang)}
               </span>
             ))}
           </div>
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)", minHeight: 0 }}>
           <div style={{ background: "var(--bg-1)", border: "1px solid var(--stroke)", borderRadius: "var(--radius-2)", padding: "var(--space-3)" }}>
-            <div style={{ color: "var(--text-1)", marginBottom: "var(--space-2)", fontSize: "13px", fontWeight: 600 }}>Projects by Sector</div>
+            <div style={{ color: "var(--text-1)", marginBottom: "var(--space-2)", fontSize: "13px", fontWeight: 600 }}>{t.dash.bySector}</div>
             <div style={{ display: "flex", gap: "var(--space-3)", alignItems: "center" }}>
               <svg viewBox="0 0 100 100" role="img" aria-label="Projects by sector" style={{ width: "110px", height: "110px", flex: "0 0 auto" }}>
                 {arcs.map((a) => <path key={a.d.s} d={a.path} fill={a.color} />)}
                 <circle cx={50} cy={50} r={22} fill="var(--bg-1)" />
                 <text x={50} y={48} textAnchor="middle" fill="var(--text-0)" fontSize={14} fontWeight={800}>{kpis.totalProjects}</text>
-                <text x={50} y={58} textAnchor="middle" fill="var(--text-2)" fontSize={6}>projects</text>
+                <text x={50} y={58} textAnchor="middle" fill="var(--text-2)" fontSize={6}>{t.dash.projects}</text>
               </svg>
               <div style={{ display: "flex", flexDirection: "column", gap: "3px" }}>
                 {arcs.map((a) => (
                   <span key={a.d.s} style={{ display: "flex", alignItems: "center", gap: "6px", color: "var(--text-1)", fontSize: "12px" }}>
-                    <span style={{ width: "9px", height: "9px", background: a.color, borderRadius: "2px" }} />{a.d.s}<span style={{ color: "var(--text-2)" }}>{a.pct}%</span>
+                    <span style={{ width: "9px", height: "9px", background: a.color, borderRadius: "2px" }} />{sectorLabel(a.d.s, lang)}<span style={{ color: "var(--text-2)" }}>{a.pct}%</span>
                   </span>
                 ))}
               </div>
             </div>
           </div>
           <div style={{ background: "var(--bg-1)", border: "1px solid var(--stroke)", borderRadius: "var(--radius-2)", padding: "var(--space-3)", flex: 1, minHeight: 0 }}>
-            <div style={{ color: "var(--text-1)", marginBottom: "var(--space-2)", fontSize: "13px", fontWeight: 600 }}>Projects by Status</div>
-            <svg viewBox="0 0 200 110" role="img" aria-label="Projects by status" style={{ width: "100%", height: "calc(100% - 28px)" }}>
+            <div style={{ color: "var(--text-1)", marginBottom: "var(--space-2)", fontSize: "13px", fontWeight: 600 }}>{t.dash.byStatus}</div>
+            <svg viewBox="0 0 200 118" role="img" aria-label="Projects by status" style={{ width: "100%", height: "calc(100% - 28px)" }}>
               {byStatus.map((d, i) => {
                 const bw = 38, gap = 12, x = 12 + i * (bw + gap), h = (d.n / maxStatus) * 78;
                 const color = [SECTOR_COLOR.Education, SECTOR_COLOR.Mobility, SECTOR_COLOR.Health, SECTOR_COLOR.Utilities][i];
@@ -130,7 +134,7 @@ export function Dashboard({ aoi, onBack }: { aoi: AoiId; onBack: () => void }) {
                   <g key={d.s}>
                     <rect x={x} y={92 - h} width={bw} height={h} rx={3} fill={color} />
                     <text x={x + bw / 2} y={90 - h} textAnchor="middle" fill="var(--text-0)" fontSize={9} fontWeight={700}>{d.n}</text>
-                    <text x={x + bw / 2} y={104} textAnchor="middle" fill="var(--text-2)" fontSize={6}>{d.s}</text>
+                    <text x={x + bw / 2} y={104} textAnchor="middle" fill="var(--text-2)" fontSize={5.4}>{statusLabel(d.s, lang)}</text>
                   </g>
                 );
               })}
@@ -140,7 +144,7 @@ export function Dashboard({ aoi, onBack }: { aoi: AoiId; onBack: () => void }) {
       </div>
 
       <div style={{ marginTop: "var(--space-2)", color: "var(--text-2)", fontSize: "11px" }}>
-        Figures computed from the frozen synthetic demonstration portfolio (Synthetic / Demo — not official ADPIC records).
+        {t.dash.note}
       </div>
     </div>
   );
